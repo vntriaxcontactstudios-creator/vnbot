@@ -45,6 +45,27 @@ vnbot/
 │   │   └── app-flow/              # 57 slides
 │   └── generation-scripts/        # Python + HTML covers para PDFs
 │
+├── vendor/                        # Repos externos como lógica base (snapshots)
+│   ├── web/firecrawl/             # Scraping web estructurado
+│   ├── voice/pipecat/             # Voz en tiempo real
+│   ├── voice/whisper/             # Transcripción de audio
+│   ├── video/yt-dlp/              # Descarga de video/audio
+│   ├── search/duckduckgo_search/  # Búsqueda web sin API key
+│   ├── embeddings/sentence-transformers/  # Embeddings locales
+│   ├── security/rebuff/           # Defensa contra prompt injection
+│   └── README.md                  # Índice y docs de integración
+│
+├── skills/                        # Catálogo de skills planificadas
+│   ├── ciencias/                  # Math, physics, chemistry, stats
+│   ├── planificacion/             # Schedule, tasks, goals, decisions
+│   ├── trading/                   # Market lookup, technical analysis (read-only)
+│   ├── documentos/                # PDF, OCR, Word, Markdown, translate
+│   ├── storytelling/              # Plot, characters, dialogue, outline
+│   ├── ideacion/                  # Brainstorm, mindmap, SCAMPER
+│   ├── analisis/                  # Deep analysis, sentiment, network, trends
+│   ├── referencia/                # Wikipedia, dictionary, currency, code
+│   └── README.md                  # Catálogo completo (38 skills)
+│
 ├── assets/                        # Assets visuales
 │   ├── references/                # 5 imágenes de referencia
 │   └── spritesheets/              # 5 spritesheets generados de VNBOT
@@ -111,15 +132,49 @@ vnbot/
 0.6 MCP · 0.7 Agentes · 0.8 Integraciones · 0.9 Estabilización · 1.0 Stable
 ```
 
-## Integraciones futuras planificadas
+## Integraciones incluidas (vendor/)
 
-- **Firecrawl** — Web scraping estructurado
-- **Pipecat** — Voz en tiempo real
-- **yt-dlp + FFmpeg** — Procesamiento de video/audio
-- **Whisper** — Transcripción local
-- **SearXNG / DuckDuckGo** — Búsqueda web
-- **NeMo Guardrails** — Defensa contra prompt injection
-- **LangGraph** — Loops de agentes autónomos
+Repositorios externos clonados como lógica base para el MVP:
+
+| Capability | Repo | Ubicación |
+|-----------|------|-----------|
+| Web scraping | [firecrawl](https://github.com/mendableai/firecrawl) | `vendor/web/firecrawl/` |
+| Voz bidireccional | [pipecat](https://github.com/pipecat-ai/pipecat) | `vendor/voice/pipecat/` |
+| Transcripción audio | [whisper](https://github.com/openai/whisper) | `vendor/voice/whisper/` |
+| Descarga video/audio | [yt-dlp](https://github.com/yt-dlp/yt-dlp) | `vendor/video/yt-dlp/` |
+| Búsqueda web | [duckduckgo_search](https://github.com/deedy5/duckduckgo_search) | `vendor/search/duckduckgo_search/` |
+| Embeddings locales | [sentence-transformers](https://github.com/UKPLab/sentence-transformers) | `vendor/embeddings/sentence-transformers/` |
+| Prompt injection defense | [rebuff](https://github.com/protectai/rebuff) | `vendor/security/rebuff/` |
+
+Ver [`vendor/README.md`](./vendor/README.md) para detalles de integración de cada repo.
+
+## Skills planificadas (skills/)
+
+38 skills organizadas en 8 categorías:
+
+| Categoría | Skills | Descripción |
+|-----------|--------|-------------|
+| `ciencias/` | 5 | Math, physics, chemistry, statistics |
+| `planificacion/` | 5 | Schedule, tasks, goals, decisions, pomodoro |
+| `trading/` | 4 | Market lookup, technical analysis (read-only, NO execution) |
+| `documentos/` | 6 | PDF, OCR, Word, Markdown, translate |
+| `storytelling/` | 5 | Plot, characters, dialogue, outline, continue |
+| `ideacion/` | 5 | Brainstorm divergent/convergent, mindmap, SCAMPER |
+| `analisis/` | 6 | Deep analysis, sentiment, network, trends, risk |
+| `referencia/` | 6 | Wikipedia, dictionary, currency, timezone, code, recipes |
+
+Ver [`skills/README.md`](./skills/README.md) para el catálogo completo con repos de referencia, riesgo y autonomía por skill.
+
+## Integraciones futuras (post-MVP)
+
+- **posthog/py-recapture** — Screenshots de páginas
+- **rhasspy/wyoming-piper** — TTS local offline
+- **NVIDIA/NeMo-Guardrails** — Guardrails completos
+- **meta-llama/llama-guard** — Clasificador de contenido unsafe
+- **microsoft/presidio** — PII detection/redaction
+- **temporalio/temporal-python** — Workflows durables
+- **langchain-ai/langgraph** — State machines para loops de agentes
+- **searxng/searxng** — Metabuscador self-hosteable
 
 ## Contribuir
 

@@ -79,3 +79,35 @@ logs/
 *.tmp
 *.bak
 *.cache
+
+# === Vendor repos — artifacts to exclude (keep source code) ===
+vendor/**/.git/
+vendor/**/node_modules/
+vendor/**/__pycache__/
+vendor/**/dist/
+vendor/**/build/
+vendor/**/.next/
+vendor/**/.turbo/
+vendor/**/target/
+vendor/**/.venv/
+vendor/**/venv/
+vendor/**/.pytest_cache/
+vendor/**/*.egg-info/
+vendor/**/coverage/
+vendor/**/.nyc_output/
+vendor/**/*.log
+vendor/**/logs/
+# Exclude lockfiles (regenerable, large)
+vendor/**/package-lock.json
+vendor/**/yarn.lock
+vendor/**/pnpm-lock.yaml
+vendor/**/poetry.lock
+# Exclude model files (too large for git)
+vendor/**/*.bin
+vendor/**/*.pt
+vendor/**/*.onnx
+vendor/**/*.gguf
+vendor/**/*.safetensors
+# Exclude test fixtures with binary content
+vendor/**/test-fixtures/
+vendor/**/fixtures/binary/

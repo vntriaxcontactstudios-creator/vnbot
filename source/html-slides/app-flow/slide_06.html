@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow — Mapa de Rutas</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .route-col { width: 380px; height: 480px; padding: 14px 16px; display: flex; flex-direction: column; }
+  .col-header { font-family: var(--font-pixel); font-size: 10px; letter-spacing: 0.1em; padding-bottom: 8px; border-bottom: 1px dashed var(--border); margin-bottom: 10px; }
+  .route-row { display: flex; align-items: baseline; gap: 8px; padding: 4px 0; }
+  .route-row .pill { font-family: var(--font-num); font-size: 11px; padding: 3px 7px; border: 1px solid var(--border-bright); color: var(--accent); background: var(--surface); white-space: nowrap; min-width: 0; }
+  .route-row .pill .dyn { color: var(--accent-3); }
+  .route-row .desc { font-family: var(--font-body); font-size: 10px; color: var(--primary-dim); line-height: 1.3; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl" data-decor></div>
+  <div class="corner-bracket tr" data-decor></div>
+  <div class="corner-bracket bl" data-decor></div>
+  <div class="corner-bracket br" data-decor></div>
+
+  <!-- Header -->
+  <div class="absolute" style="top: 30px; left: 56px; right: 56px; display: flex; justify-content: space-between; align-items: flex-end;">
+    <div>
+      <span class="pixel-badge">01.3 // RUTAS</span>
+      <h1 class="mt-2" style="font-family: var(--font-heading); font-weight: 700; font-size: 32px; letter-spacing: 0.02em; color: var(--primary);">Mapa de Navegación</h1>
+      <p class="mt-1" style="font-family: var(--font-body); font-size: 14px; color: var(--primary-dim);">23 rutas — web/PWA. Local puede omitir <span style="color: var(--accent); font-family: var(--font-num);">/auth/login</span>.</p>
+    </div>
+    <div style="font-family: var(--font-num); font-size: 11px; color: var(--primary-dim); letter-spacing: 0.08em; text-align: right;">
+      <div><span style="color: var(--accent-3);">:id</span> = RUTA DINÁMICA</div>
+      <div style="color: var(--accent);">// WEB · PWA</div>
+    </div>
+  </div>
+
+  <!-- 3 columns -->
+  <div class="absolute grid grid-cols-3 gap-4" style="top: 160px; left: 56px; width: 1168px;">
+
+    <!-- COL 1: PUBLICAS + AUTH -->
+    <div class="hud-panel route-col" style="border-color: var(--accent);">
+      <div class="col-header" style="color: var(--accent);">PÚBLICAS + AUTH</div>
+      <div class="route-row"><span class="pill">/</span><span class="desc">Landing o entrada</span></div>
+      <div class="route-row"><span class="pill">/onboarding</span><span class="desc">Configuración inicial</span></div>
+      <div class="route-row"><span class="pill">/auth/login</span><span class="desc">Inicio sesión remoto</span></div>
+      <div class="route-row"><span class="pill">/auth/register</span><span class="desc">Registro</span></div>
+      <div class="route-row"><span class="pill">/unlock</span><span class="desc">Desbloqueo bóveda</span></div>
+      <div style="margin-top: auto; padding-top: 10px; border-top: 1px dashed var(--border); font-family: var(--font-num); font-size: 9px; color: var(--primary-dim); letter-spacing: 0.1em;">5 RUTAS</div>
+    </div>
+
+    <!-- COL 2: CORE -->
+    <div class="hud-panel route-col" style="border-color: var(--accent);">
+      <div class="col-header" style="color: var(--accent);">CORE</div>
+      <div class="route-row"><span class="pill">/today</span><span class="desc">Centro operativo</span></div>
+      <div class="route-row"><span class="pill">/chat</span><span class="desc">Conversación</span></div>
+      <div class="route-row"><span class="pill">/chat/<span class="dyn">:conversationId</span></span><span class="desc">Conversación específica</span></div>
+      <div class="route-row"><span class="pill">/memory</span><span class="desc">Lista memorias</span></div>
+      <div class="route-row"><span class="pill">/memory/<span class="dyn">:id</span></span><span class="desc">Detalle memoria</span></div>
+      <div class="route-row"><span class="pill">/graph</span><span class="desc">Grafo memoria</span></div>
+      <div class="route-row"><span class="pill">/lists</span><span class="desc">Listas</span></div>
+      <div style="margin-top: auto; padding-top: 10px; border-top: 1px dashed var(--border); font-family: var(--font-num); font-size: 9px; color: var(--primary-dim); letter-spacing: 0.1em;">7 RUTAS</div>
+    </div>
+
+    <!-- COL 3: AGENTES + CONFIG -->
+    <div class="hud-panel route-col" style="border-color: var(--accent-3);">
+      <div class="col-header" style="color: var(--accent-3);">AGENTES + CONFIG</div>
+      <div class="route-row"><span class="pill" style="color: var(--accent-3);">/agents</span><span class="desc">Agentes</span></div>
+      <div class="route-row"><span class="pill" style="color: var(--accent-3);">/agents/new</span><span class="desc">Crear agente</span></div>
+      <div class="route-row"><span class="pill" style="color: var(--accent-3);">/agents/<span class="dyn">:id</span></span><span class="desc">Detalle agente</span></div>
+      <div class="route-row"><span class="pill" style="color: var(--accent-3);">/skills</span><span class="desc">Catálogo skills</span></div>
+      <div class="route-row"><span class="pill" style="color: var(--accent-3);">/integrations</span><span class="desc">Integraciones</span></div>
+      <div class="route-row"><span class="pill" style="color: var(--accent-3);">/integrations/mcp/new</span><span class="desc">Conectar MCP</span></div>
+      <div class="route-row"><span class="pill" style="color: var(--accent-3);">/activity</span><span class="desc">Actividad y auditoría</span></div>
+      <div class="route-row"><span class="pill" style="color: var(--accent-3);">/settings</span><span class="desc">Configuración</span></div>
+      <div class="route-row"><span class="pill" style="color: var(--accent-3);">/settings/privacy</span><span class="desc">Privacidad</span></div>
+      <div class="route-row"><span class="pill" style="color: var(--accent-3);">/settings/models</span><span class="desc">Modelos LLM</span></div>
+      <div class="route-row"><span class="pill" style="color: var(--accent-3);">/settings/notifications</span><span class="desc">Notificaciones</span></div>
+      <div class="route-row"><span class="pill" style="color: var(--accent-3);">/settings/security</span><span class="desc">Seguridad</span></div>
+      <div class="route-row"><span class="pill" style="color: var(--accent-3);">/diagnostics</span><span class="desc">Diagnóstico</span></div>
+      <div style="margin-top: auto; padding-top: 10px; border-top: 1px dashed var(--border); font-family: var(--font-num); font-size: 9px; color: var(--primary-dim); letter-spacing: 0.1em;">13 RUTAS</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>CAP. 01 · RUTAS</span>
+    <span>06 / 57</span>
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- 23 rutas en web/PWA organizadas en 3 grupos.
+- Rutas dinámicas con :id marcadas en amber.
+- Local puede omitir /auth/login — modo sin servidor.
+- /today es el centro operativo de la app.
+- /settings agrupa 5 sub-rutas: privacy, models, notifications, security y la raíz.
+</aside>
+</body>
+</html>

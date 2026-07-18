@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT UI/UX — Agentes + Skills</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .sprite { position: relative; background: var(--surface-2); display:flex; }
+  .sprite .visor { position: absolute; top: 30%; left: 22%; right: 22%; height: 16%; }
+  .sprite .mouth { position: absolute; bottom: 22%; left: 32%; right: 32%; height: 4px; background: var(--accent-2); }
+  .s-48 { width: 48px; height: 48px; border:2px solid var(--accent); }
+  .s-48 .visor { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .agent-card { background: var(--bg-deep); padding: 10px; display:flex; flex-direction:column; gap:6px; height:108px; border:2px solid var(--border); }
+  .agent-card .top { display:flex; align-items:center; gap:8px; }
+  .agent-card .name { font-family:var(--font-pixel); font-size:9px; letter-spacing:0.04em; }
+  .agent-card .role { font-size:9px; color:var(--primary-dim); }
+  .state { font-family:var(--font-num); font-size:9px; }
+  .skill-row { display:flex; align-items:center; gap:8px; padding:7px 10px; background:var(--bg-deep); border:1px solid var(--border); height:48px; }
+  .check { width:14px; height:14px; border:1px solid var(--border-bright); display:flex; align-items:center; justify-content:center; }
+  .check.on { background:var(--accent); border-color:var(--accent); color:var(--bg-deep); }
+  .pixel-btn { font-family:var(--font-pixel); font-size:9px; padding:6px 10px; letter-spacing:0.08em; text-transform:uppercase; border:1px solid var(--border-bright); background:var(--surface-2); color:var(--primary-dim); display:inline-flex; align-items:center; gap:6px; }
+  .pixel-btn.primary { border-color:var(--accent); background:var(--accent); color:var(--bg-deep); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <!-- Header -->
+  <div style="position:absolute; top:30px; left:80px; right:80px;">
+    <div class="pixel-badge">05.5 // AGENTES+SKILLS</div>
+    <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; margin-top:8px; color:var(--primary);">Gestión de Agentes y Skills</h1>
+  </div>
+
+  <!-- Two columns -->
+  <div style="position:absolute; top:118px; left:84px; right:84px; display:flex; gap:32px;">
+
+    <!-- LEFT: AGENTES -->
+    <div class="hud-panel" style="width:540px; height:500px; padding:16px; position:relative;">
+      <span class="corner-bracket tl"></span>
+      <span class="corner-bracket tr"></span>
+      <span class="corner-bracket bl"></span>
+      <span class="corner-bracket br"></span>
+
+      <!-- Header -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div style="font-family:var(--font-heading); font-weight:600; font-size:14px; color:var(--primary);">Agentes · <span style="color:var(--accent); font-family:var(--font-num);">7 activos</span></div>
+        <button class="pixel-btn primary" style="font-size:8px; padding:5px 9px;">+ CREAR AGENTE</button>
+      </div>
+
+      <!-- Grid 2x3 + 1 half -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <!-- Guardian -->
+        <div class="agent-card" style="border-color:var(--accent);">
+          <div class="top">
+            <div class="sprite s-48" style="border-color:var(--accent);">
+              <div class="visor" style="background:var(--accent); box-shadow:0 0 8px var(--accent);"></div>
+              <div class="mouth"></div>
+            </div>
+            <div>
+              <div class="name" style="color:var(--accent);">GUARDIAN</div>
+              <div class="state" style="color:var(--accent);">● idle</div>
+            </div>
+          </div>
+          <div class="role">Core · activo siempre</div>
+        </div>
+        <!-- Chat Assistant -->
+        <div class="agent-card" style="border-color:var(--primary);">
+          <div class="top">
+            <div class="sprite s-48" style="border-color:var(--primary);">
+              <div class="visor" style="background:var(--primary); box-shadow:0 0 8px var(--primary);"></div>
+              <div class="mouth"></div>
+            </div>
+            <div>
+              <div class="name" style="color:var(--primary);">CHAT ASSISTANT</div>
+              <div class="state" style="color:var(--accent);">● listening</div>
+            </div>
+          </div>
+          <div class="role">chat · activo</div>
+        </div>
+        <!-- Archivist -->
+        <div class="agent-card" style="border-color:#8B5CF6;">
+          <div class="top">
+            <div class="sprite s-48" style="border-color:#8B5CF6;">
+              <div class="visor" style="background:#8B5CF6; box-shadow:0 0 8px #8B5CF6;"></div>
+              <div class="mouth"></div>
+            </div>
+            <div>
+              <div class="name" style="color:#8B5CF6;">ARCHIVIST</div>
+              <div class="state" style="color:var(--accent);">● idle</div>
+            </div>
+          </div>
+          <div class="role">memoria · activo</div>
+        </div>
+        <!-- Beacon -->
+        <div class="agent-card" style="border-color:var(--accent-3);">
+          <div class="top">
+            <div class="sprite s-48" style="border-color:var(--accent-3);">
+              <div class="visor" style="background:var(--accent-3); box-shadow:0 0 8px var(--accent-3);"></div>
+              <div class="mouth"></div>
+            </div>
+            <div>
+              <div class="name" style="color:var(--accent-3);">BEACON</div>
+              <div class="state" style="color:var(--accent-3);">● processing</div>
+            </div>
+          </div>
+          <div class="role">recordatorios · trabajando</div>
+        </div>
+        <!-- Navigator -->
+        <div class="agent-card" style="border-color:#3B82F6;">
+          <div class="top">
+            <div class="sprite s-48" style="border-color:#3B82F6;">
+              <div class="visor" style="background:#3B82F6; box-shadow:0 0 8px #3B82F6;"></div>
+              <div class="mouth"></div>
+            </div>
+            <div>
+              <div class="name" style="color:#3B82F6;">NAVIGATOR</div>
+              <div class="state" style="color:var(--accent);">● idle</div>
+            </div>
+          </div>
+          <div class="role">calendario · activo</div>
+        </div>
+        <!-- Forge -->
+        <div class="agent-card" style="border-color:var(--accent-2);">
+          <div class="top">
+            <div class="sprite s-48" style="border-color:var(--accent-2);">
+              <div class="visor" style="background:var(--accent-2); box-shadow:0 0 8px var(--accent-2);"></div>
+              <div class="mouth"></div>
+            </div>
+            <div>
+              <div class="name" style="color:var(--accent-2);">FORGE</div>
+              <div class="state" style="color:var(--accent);">● idle</div>
+            </div>
+          </div>
+          <div class="role">skills · activo</div>
+        </div>
+      </div>
+      <!-- 7th card occupying half row -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px;">
+        <div class="agent-card" style="border-color:var(--success); height:60px; padding:8px 10px;">
+          <div class="top">
+            <div class="sprite s-48" style="border-color:var(--success); width:36px; height:36px;">
+              <div class="visor" style="background:var(--success); box-shadow:0 0 8px var(--success);"></div>
+              <div class="mouth"></div>
+            </div>
+            <div>
+              <div class="name" style="color:var(--success);">SENTINEL</div>
+              <div class="state" style="color:var(--accent);">● idle</div>
+            </div>
+          </div>
+          <div class="role" style="font-size:9px;">seguridad · activo</div>
+        </div>
+        <div style="border:1px dashed var(--border); display:flex; align-items:center; justify-content:center; height:60px; font-family:var(--font-pixel); font-size:9px; color:var(--primary-dim);">+ SLOT LIBRE</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: SKILLS -->
+    <div class="hud-panel accent" style="width:540px; height:500px; padding:16px; position:relative;">
+      <span class="corner-bracket tl"></span>
+      <span class="corner-bracket tr"></span>
+      <span class="corner-bracket bl"></span>
+      <span class="corner-bracket br"></span>
+
+      <!-- Header -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div style="font-family:var(--font-heading); font-weight:600; font-size:14px; color:var(--primary);">Skills · <span style="color:var(--accent); font-family:var(--font-num);">12 instaladas · 4 activas</span></div>
+        <button class="pixel-btn primary" style="font-size:8px; padding:5px 9px;">+ INSTALAR SKILL</button>
+      </div>
+
+      <!-- Skills list -->
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <div class="skill-row">
+          <div class="check on">✓</div>
+          <div style="flex:1;">
+            <div style="font-size:11px; color:var(--primary);"><span style="font-family:var(--font-num);">memory-graph</span> <span style="color:var(--primary-dim); font-family:var(--font-num); font-size:10px;">· v1.2.0</span></div>
+            <div style="font-size:9px; color:var(--primary-dim);">Crea y consulta grafo de memoria</div>
+          </div>
+          <span class="pixel-badge" style="font-size:8px; padding:3px 6px;">ENABLED</span>
+        </div>
+        <div class="skill-row">
+          <div class="check on">✓</div>
+          <div style="flex:1;">
+            <div style="font-size:11px; color:var(--primary);"><span style="font-family:var(--font-num);">calendar-sync</span> <span style="color:var(--primary-dim); font-family:var(--font-num); font-size:10px;">· v0.8.1</span></div>
+            <div style="font-size:9px; color:var(--primary-dim);">Sincroniza calendarios ICS</div>
+          </div>
+          <span class="pixel-badge" style="font-size:8px; padding:3px 6px;">ENABLED</span>
+        </div>
+        <div class="skill-row">
+          <div class="check on">✓</div>
+          <div style="flex:1;">
+            <div style="font-size:11px; color:var(--primary);"><span style="font-family:var(--font-num);">telegram-bridge</span> <span style="color:var(--primary-dim); font-family:var(--font-num); font-size:10px;">· v0.5.0</span></div>
+            <div style="font-size:9px; color:var(--primary-dim);">Bot de Telegram bidireccional</div>
+          </div>
+          <span class="pixel-badge" style="font-size:8px; padding:3px 6px;">ENABLED</span>
+        </div>
+        <div class="skill-row">
+          <div class="check"></div>
+          <div style="flex:1;">
+            <div style="font-size:11px; color:var(--primary-dim);"><span style="font-family:var(--font-num);">email-drafts</span> <span style="color:var(--primary-dim); font-family:var(--font-num); font-size:10px;">· v0.3.2</span></div>
+            <div style="font-size:9px; color:var(--primary-dim);">Lee y redacta borradores</div>
+          </div>
+          <span style="font-family:var(--font-pixel); font-size:8px; padding:3px 6px; color:var(--primary-dim); border:1px solid var(--border);">DISABLED</span>
+        </div>
+        <div class="skill-row">
+          <div class="check"></div>
+          <div style="flex:1;">
+            <div style="font-size:11px; color:var(--primary-dim);"><span style="font-family:var(--font-num);">whatsapp-business</span> <span style="color:var(--primary-dim); font-family:var(--font-num); font-size:10px;">· v0.1.0</span></div>
+            <div style="font-size:9px; color:var(--accent-3);">REQUIERE AUTH · WhatsApp Business API</div>
+          </div>
+          <span style="font-family:var(--font-pixel); font-size:8px; padding:3px 6px; color:var(--primary-dim); border:1px solid var(--border);">DISABLED</span>
+        </div>
+        <div class="skill-row">
+          <div class="check on">✓</div>
+          <div style="flex:1;">
+            <div style="font-size:11px; color:var(--primary);"><span style="font-family:var(--font-num);">ollama-local</span> <span style="color:var(--primary-dim); font-family:var(--font-num); font-size:10px;">· v1.0.0</span></div>
+            <div style="font-size:9px; color:var(--primary-dim);">Modelos locales via Ollama</div>
+          </div>
+          <span class="pixel-badge" style="font-size:8px; padding:3px 6px;">ENABLED</span>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="position:absolute; bottom:12px; left:16px; right:16px; font-family:var(--font-num); font-size:9px; color:var(--primary-dim); display:flex; justify-content:space-between;">
+        <span>↻ Última sync: hace 5m</span>
+        <span>fuente: skills-registry</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <span>CAP. 05 · AGENTES+SKILLS</span>
+    <span>31 / 39</span>
+  </div>
+
+  <aside data-notes class="hidden">
+    <ul>
+      <li>7 agentes siempre activos con sprite y estado visibles.</li>
+      <li>Cada agente tiene color de borde propio (cyan, white, violet, amber, blue, magenta, green).</li>
+      <li>Skills versionadas con enable/disable individual.</li>
+      <li>whatsapp-business marcado como REQUIERE AUTH.</li>
+      <li>Forge agent gestionaría skills creativas.</li>
+    </ul>
+  </aside>
+</div>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · Chat Pipeline de Envío</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .pipeline-row { display: flex; align-items: center; gap: 6px; justify-content: center; flex-wrap: nowrap; }
+  .pl-step {
+    background: var(--surface);
+    border: 1.5px solid var(--accent);
+    color: var(--primary);
+    padding: 10px 12px;
+    font-family: var(--font-num);
+    font-size: 11px;
+    font-weight: 500;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    min-width: 110px;
+    text-align: center;
+    clip-path: polygon(0 5px, 5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
+  }
+  .pl-step .num { font-family: var(--font-pixel); font-size: 9px; color: var(--accent); letter-spacing: 0.06em; }
+  .pl-step.am { border-color: var(--accent-3); background: rgba(251,191,36,0.06); }
+  .pl-step.am .num { color: var(--accent-3); }
+  .pl-step.gr { border-color: var(--success); background: rgba(16,185,129,0.06); }
+  .pl-step.gr .num { color: var(--success); }
+  .pl-arr { color: var(--accent); font-family: var(--font-num); font-size: 16px; font-weight: 700; }
+  .pl-arr.am { color: var(--accent-3); }
+
+  .mascot-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--bg); border: 1px dashed var(--border); margin-top: 12px; }
+  .mascot-cell { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .ms-sprite {
+    width: 28px; height: 28px;
+    background: var(--surface-2);
+    border: 1px solid currentColor;
+    position: relative;
+  }
+  .ms-sprite::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 4px;
+    width: 18px; height: 4px;
+    background: currentColor;
+  }
+  .ms-sprite.idle { color: var(--primary-dim); }
+  .ms-sprite.listening { color: var(--accent-3); }
+  .ms-sprite.thinking { color: var(--accent); }
+  .ms-sprite.success { color: var(--success); }
+  .ms-sprite.waiting { color: var(--accent-3); border-style: dashed; }
+  .ms-label { font-family: var(--font-num); font-size: 9px; color: var(--primary-dim); }
+  .ms-phase { font-family: var(--font-pixel); font-size: 8px; color: var(--accent); letter-spacing: 0.04em; }
+
+  .annot-card {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    padding: 10px 12px;
+    display: flex; flex-direction: column; gap: 4px;
+    clip-path: polygon(0 5px, 5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
+  }
+  .annot-card .lbl { font-family: var(--font-pixel); font-size: 9px; color: var(--accent); letter-spacing: 0.06em; }
+  .annot-card .body { font-family: 'Inter', sans-serif; font-size: 11.5px; color: var(--primary); line-height: 1.4; }
+  .annot-card .num { font-family: var(--font-num); font-size: 9px; color: var(--primary-dim); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- HEADER -->
+  <header class="absolute top-7 left-8 right-8">
+    <div class="flex items-end justify-between">
+      <div class="flex items-center gap-4">
+        <span class="pixel-badge">05.2 // PIPELINE</span>
+        <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; letter-spacing:0.02em; color:var(--primary);">Chat — Pipeline de <span style="color:var(--accent);">Envío</span></h1>
+      </div>
+      <div class="flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+        <span class="material-icons" style="font-size:14px; color:var(--accent);">timeline</span>
+        <span>8 PASOS · 4 FASES MASCOTA</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="absolute" style="top:108px; left:32px; right:32px; bottom:50px; display:flex; flex-direction:column; gap:14px;">
+
+    <!-- TOP: Pipeline -->
+    <section class="hud-panel" style="padding:18px 18px 14px;">
+      <div class="flex items-center justify-between mb-3">
+        <span style="font-family:var(--font-pixel); font-size:10px; color:var(--accent); letter-spacing:0.08em;">PIPELINE · ENVÍO DE MENSAJE</span>
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">8 ETAPAS</span>
+      </div>
+
+      <div class="pipeline-row">
+        <div class="pl-step"><span class="num">01</span><span>Usuario escribe</span></div>
+        <span class="pl-arr">→</span>
+        <div class="pl-step"><span class="num">02</span><span>Enviar</span></div>
+        <span class="pl-arr">→</span>
+        <div class="pl-step"><span class="num">03</span><span>Validar longitud/archivos</span></div>
+        <span class="pl-arr">→</span>
+        <div class="pl-step"><span class="num">04</span><span>Crear mensaje</span></div>
+        <span class="pl-arr am">→</span>
+        <div class="pl-step am"><span class="num">05</span><span>Mascota LISTENING/THINKING</span></div>
+        <span class="pl-arr">→</span>
+        <div class="pl-step"><span class="num">06</span><span>Clasificar intención</span></div>
+        <span class="pl-arr">→</span>
+        <div class="pl-step"><span class="num">07</span><span>Recuperar contexto autorizado</span></div>
+        <span class="pl-arr" style="color:var(--success);">→</span>
+        <div class="pl-step gr"><span class="num">08</span><span>Generar propuesta</span></div>
+      </div>
+
+      <!-- Mascot states row -->
+      <div class="mascot-row">
+        <span style="font-family:var(--font-pixel); font-size:9px; color:var(--accent-3); letter-spacing:0.06em; margin-right:8px;">ESTADO MASCOTA</span>
+        <div class="mascot-cell">
+          <div class="ms-sprite idle"></div>
+          <span class="ms-phase">FASE 1-4</span>
+          <span class="ms-label">idle</span>
+        </div>
+        <span style="color:var(--border-bright);">│</span>
+        <div class="mascot-cell">
+          <div class="ms-sprite listening"></div>
+          <span class="ms-phase" style="color:var(--accent-3);">FASE 5</span>
+          <span class="ms-label">listening</span>
+        </div>
+        <span style="color:var(--border-bright);">→</span>
+        <div class="mascot-cell">
+          <div class="ms-sprite thinking"></div>
+          <span class="ms-phase" style="color:var(--accent);">FASE 5</span>
+          <span class="ms-label">thinking</span>
+        </div>
+        <span style="color:var(--border-bright);">│</span>
+        <div class="mascot-cell">
+          <div class="ms-sprite thinking"></div>
+          <span class="ms-phase" style="color:var(--accent);">FASE 6-7</span>
+          <span class="ms-label">thinking</span>
+        </div>
+        <span style="color:var(--border-bright);">│</span>
+        <div class="mascot-cell">
+          <div class="ms-sprite success"></div>
+          <span class="ms-phase" style="color:var(--success);">FASE 8</span>
+          <span class="ms-label">success</span>
+        </div>
+        <span style="color:var(--border-bright);">/</span>
+        <div class="mascot-cell">
+          <div class="ms-sprite waiting"></div>
+          <span class="ms-phase" style="color:var(--accent-3);">FASE 8</span>
+          <span class="ms-label">waiting_confirmation</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM: 4 annotations grid -->
+    <section style="display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap:12px; flex:1;">
+      <div class="annot-card">
+        <div class="flex items-center justify-between">
+          <span class="lbl">VALIDACIÓN</span>
+          <span class="num">01</span>
+        </div>
+        <div class="body">Longitud mínima/máxima. Tamaño de archivos. Tipo MIME. Rate limiting.</div>
+      </div>
+      <div class="annot-card" style="border-color:var(--accent-3);">
+        <div class="flex items-center justify-between">
+          <span class="lbl" style="color:var(--accent-3);">CLASIFICACIÓN</span>
+          <span class="num">02</span>
+        </div>
+        <div class="body">LLM clasifica intención: <span style="font-family:var(--font-num); color:var(--accent-3);">consulta, save_memory, create_reminder, create_list, action</span>.</div>
+      </div>
+      <div class="annot-card">
+        <div class="flex items-center justify-between">
+          <span class="lbl">CONTEXTO AUTORIZADO</span>
+          <span class="num">03</span>
+        </div>
+        <div class="body">Solo memorias del workspace actual, filtradas por sensibilidad. Permisos del agente activo.</div>
+      </div>
+      <div class="annot-card" style="border-color:var(--success);">
+        <div class="flex items-center justify-between">
+          <span class="lbl" style="color:var(--success);">PROPUESTA</span>
+          <span class="num">04</span>
+        </div>
+        <div class="body">Estructurada: texto + memorias + acción + estado. <b style="color:var(--accent-3);">Nunca</b> ejecución directa sin confirmación si hay riesgo.</div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>CAP. 05 · PIPELINE</span>
+    <span style="color:var(--accent);">VNBOT APP FLOW</span>
+    <span>24 / 57</span>
+  </footer>
+
+</div>
+
+<aside data-notes class="hidden">
+  <ul>
+    <li>8 etapas: escribir → enviar → validar → crear mensaje → mascota → clasificar → contexto → propuesta.</li>
+    <li>La mascota cambia de estado en cada fase (idle → listening → thinking → success/waiting).</li>
+    <li>Validación cubre longitud, archivos, MIME y rate limiting.</li>
+    <li>Clasificación LLM decide entre 5 intents: consulta, save_memory, create_reminder, create_list, action.</li>
+    <li>Nunca ejecución directa si hay riesgo — siempre propuesta → confirmación.</li>
+  </ul>
+</aside>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · Memoria Inferida + Contradicción</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .col-panel { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+  .col-head { display: flex; align-items: center; gap: 12px; padding-bottom: 8px; border-bottom: 1px dashed rgba(51,65,85,0.6); }
+  .col-head .material-icons { font-size: 28px; }
+  .col-title { font-family: var(--font-pixel); font-size: 12px; letter-spacing: 0.08em; }
+  .col-body { font-family: 'Inter', sans-serif; font-size: 12px; color: var(--primary); line-height: 1.4; }
+
+  .user-msg {
+    background: rgba(34,211,238,0.08);
+    border: 1px solid var(--accent);
+    color: var(--primary);
+    padding: 7px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    margin-bottom: 8px;
+    clip-path: polygon(0 4px, 4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+  }
+
+  .sugg-card {
+    border: 1.5px solid var(--accent-2);
+    background: rgba(244,114,182,0.06);
+    padding: 9px 12px;
+    clip-path: polygon(0 5px, 5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
+  }
+  .sugg-card.rd { border-color: var(--error); background: rgba(239,68,68,0.06); }
+
+  .sugg-card .lbl { font-family: var(--font-pixel); font-size: 9px; letter-spacing: 0.06em; }
+  .sugg-card.mg .lbl { color: var(--accent-2); }
+  .sugg-card.rd .lbl { color: var(--error); }
+  .sugg-card .text { font-family: 'Inter', sans-serif; font-size: 12px; color: var(--primary); line-height: 1.35; margin-top: 4px; }
+  .sugg-card .question { font-family: 'Inter', sans-serif; font-size: 12px; color: var(--primary); font-style: italic; margin-top: 4px; }
+
+  .opt-row { display: flex; gap: 5px; margin-top: 7px; flex-wrap: wrap; }
+  .opt-btn {
+    padding: 4px 9px;
+    border: 1px solid;
+    font-family: var(--font-num);
+    font-size: 10px;
+    font-weight: 600;
+    clip-path: polygon(0 3px, 3px 0, 100% 0, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0 100%);
+  }
+  .opt-btn.mg { color: var(--accent-2); border-color: var(--accent-2); background: rgba(244,114,182,0.1); }
+  .opt-btn.rd { color: var(--error); border-color: var(--error); background: rgba(239,68,68,0.1); }
+  .opt-btn.cancel { color: var(--primary-dim); border-color: var(--border-bright); background: transparent; font-style: italic; font-family: 'Inter', sans-serif; font-weight: 400; }
+
+  .memory-cite {
+    background: var(--surface);
+    border-left: 2px solid var(--error);
+    padding: 6px 10px;
+    font-family: var(--font-num);
+    font-size: 11px;
+    color: var(--primary);
+    margin-top: 6px;
+  }
+  .memory-cite .id { color: var(--accent); font-weight: 600; }
+  .memory-cite .date { color: var(--primary-dim); }
+
+  .note-strip {
+    padding: 7px 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11.5px;
+    border-left: 2px solid;
+    margin-top: auto;
+    line-height: 1.4;
+  }
+  .note-strip.mg { color: var(--accent-2); border-color: var(--accent-2); background: rgba(244,114,182,0.05); }
+  .note-strip.rd { color: var(--error); border-color: var(--error); background: rgba(239,68,68,0.05); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- HEADER -->
+  <header class="absolute top-7 left-8 right-8">
+    <div class="flex items-end justify-between">
+      <div class="flex items-center gap-4">
+        <span class="pixel-badge magenta">06.5 // INFERIDA + CONFLICTO</span>
+        <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; letter-spacing:0.02em; color:var(--primary);">Memoria — Inferida y <span style="color:var(--error);">Contradicción</span></h1>
+      </div>
+      <div class="flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+        <span class="material-icons" style="font-size:14px; color:var(--accent-2);">compare_arrows</span>
+        <span>SUGERIR · MOSTRAR · DECIDIR</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="absolute" style="top:108px; left:32px; right:32px; bottom:50px; display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+
+    <!-- LEFT: Inferida -->
+    <section class="hud-panel magenta col-panel">
+      <div class="col-head">
+        <span class="material-icons" style="color:var(--accent-2);">lightbulb</span>
+        <span class="col-title" style="color:var(--accent-2);">INFERIDA</span>
+        <span style="margin-left:auto; font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">SUGERENCIA</span>
+      </div>
+
+      <p class="col-body">Si una preferencia se detecta en conversación sin que el usuario diga <span style="font-family:var(--font-num); color:var(--accent-2);">"recuerda"</span>, se marca como sugerencia.</p>
+
+      <div>
+        <div style="font-family:var(--font-pixel); font-size:9px; color:var(--accent-2); letter-spacing:0.06em; margin-bottom:5px;">CONVERSACIÓN</div>
+        <div class="user-msg">"...mejor programemos la reunión tipo 16:30 o 17:00, soy más productivo entonces..."</div>
+      </div>
+
+      <div class="sugg-card mg">
+        <div class="lbl">ARCHIVIST · SUGERENCIA</div>
+        <div class="text">Parece que prefieres reuniones después de las 16:00.</div>
+        <div class="question">¿Quieres guardarlo como preferencia?</div>
+        <div class="opt-row">
+          <span class="opt-btn mg">Guardar</span>
+          <span class="opt-btn cancel">No guardar</span>
+          <span class="opt-btn cancel">No volver a sugerir</span>
+        </div>
+      </div>
+
+      <div class="note-strip mg">Si usuario elige <b>No volver a sugerir</b>, se respeta. No se insiste.</div>
+    </section>
+
+    <!-- RIGHT: Contradicción -->
+    <section class="hud-panel col-panel" style="border-color:var(--error);">
+      <div class="col-head">
+        <span class="material-icons" style="color:var(--error);">warning</span>
+        <span class="col-title" style="color:var(--error);">CONTRADICCIÓN</span>
+        <span style="margin-left:auto; font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">CONFLICTO DETECTADO</span>
+      </div>
+
+      <p class="col-body">Si existe una memoria anterior que podría contradecir la nueva, se muestra explícitamente.</p>
+
+      <div>
+        <div style="font-family:var(--font-pixel); font-size:9px; color:var(--error); letter-spacing:0.06em; margin-bottom:5px;">ESCENARIO</div>
+        <div class="user-msg">Usuario: "Guarda que Daniel prefiere reuniones por la mañana."</div>
+        <div class="memory-cite">
+          <span style="color:var(--error); font-family:var(--font-pixel); font-size:9px; letter-spacing:0.06em;">SISTEMA DETECTA</span><br>
+          <span class="id">M-201:</span> Daniel prefiere reuniones después de las 16:00 <span class="date">(15 Jul)</span>
+        </div>
+      </div>
+
+      <div class="sugg-card rd">
+        <div class="lbl">UI MUESTRA</div>
+        <div class="text">Encontré una preferencia anterior que podría contradecir esta.</div>
+        <div class="opt-row">
+          <span class="opt-btn rd">Conservar ambas con fechas</span>
+          <span class="opt-btn rd">Reemplazar anterior</span>
+          <span class="opt-btn cancel">Descartar nueva</span>
+        </div>
+      </div>
+
+      <div class="note-strip rd">Las contradicciones se muestran <b>PRIMERO</b>, no se ocultan en el resumen.</div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>CAP. 06 · INFERIDA</span>
+    <span style="color:var(--accent);">VNBOT APP FLOW</span>
+    <span>32 / 57</span>
+  </footer>
+
+</div>
+
+<aside data-notes class="hidden">
+  <ul>
+    <li>Inferida: preferencia detectada sin "recuerda" se ofrece como sugerencia.</li>
+    <li>3 opciones: guardar, no guardar, no volver a sugerir (se respeta).</li>
+    <li>Contradicción: memoria anterior conflictiva se muestra antes de guardar la nueva.</li>
+    <li>3 opciones: conservar ambas con fechas, reemplazar anterior, descartar nueva.</li>
+    <li>Principio: contradicciones se muestran PRIMERO, no se ocultan.</li>
+  </ul>
+</aside>
+</body>
+</html>

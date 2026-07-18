@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · Flujo de Desbloqueo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .flow-stage { display: flex; align-items: center; gap: 8px; }
+  .stage-pill {
+    background: var(--surface);
+    border: 1.5px solid var(--accent);
+    color: var(--primary);
+    padding: 6px 12px;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    clip-path: polygon(0 5px, 5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
+  }
+  .stage-pill .meta { font-family: var(--font-num); font-size: 10px; color: var(--primary-dim); }
+  .stage-pill.am { border-color: var(--accent-3); }
+  .stage-pill.rd { border-color: var(--error); color: var(--error); }
+  .stage-pill.gr { border-color: var(--success); color: var(--success); }
+  .arrow-down { color: var(--border-bright); font-family: var(--font-num); font-size: 14px; text-align: center; line-height: 1; padding: 2px 0; }
+  .arrow-down.am { color: var(--accent-3); }
+  .branch-line { width: 2px; background: var(--border-bright); }
+  .branch-label { font-family: var(--font-pixel); font-size: 9px; letter-spacing: 0.06em; padding: 2px 6px; border: 1px solid; }
+  .branch-label.si { color: var(--success); border-color: var(--success); background: rgba(16,185,129,0.08); }
+  .branch-label.no { color: var(--error); border-color: var(--error); background: rgba(239,68,68,0.08); }
+  .prot-row { display: flex; align-items: flex-start; gap: 8px; font-family: 'Inter', sans-serif; font-size: 12px; color: var(--primary); line-height: 1.35; padding: 4px 0; }
+  .prot-row .material-icons { font-size: 14px; color: var(--success); margin-top: 1px; }
+  .opt-list { font-family: 'Inter', sans-serif; font-size: 12px; color: var(--primary); line-height: 1.5; }
+  .opt-list li { padding: 3px 0; display: flex; gap: 8px; }
+  .opt-list li::before { content: '?'; color: var(--accent-3); font-family: var(--font-num); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- HEADER -->
+  <header class="absolute top-7 left-8 right-8">
+    <div class="flex items-end justify-between">
+      <div class="flex items-center gap-4">
+        <span class="pixel-badge">04.4 // UNLOCK</span>
+        <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; letter-spacing:0.02em; color:var(--primary);">Flujo de <span style="color:var(--accent);">Desbloqueo</span></h1>
+      </div>
+      <div class="flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+        <span class="material-icons" style="font-size:14px; color:var(--accent);">lock_open</span>
+        <span>ARGON2ID · BACKOFF · AUTO-LOCK</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="absolute" style="top:108px; left:32px; right:32px; bottom:50px; display:grid; grid-template-columns: 620px 1fr; gap:20px;">
+
+    <!-- LEFT: Flowchart -->
+    <section class="hud-panel" style="padding:16px 20px; display:flex; flex-direction:column;">
+      <div class="flex items-center justify-between mb-2">
+        <span style="font-family:var(--font-pixel); font-size:10px; color:var(--accent); letter-spacing:0.08em;">DIAGRAMA · DESBLOQUEO</span>
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">7 NODOS · 2 DECISIONES</span>
+      </div>
+
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0; padding:6px 0;">
+        <!-- 1. LOCKED -->
+        <span class="state-badge locked">LOCKED</span>
+        <div class="arrow-down">▼</div>
+        <!-- 2. Passphrase -->
+        <div class="flow-stage">
+          <span class="stage-pill"><span class="material-icons" style="font-size:14px; color:var(--accent);">keyboard</span>Introducir passphrase</span>
+        </div>
+        <div class="arrow-down">▼</div>
+        <!-- 3. Derive key -->
+        <div class="flow-stage">
+          <span class="stage-pill"><span class="material-icons" style="font-size:14px; color:var(--accent);">vpn_key</span>Derivar clave <span class="meta">KDF Argon2id o PBKDF2</span></span>
+        </div>
+        <div class="arrow-down">▼</div>
+        <!-- 4. Verify payload -->
+        <div class="flow-stage">
+          <span class="stage-pill"><span class="material-icons" style="font-size:14px; color:var(--accent);">verified</span>Verificar payload de control</span>
+        </div>
+        <div class="arrow-down am">▼</div>
+        <!-- 5. Decision: ¿Correcta? -->
+        <div style="display:flex; align-items:center; gap:14px;">
+          <!-- YES branch -->
+          <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+            <span class="branch-label si">SÍ</span>
+            <div class="arrow-down" style="color:var(--success);">▼</div>
+            <span class="state-badge ready">READY</span>
+          </div>
+          <!-- Decision diamond -->
+          <div style="width:96px; height:96px; border:2px solid var(--accent-3); transform:rotate(45deg); display:flex; align-items:center; justify-content:center; background:var(--surface);">
+            <span style="transform:rotate(-45deg); font-family:var(--font-body); font-size:11px; color:var(--accent-3); font-weight:600; text-align:center; line-height:1.2;">¿Correcta?</span>
+          </div>
+          <!-- NO branch -->
+          <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+            <span class="branch-label no">NO</span>
+            <div class="arrow-down" style="color:var(--error);">▼</div>
+            <span class="stage-pill rd">Error + reintentar</span>
+          </div>
+        </div>
+        <div class="arrow-down" style="margin-top:4px;">▼</div>
+        <!-- 6. Decision: ¿Backoff activo? -->
+        <div style="display:flex; align-items:center; gap:14px;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+            <span class="branch-label si">SÍ</span>
+            <div class="arrow-down" style="color:var(--accent-3);">▼</div>
+            <span class="stage-pill am"><span class="material-icons" style="font-size:14px; color:var(--accent-3);">hourglass_top</span>Esperar N segundos</span>
+          </div>
+          <div style="width:108px; height:108px; border:2px solid var(--accent-3); transform:rotate(45deg); display:flex; align-items:center; justify-content:center; background:var(--surface);">
+            <span style="transform:rotate(-45deg); font-family:var(--font-body); font-size:10px; color:var(--accent-3); font-weight:600; text-align:center; line-height:1.2;">¿Backoff<br>activo?</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+            <span class="branch-label no">NO</span>
+            <div class="arrow-down" style="color:var(--accent);">▼</div>
+            <span class="stage-pill">Permitir reintento</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: Protecciones + Pérdida -->
+    <section style="display:flex; flex-direction:column; gap:14px;">
+
+      <div class="hud-panel accent" style="padding:14px 18px; flex:1;">
+        <div class="flex items-center justify-between mb-2">
+          <span style="font-family:var(--font-pixel); font-size:11px; color:var(--accent); letter-spacing:0.08em;">PROTECCIONES</span>
+          <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">6 / 6</span>
+        </div>
+        <div class="prot-row"><span class="material-icons">check</span><span>No indicar detalles que faciliten fuerza bruta</span></div>
+        <div class="prot-row"><span class="material-icons">check</span><span>Backoff exponencial tras varios intentos</span></div>
+        <div class="prot-row"><span class="material-icons">check</span><span>Auto-lock configurable <span style="font-family:var(--font-num); color:var(--accent);">(1 / 5 / 15 / 60 min)</span></span></div>
+        <div class="prot-row"><span class="material-icons">check</span><span>No persistir passphrase en texto</span></div>
+        <div class="prot-row"><span class="material-icons">check</span><span>Borrar material criptográfico de memoria al bloquear</span></div>
+        <div class="prot-row"><span class="material-icons">check</span><span>Biometría futura <span style="color:var(--primary-dim);">(no MVP)</span></span></div>
+      </div>
+
+      <div class="hud-panel amber" style="padding:12px 16px;">
+        <div class="flex items-center justify-between mb-2">
+          <span style="font-family:var(--font-pixel); font-size:11px; color:var(--accent-3); letter-spacing:0.08em;">PÉRDIDA DE PASSPHRASE</span>
+          <span class="material-icons" style="font-size:16px; color:var(--accent-3);">key_off</span>
+        </div>
+        <ul class="opt-list">
+          <li>¿Backup con clave externa?</li>
+          <li>¿Recuperación de cuenta sin bóveda?</li>
+          <li>¿Restauración desde exportación?</li>
+        </ul>
+      </div>
+
+      <div style="background:rgba(239,68,68,0.06); border-left:2px solid var(--error); padding:8px 12px; font-family:'Inter',sans-serif; font-size:12px; color:var(--error); line-height:1.4; display:flex; gap:8px; align-items:flex-start;">
+        <span class="material-icons" style="font-size:14px;">warning</span>
+        <span>Nunca prometer recuperación de contenido cifrado si la clave se perdió y no existe mecanismo válido.</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>CAP. 04 · UNLOCK</span>
+    <span style="color:var(--accent);">VNBOT APP FLOW</span>
+    <span>21 / 57</span>
+  </footer>
+
+</div>
+
+<aside data-notes class="hidden">
+  <ul>
+    <li>Unlock: passphrase → KDF Argon2id/PBKDF2 → verificar payload de control.</li>
+    <li>2 decisiones: ¿correcta? y ¿backoff activo? — green path a READY.</li>
+    <li>Protecciones clave: no filtrar info, backoff exponencial, auto-lock 1/5/15/60.</li>
+    <li>Pérdida de passphrase: 3 opciones, sin prometer recuperación mágica.</li>
+    <li>Biometría queda fuera del MVP.</li>
+  </ul>
+</aside>
+</body>
+</html>

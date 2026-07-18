@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · 40 / 57 — Permisos + Simulación</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .perm-line { font-family: var(--font-num); font-size: 13px; line-height: 1.7; }
+  .sim-line { font-family: var(--font-num); font-size: 12px; line-height: 1.55; color: var(--primary); }
+  .sim-key { color: var(--accent); }
+  .sim-val { color: var(--primary); }
+  .check-card { border: 1px solid; padding: 10px 12px; background: var(--surface); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl"></div>
+  <div class="corner-bracket tr"></div>
+  <div class="corner-bracket bl"></div>
+  <div class="corner-bracket br"></div>
+
+  <div class="absolute" style="top:32px; left:48px; right:48px; display:flex; justify-content:space-between; align-items:center;">
+    <span class="pixel-badge">08.2 // PERMISOS + SIM</span>
+    <span style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim); letter-spacing:0.08em;">CHAPTER 08 · AGENTS</span>
+  </div>
+  <h1 style="position:absolute; top:62px; left:48px; font-family:var(--font-heading); font-weight:700; font-size:32px; color:var(--primary); letter-spacing:0.02em;">Agente — Permisos y Simulación</h1>
+
+  <!-- LEFT: Resumen de Permisos -->
+  <div class="hud-panel magenta" style="position:absolute; top:118px; left:48px; width:540px; height:548px; padding:18px 22px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+      <i class="material-icons" style="font-size:32px; color:var(--accent-2);">shield</i>
+      <div>
+        <div style="font-family:var(--font-pixel); font-size:12px; color:var(--accent-2);">RESUMEN DE PERMISOS</div>
+        <div style="font-family:var(--font-body); font-size:12px; color:var(--primary-dim);">Antes de activar, el usuario ve:</div>
+      </div>
+    </div>
+
+    <!-- Highlighted permission box -->
+    <div style="background:var(--bg-deep); border:1px solid var(--accent-2); padding:14px 16px; margin-top:8px;">
+      <div style="font-family:var(--font-body); font-size:13px; color:var(--primary); margin-bottom:8px; font-weight:600;">Este agente podrá:</div>
+      <div class="perm-line" style="color:var(--success);"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check</i> Leer memorias de trabajo</div>
+      <div class="perm-line" style="color:var(--success);"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check</i> Crear recordatorios</div>
+      <div class="perm-line" style="color:var(--success);"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check</i> Consultar Graphify</div>
+      <div class="perm-line" style="color:var(--error);"><i class="material-icons" style="font-size:13px; vertical-align:middle;">close</i> Enviar correos</div>
+      <div class="perm-line" style="color:var(--error);"><i class="material-icons" style="font-size:13px; vertical-align:middle;">close</i> Leer archivos personales</div>
+      <div class="perm-line" style="color:var(--error);"><i class="material-icons" style="font-size:13px; vertical-align:middle;">close</i> Eliminar memorias</div>
+    </div>
+
+    <div style="position:absolute; bottom:18px; left:22px; right:22px; padding-top:10px; border-top:1px solid var(--border-bright);">
+      <p style="font-family:var(--font-body); font-size:11px; color:var(--primary-dim); line-height:1.5;">Permisos granulares. Sin checkbox, sin wizard, sin una pantalla de más. <span style="color:var(--accent-2);">Claridad sobre todo.</span></p>
+    </div>
+  </div>
+
+  <!-- RIGHT: Simulación -->
+  <div class="hud-panel amber" style="position:absolute; top:118px; left:608px; width:624px; height:548px; padding:18px 22px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+      <i class="material-icons" style="font-size:32px; color:var(--accent-3);">play_circle</i>
+      <div>
+        <div style="font-family:var(--font-pixel); font-size:12px; color:var(--accent-3);">SIMULACIÓN</div>
+        <div style="font-family:var(--font-body); font-size:12px; color:var(--primary);">El usuario escribe una instrucción y el agente muestra <strong>QUÉ</strong> haría.</div>
+      </div>
+    </div>
+
+    <!-- Mockup -->
+    <div style="margin-top:10px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+        <span style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">INPUT &gt;</span>
+        <span style="font-family:var(--font-num); font-size:12px; color:var(--accent); background:rgba(34,211,238,0.06); border:1px solid var(--accent); padding:4px 8px;">"Recuérdame pagar la luz mañana"</span>
+      </div>
+
+      <div style="background:var(--bg-deep); border:1px solid var(--accent-3); padding:14px 16px;">
+        <div style="font-family:var(--font-pixel); font-size:9px; color:var(--accent-3); margin-bottom:10px;">SALIDA DEL AGENTE · DRY-RUN</div>
+
+        <div class="sim-line"><span class="sim-key">Memoria consultaría:</span> <span class="sim-val">M-198 (preferencia horarios)</span></div>
+        <div class="sim-line"><span class="sim-key">Herramienta usaría:</span> <span class="sim-val">reminder.create()</span></div>
+        <div class="sim-line"><span class="sim-key">Acción propondría:</span> <span class="sim-val">crear recordatorio Jue 17 Jul 08:00</span></div>
+        <div class="sim-line"><span class="sim-key">Permiso necesitaría:</span> <span class="sim-val">create_reminder</span> <span style="color:var(--success);">✓</span></div>
+      </div>
+    </div>
+
+    <div style="position:absolute; bottom:18px; left:22px; right:22px; padding-top:10px; border-top:1px solid var(--border-bright);">
+      <p style="font-family:var(--font-body); font-size:12px; color:var(--error); line-height:1.45;"><i class="material-icons" style="font-size:14px; vertical-align:middle;">block</i> NO se ejecuta ningún efecto externo durante la simulación. Es <strong>readOnly + dryRun</strong>.</p>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>VNBOT // APP FLOW · CAP. 08 · PERMISOS</span>
+    <span>40 / 57</span>
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- Resumen de permisos visible antes de activar; claridad sobre fricción.
+- Simulación es dry-run: muestra memoria, herramienta, acción y permiso sin ejecutar.
+- Ejemplo "Recuérdame pagar la luz mañana" usa M-198 y reminder.create().
+- Animar a mostrar permisos como lista, no como wizard de checkboxes.
+- El usuario nunca debe inferir qué puede hacer el agente.
+</aside>
+</body>
+</html>

@@ -1,0 +1,81 @@
+# VNBOT .gitignore
+
+# === Build artifacts ===
+*.zip
+*.tar.gz
+*.rar
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.venv/
+venv/
+env/
+
+# === Node ===
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# === Environment & secrets ===
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+secrets/
+!.env.example
+
+# === IDE ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# === Tool results & staging ===
+tool-results/
+scripts/_workspace_staging/
+
+# === Large binary artifacts (use Git LFS or external storage) ===
+# Keep PPTX out of git — they're regenerable from HTML slides
+*.pptx
+# Keep large ZIPs out
+VNBOT_WORKSPACE_COMPLETE.zip
+
+# === OS ===
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# === Logs ===
+*.log
+logs/
+
+# === Database ===
+*.sqlite
+*.sqlite3
+*.db
+
+# === Temporary files ===
+*.tmp
+*.bak
+*.cache

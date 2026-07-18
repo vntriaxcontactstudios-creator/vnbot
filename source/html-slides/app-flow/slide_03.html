@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow — Cap. 1 Principios de Flujo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .ch-num { font-family: var(--font-pixel); font-size: 96px; line-height: 1; color: var(--accent); text-shadow: 0 0 24px rgba(34,211,238,0.4); }
+  .ghost-num { font-family: var(--font-pixel); font-size: 480px; color: rgba(34,211,238,0.035); line-height: 1; letter-spacing: -0.05em; }
+  .ch-title { font-family: var(--font-heading); font-weight: 700; font-size: 48px; letter-spacing: 0.15em; color: var(--primary); }
+  .ch-tag { font-family: var(--font-body); font-size: 18px; color: var(--primary-dim); }
+  .ch-rule { width: 240px; height: 2px; background: var(--accent); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl" data-decor></div>
+  <div class="corner-bracket tr" data-decor></div>
+  <div class="corner-bracket bl" data-decor></div>
+  <div class="corner-bracket br" data-decor></div>
+
+  <!-- Ghost watermark -->
+  <div class="absolute ghost-num" data-decor style="top: 100px; right: -40px; pointer-events: none;">01</div>
+
+  <!-- Top-left chapter badge -->
+  <div class="absolute" style="top: 40px; left: 56px;">
+    <span class="pixel-badge">CAPÍTULO 01 / 10</span>
+  </div>
+
+  <!-- Top-right pixel-grid decoration -->
+  <div class="absolute" data-decor style="top: 40px; right: 56px; display: grid; grid-template-columns: repeat(8, 4px); grid-template-rows: repeat(4, 4px); gap: 4px;">
+    <span style="background: var(--accent);"></span><span style="background: var(--accent);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--accent);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--accent);"></span>
+    <span style="background: var(--surface-2);"></span><span style="background: var(--accent);"></span><span style="background: var(--accent);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--accent);"></span><span style="background: var(--accent);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--surface-2);"></span>
+    <span style="background: var(--surface-2);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--accent);"></span><span style="background: var(--accent);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--accent);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--surface-2);"></span>
+    <span style="background: var(--accent);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--accent);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--accent);"></span><span style="background: var(--accent);"></span>
+  </div>
+
+  <!-- Center content -->
+  <div class="absolute" style="top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 100%;">
+    <div class="ch-num">01</div>
+    <div class="ch-rule mx-auto mt-6"></div>
+    <h1 class="ch-title mt-6">PRINCIPIOS DE FLUJO</h1>
+    <p class="ch-tag mt-4">Captura rápida, acción explicada — sin fingir éxito.</p>
+  </div>
+
+  <!-- Bottom-right mini flow nodes preview -->
+  <div class="absolute" style="bottom: 50px; right: 56px;">
+    <div style="font-family: var(--font-num); font-size: 9px; color: var(--primary-dim); letter-spacing: 0.15em; text-align: right; margin-bottom: 8px;">// ADELANTO</div>
+    <div class="pipeline" style="gap: 8px;">
+      <span class="pipeline-step">CAPTURAR</span>
+      <span class="flow-arrow">→</span>
+      <span class="pipeline-step alt">CONFIRMAR</span>
+      <span class="flow-arrow">→</span>
+      <span class="pipeline-step ok">AUDITAR</span>
+    </div>
+  </div>
+
+  <!-- Bottom-left meta -->
+  <div class="absolute" style="bottom: 50px; left: 56px; font-family: var(--font-num); font-size: 11px; color: var(--primary-dim); letter-spacing: 0.1em;">
+    <span style="color: var(--accent);">●</span> 5 PRINCIPIOS &nbsp;·&nbsp; CICLO 7-ETAPAS &nbsp;·&nbsp; 23 RUTAS
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- Capítulo fundacional del deck de App Flow.
+- Cubre los 5 principios no negociables del flujo.
+- Establece el ciclo central de VNBOT (7 etapas).
+- Incluye mapa de rutas de navegación (23 rutas).
+- Mensaje clave: captura rápida, acción explicada, sin fingir éxito.
+</aside>
+</body>
+</html>

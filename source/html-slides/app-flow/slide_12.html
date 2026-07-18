@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow — Flujo de Arranque</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .node { background: var(--surface); border: 1px solid currentColor; padding: 6px 10px; font-family: var(--font-num); font-size: 10px; font-weight: 700; letter-spacing: 0.04em; display: inline-block; clip-path: polygon(0 5px,5px 0,calc(100% - 5px) 0,100% 5px,100% calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,0 calc(100% - 5px)); }
+  .node-cyan { color: var(--accent); }
+  .node-amber { color: var(--accent-3); }
+  .node-dim { color: var(--primary-dim); }
+  .node-green { color: var(--success); }
+  .decision { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; border: 2px solid var(--accent-3); color: var(--accent-3); background: rgba(251,191,36,0.06); font-family: var(--font-num); font-size: 10px; font-weight: 700; transform: rotate(45deg); width: 84px; height: 84px; }
+  .decision > span { transform: rotate(-45deg); text-align: center; line-height: 1.2; }
+  .arr { color: var(--border-bright); font-family: var(--font-num); font-size: 12px; }
+  .arr-amber { color: var(--accent-3); font-family: var(--font-num); font-size: 12px; }
+  .lbl-amber { font-family: var(--font-num); font-size: 9px; color: var(--accent-3); font-weight: 700; letter-spacing: 0.05em; }
+  .lbl-dim { font-family: var(--font-num); font-size: 9px; color: var(--primary-dim); letter-spacing: 0.05em; }
+  .note-row { font-family: var(--font-body); font-size: 12px; color: var(--primary); line-height: 1.5; padding: 6px 0; border-bottom: 1px dashed var(--border); display: flex; gap: 8px; align-items: flex-start; }
+  .note-row:last-child { border-bottom: none; }
+  .note-check { color: var(--success); font-family: var(--font-num); font-size: 11px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl" data-decor></div>
+  <div class="corner-bracket tr" data-decor></div>
+  <div class="corner-bracket bl" data-decor></div>
+  <div class="corner-bracket br" data-decor></div>
+
+  <!-- Header -->
+  <div class="absolute" style="top: 28px; left: 56px; right: 56px; display: flex; justify-content: space-between; align-items: flex-end;">
+    <div>
+      <span class="pixel-badge amber">03.1 // ARRANQUE</span>
+      <h1 class="mt-2" style="font-family: var(--font-heading); font-weight: 700; font-size: 28px; letter-spacing: 0.02em; color: var(--primary);">Flujo de Arranque</h1>
+    </div>
+    <div style="font-family: var(--font-num); font-size: 11px; color: var(--primary-dim); letter-spacing: 0.08em; text-align: right;">
+      <div>DECISION TREE · 5 RAMAS</div>
+      <div style="color: var(--accent-3);">// BOOT SEQUENCE</div>
+    </div>
+  </div>
+
+  <!-- LEFT: decision tree -->
+  <div class="hud-panel absolute" style="top: 122px; left: 56px; width: 760px; height: 510px; padding: 16px 20px; border-color: var(--accent-3);">
+    <div style="font-family: var(--font-num); font-size: 9px; color: var(--accent-3); letter-spacing: 0.15em; margin-bottom: 12px;">// ÁRBOL DE DECISIÓN · ARRANQUE</div>
+
+    <div class="flex flex-col items-center gap-1.5">
+
+      <!-- Start -->
+      <span class="node node-cyan">[Abrir VNBOT]</span>
+      <span class="arr">↓</span>
+
+      <span class="node node-cyan">BOOTING</span>
+      <span class="arr">↓</span>
+
+      <!-- Decision 1: First run? -->
+      <div class="decision"><span>¿Primera ejecución?</span></div>
+
+      <!-- Branches -->
+      <div class="grid grid-cols-2 gap-12 w-full" style="margin-top: 4px;">
+        <!-- SÍ branch -->
+        <div class="flex flex-col items-center gap-1.5">
+          <div class="lbl-amber">SÍ →</div>
+          <span class="node node-cyan">FIRST_RUN</span>
+          <span class="arr">→</span>
+          <span style="font-family: var(--font-body); font-size: 11px; color: var(--primary-dim); font-style: italic;">Onboarding</span>
+        </div>
+        <!-- NO branch (continues down) -->
+        <div class="flex flex-col items-center gap-1.5">
+          <div class="lbl-amber">NO ↓</div>
+          <div class="decision" style="margin-top: 4px;"><span>¿Modo servidor?</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sub-branches for "Modo servidor" -->
+    <div class="grid grid-cols-2 gap-8" style="margin-top: 10px; padding: 0 30px;">
+
+      <!-- SÍ servidor -->
+      <div class="flex flex-col items-center gap-1">
+        <div class="lbl-amber">SÍ ↓</div>
+        <div class="decision" style="width: 70px; height: 70px;"><span style="font-size: 8px;">¿Sesión válida?</span></div>
+        <div class="grid grid-cols-2 gap-2 w-full" style="margin-top: 2px;">
+          <div class="flex flex-col items-center gap-1">
+            <div class="lbl-amber">NO</div>
+            <span class="node node-dim">AUTH_REQUIRED</span>
+          </div>
+          <div class="flex flex-col items-center gap-1">
+            <div class="lbl-amber">SÍ ↓</div>
+            <div class="decision" style="width: 64px; height: 64px;"><span style="font-size: 7px;">¿Bóveda desbloqueada?</span></div>
+            <div class="grid grid-cols-2 gap-1 w-full" style="margin-top: 2px;">
+              <div class="flex flex-col items-center gap-1">
+                <div class="lbl-amber">NO</div>
+                <span class="node node-dim">LOCKED</span>
+                <span class="arr" style="font-size: 10px;">→</span>
+                <span class="node node-green">READY</span>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <div class="lbl-amber">SÍ</div>
+                <span class="node node-green">READY</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NO servidor -->
+      <div class="flex flex-col items-center gap-1">
+        <div class="lbl-amber">NO ↓</div>
+        <div class="decision" style="width: 70px; height: 70px;"><span style="font-size: 8px;">¿Bóveda desbloqueada?</span></div>
+        <div class="grid grid-cols-2 gap-2 w-full" style="margin-top: 2px;">
+          <div class="flex flex-col items-center gap-1">
+            <div class="lbl-amber">NO</div>
+            <span class="node node-dim">LOCKED</span>
+            <span class="arr" style="font-size: 10px;">→</span>
+            <span class="node node-green">READY</span>
+          </div>
+          <div class="flex flex-col items-center gap-1">
+            <div class="lbl-amber">SÍ</div>
+            <span class="node node-green">READY</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="absolute" style="bottom: 10px; left: 20px; right: 20px; display: flex; gap: 12px; font-family: var(--font-num); font-size: 9px; color: var(--primary-dim); letter-spacing: 0.05em; border-top: 1px dashed var(--border); padding-top: 6px;">
+      <span><span style="color: var(--accent);">●</span> INICIO</span>
+      <span><span style="color: var(--accent-3);">●</span> DECISIÓN</span>
+      <span><span style="color: var(--primary-dim);">●</span> ESTADO INTERMEDIO</span>
+      <span><span style="color: var(--success);">●</span> ESTADO FINAL</span>
+    </div>
+  </div>
+
+  <!-- RIGHT: notes -->
+  <div class="hud-panel absolute" style="top: 122px; left: 832px; width: 392px; height: 460px; padding: 14px 18px;">
+    <div style="font-family: var(--font-pixel); font-size: 10px; color: var(--accent); letter-spacing: 0.08em; margin-bottom: 12px;">NOTAS DE ARRANQUE</div>
+
+    <div class="note-row"><span class="note-check">✓</span><span>BOOTING carga config, comprueba schema, inicializa DB, comprueba conectividad</span></div>
+    <div class="note-row"><span class="note-check">✓</span><span>No debe mostrar chat interactivo hasta conocer el estado de almacenamiento</span></div>
+    <div class="note-row"><span class="note-check">✓</span><span>Si falla SQLite/IndexedDB: no fingir que datos están disponibles</span></div>
+    <div class="note-row"><span class="note-check">✓</span><span>Si falla API: permitir modo local si existe</span></div>
+    <div class="note-row"><span class="note-check">✓</span><span>Si falla Redis: marcar workers degradados</span></div>
+    <div class="note-row"><span class="note-check">✓</span><span>Si falla LLM: activar heurística</span></div>
+    <div class="note-row"><span class="note-check">✓</span><span>Si falla MCP: mostrar integración desconectada</span></div>
+  </div>
+
+  <!-- Amber note bottom-right -->
+  <div class="absolute" style="bottom: 40px; right: 56px; width: 392px; padding: 8px 12px; border-left: 3px solid var(--accent-3); background: rgba(251,191,36,0.05);">
+    <span style="font-family: var(--font-body); font-size: 11px; color: var(--accent-3); line-height: 1.4;">Cada fallo de dependencia tiene manejo explícito. No hay fallbacks silenciosos.</span>
+  </div>
+
+  <div class="page-footer">
+    <span>CAP. 03 · ARRANQUE</span>
+    <span>12 / 57</span>
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- Árbol de decisión con 3 niveles de profundidad.
+- Estados finales en verde: READY.
+- 7 notas operativas sobre manejo de dependencias.
+- No mostrar chat hasta conocer el estado de almacenamiento.
+- Cada fallo tiene manejo explícito — no fallbacks silenciosos.
+</aside>
+</body>
+</html>

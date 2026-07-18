@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · Anatomía de Respuesta del Agente</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .bubble { display: flex; flex-direction: column; height: 100%; }
+  .bubble-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .avatar32 {
+    width: 32px; height: 32px;
+    background: var(--surface-2);
+    border: 2px solid var(--accent);
+    position: relative;
+    clip-path: polygon(0 4px, 4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+  }
+  .avatar32::before {
+    content: '';
+    position: absolute;
+    top: 12px; left: 6px;
+    width: 20px; height: 4px;
+    background: var(--accent);
+  }
+  .bubble-head .name { font-family: var(--font-heading); font-weight: 600; font-size: 13px; color: var(--primary); }
+  .bubble-head .state { font-family: var(--font-num); font-size: 11px; color: var(--success); display: flex; align-items: center; gap: 4px; }
+  .bubble-head .state::before { content: '●'; color: var(--success); }
+
+  .bubble-body { padding: 8px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+
+  .sec {
+    border: 1.5px solid;
+    background: var(--surface);
+    padding: 6px 10px;
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  .sec.cy { border-color: var(--accent); }
+  .sec.am { border-color: var(--accent-3); }
+  .sec.mg { border-color: var(--accent-2); }
+  .sec-head {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--font-pixel); font-size: 9px; letter-spacing: 0.06em;
+  }
+  .sec-head .num { font-family: var(--font-num); font-size: 9px; color: var(--primary-dim); }
+  .sec.cy .sec-head { color: var(--accent); }
+  .sec.am .sec-head { color: var(--accent-3); }
+  .sec.mg .sec-head { color: var(--accent-2); }
+  .sec-body { font-family: 'Inter', sans-serif; font-size: 11.5px; color: var(--primary); line-height: 1.35; }
+  .sec-body code { font-family: var(--font-num); font-size: 11px; color: var(--accent); background: rgba(34,211,238,0.08); padding: 1px 5px; }
+  .sec-body .mem-id { font-family: var(--font-num); color: var(--accent); font-weight: 600; }
+  .sec-body .mem-date { font-family: var(--font-num); color: var(--primary-dim); }
+
+  .pill-btn {
+    display: inline-block;
+    padding: 3px 8px;
+    border: 1px solid var(--accent-3);
+    color: var(--accent-3);
+    background: rgba(251,191,36,0.08);
+    font-family: var(--font-pixel);
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    margin-right: 4px;
+  }
+  .pill-btn.cancel { color: var(--primary-dim); border-color: var(--border-bright); background: transparent; }
+  .pill-btn.cy { color: var(--accent); border-color: var(--accent); background: rgba(34,211,238,0.08); }
+
+  .rule-row { display: flex; align-items: flex-start; gap: 8px; font-family: 'Inter', sans-serif; font-size: 12px; color: var(--primary); line-height: 1.35; padding: 5px 0; border-bottom: 1px dashed rgba(51,65,85,0.5); }
+  .rule-row:last-child { border-bottom: none; }
+  .rule-row .material-icons { font-size: 14px; color: var(--success); margin-top: 1px; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- HEADER -->
+  <header class="absolute top-7 left-8 right-8">
+    <div class="flex items-end justify-between">
+      <div class="flex items-center gap-4">
+        <span class="pixel-badge">05.4 // ANATOMÍA</span>
+        <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; letter-spacing:0.02em; color:var(--primary);">Anatomía de Respuesta del <span style="color:var(--accent);">Agente</span></h1>
+      </div>
+      <div class="flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+        <span class="material-icons" style="font-size:14px; color:var(--accent);">view_module</span>
+        <span>6 SECCIONES · 0 CAJAS NEGRAS</span>
+      </div>
+    </div>
+    <p style="font-family:'Inter',sans-serif; font-size:14px; color:#94A3B8; margin-top:6px;">Cada respuesta separa 6 secciones — sin cajas negras.</p>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="absolute" style="top:128px; left:32px; right:32px; bottom:50px; display:grid; grid-template-columns: 620px 1fr; gap:24px;">
+
+    <!-- LEFT: bubble mockup -->
+    <section class="hud-panel" style="padding:0; overflow:hidden;">
+      <div class="bubble">
+        <div class="bubble-head">
+          <div class="avatar32"></div>
+          <div>
+            <div class="name">Chat Assistant</div>
+            <div class="state">success</div>
+          </div>
+          <span style="margin-left:auto; font-family:var(--font-num); font-size:9px; color:var(--primary-dim);">RESP #M-247</span>
+        </div>
+        <div class="bubble-body">
+          <!-- 1. TEXTO -->
+          <div class="sec cy">
+            <div class="sec-head"><span>1 · TEXTO NATURAL</span><span class="num">TXT</span></div>
+            <div class="sec-body">Encontré 3 memorias sobre el dentista. Tu próxima cita es el <b style="color:var(--accent);">jueves 17 a las 15:00</b>.</div>
+          </div>
+          <!-- 2. MEMORIAS -->
+          <div class="sec cy">
+            <div class="sec-head"><span>2 · MEMORIAS UTILIZADAS</span><span class="num">2 SOURCES</span></div>
+            <div class="sec-body">
+              <div><span class="mem-id">M-247:</span> Cita dentista 17 Jul 15:00</div>
+              <div><span class="mem-id">M-198:</span> Preferencia reuniones tarde</div>
+            </div>
+          </div>
+          <!-- 3. ACCIÓN -->
+          <div class="sec am">
+            <div class="sec-head"><span>3 · ACCIÓN PROPUESTA</span><span class="num">OPT-IN</span></div>
+            <div class="sec-body">
+              <div>Propongo crear recordatorio 30 min antes</div>
+              <div style="margin-top:4px;">
+                <span class="pill-btn">CONFIRMAR</span>
+                <span class="pill-btn cancel">CANCELAR</span>
+              </div>
+            </div>
+          </div>
+          <!-- 4. ESTADO -->
+          <div class="sec cy">
+            <div class="sec-head"><span>4 · ESTADO</span><span class="num">STATE</span></div>
+            <div class="sec-body">
+              <span style="font-family:var(--font-num); color:var(--accent-3);">● waiting_confirmation</span> &nbsp;— Esperando tu confirmación
+            </div>
+          </div>
+          <!-- 5. HERRAMIENTA -->
+          <div class="sec mg">
+            <div class="sec-head"><span>5 · HERRAMIENTA</span><span class="num">TOOL</span></div>
+            <div class="sec-body">
+              <code>memory.search(query="dentista", limit=5)</code>
+            </div>
+          </div>
+          <!-- 6. CONTROLES -->
+          <div class="sec cy">
+            <div class="sec-head"><span>6 · CONTROLES</span><span class="num">UI</span></div>
+            <div class="sec-body">
+              <span class="pill-btn cy">EDITAR</span>
+              <span class="pill-btn cy">REINTENTAR</span>
+              <span class="pill-btn cy">COPIAR</span>
+              <span class="pill-btn cancel">REPORTAR</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: rules + note -->
+    <section style="display:flex; flex-direction:column; gap:14px;">
+      <div class="hud-panel accent" style="padding:14px 18px; flex:1;">
+        <div class="flex items-center justify-between mb-2">
+          <span style="font-family:var(--font-pixel); font-size:11px; color:var(--accent); letter-spacing:0.08em;">REGLAS DE RESPUESTA</span>
+          <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">6 / 6</span>
+        </div>
+        <div class="rule-row"><span class="material-icons">check</span><span>Texto <b style="color:var(--accent);">SIEMPRE</b> primero</span></div>
+        <div class="rule-row"><span class="material-icons">check</span><span>Memorias con ID + título + fecha</span></div>
+        <div class="rule-row"><span class="material-icons">check</span><span>Acción propuesta es opcional (solo si hay)</span></div>
+        <div class="rule-row"><span class="material-icons">check</span><span>Estado visible en texto accesible</span></div>
+        <div class="rule-row"><span class="material-icons">check</span><span>Herramienta mostrada como código</span></div>
+        <div class="rule-row"><span class="material-icons">check</span><span>Controles siempre disponibles</span></div>
+      </div>
+
+      <div style="background:rgba(251,191,36,0.06); border-left:2px solid var(--accent-3); padding:10px 14px; display:flex; gap:8px; align-items:flex-start;">
+        <span class="material-icons" style="color:var(--accent-3); font-size:16px; margin-top:1px;">visibility</span>
+        <span style="font-family:'Inter',sans-serif; font-size:12px; color:var(--accent-3); line-height:1.4;">El usuario puede revisar <b>QUÉ</b> entendió el sistema, <b>QUÉ</b> memoria utilizó, <b>QUÉ</b> agente actuó, <b>QUÉ</b> herramienta se llamó y <b>CUÁL</b> fue el resultado.</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>CAP. 05 · ANATOMÍA</span>
+    <span style="color:var(--accent);">VNBOT APP FLOW</span>
+    <span>26 / 57</span>
+  </footer>
+
+</div>
+
+<aside data-notes class="hidden">
+  <ul>
+    <li>Cada respuesta del agente separa 6 secciones visibles.</li>
+    <li>Texto natural primero; luego memorias con ID, acción propuesta, estado, herramienta y controles.</li>
+    <li>Acción propuesta es opcional — solo aparece si hay.</li>
+    <li>Herramienta se muestra como código (memory.search en el ejemplo).</li>
+    <li>Sin cajas negras: usuario puede auditar qué memoria y qué herramienta se usaron.</li>
+  </ul>
+</aside>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT UI/UX — Landing + Onboarding</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .sprite { position: relative; background: var(--surface-2); border: 2px solid var(--accent); display:flex; }
+  .sprite .visor { position: absolute; top: 28%; left: 20%; right: 20%; height: 18%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+  .sprite .mouth { position: absolute; bottom: 18%; left: 30%; right: 30%; height: 6px; background: var(--accent-2); opacity: 0.8; }
+  .sprite.amber { border-color: var(--accent-3); }
+  .sprite.amber .visor { background: var(--accent-3); box-shadow: 0 0 12px var(--accent-3); }
+  .sprite.magenta { border-color: var(--accent-2); }
+  .sprite.magenta .visor { background: var(--accent-2); box-shadow: 0 0 12px var(--accent-2); }
+  .sprite.magenta .mouth { background: var(--accent); }
+  .s-128 { width: 128px; height: 128px; }
+  .s-64 { width: 64px; height: 64px; }
+  .pixel-btn { font-family: var(--font-pixel); font-size: 9px; padding: 9px 14px; letter-spacing: 0.08em; text-transform: uppercase; border: 2px solid var(--border-bright); background: var(--surface-2); color: var(--primary-dim); display:inline-flex; align-items:center; gap:6px; }
+  .pixel-btn.primary { border-color: var(--accent); background: var(--accent); color: var(--bg-deep); }
+  .pixel-btn.amber { border-color: var(--accent-3); background: rgba(251,191,36,0.12); color: var(--accent-3); }
+  .pixel-btn.ghost { background: transparent; color: var(--primary-dim); border-color: var(--border); }
+  .nav-link { font-family: var(--font-num); font-size: 10px; letter-spacing: 0.06em; color: var(--primary-dim); }
+  .feat-card { background: var(--bg-deep); border: 1px solid var(--border); padding: 9px 10px; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <!-- Header -->
+  <div style="position:absolute; top:34px; left:80px; right:80px;">
+    <div class="pixel-badge">05.1 // LANDING + ONBOARDING</div>
+    <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; margin-top:10px; letter-spacing:0.01em; color:var(--primary);">Primera Impresión y Setup</h1>
+  </div>
+
+  <!-- Two columns -->
+  <div style="position:absolute; top:128px; left:84px; right:84px; display:flex; gap:32px;">
+
+    <!-- LEFT: LANDING -->
+    <div class="hud-panel" style="width:540px; height:478px; padding:18px; position:relative;">
+      <span class="corner-bracket tl"></span>
+      <span class="corner-bracket tr"></span>
+      <span class="corner-bracket bl"></span>
+      <span class="corner-bracket br"></span>
+
+      <!-- Top bar -->
+      <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:10px; border-bottom:1px solid var(--border);">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="width:18px; height:18px; background:var(--accent); box-shadow:0 0 10px var(--accent);"></div>
+          <span style="font-family:var(--font-pixel); font-size:10px; color:var(--accent);">VNBOT</span>
+        </div>
+        <div style="display:flex; gap:14px;" class="nav-link">
+          <span>DOCS</span><span>GITHUB</span><span>DEMO</span>
+        </div>
+      </div>
+
+      <!-- Hero -->
+      <div style="display:flex; flex-direction:column; align-items:center; padding:14px 0 12px;">
+        <div class="sprite s-128">
+          <div class="visor"></div>
+          <div class="mouth"></div>
+        </div>
+        <h2 style="font-family:var(--font-heading); font-weight:700; font-size:28px; margin-top:12px; text-align:center; line-height:1.1; color:var(--primary);">Memoria personal open source</h2>
+        <p style="font-family:var(--font-body); font-size:12px; color:var(--primary-dim); margin-top:6px; text-align:center;">Captura, interpreta, confirma, ejecuta, audita.</p>
+        <div style="display:flex; gap:8px; margin-top:12px;">
+          <button class="pixel-btn primary">Try Web</button>
+          <button class="pixel-btn amber">Self-host</button>
+          <button class="pixel-btn ghost">Docs</button>
+        </div>
+      </div>
+
+      <!-- Features -->
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; padding-top:10px; border-top:1px solid var(--border);">
+        <div class="feat-card">
+          <i class="material-icons" style="font-size:18px; color:var(--accent);">hub</i>
+          <div style="font-family:var(--font-heading); font-weight:600; font-size:11px; margin-top:4px; color:var(--primary);">Memoria grafo</div>
+          <div style="font-size:10px; color:var(--primary-dim);">Nodos + relaciones</div>
+        </div>
+        <div class="feat-card">
+          <i class="material-icons" style="font-size:18px; color:var(--accent-2);">smart_toy</i>
+          <div style="font-family:var(--font-heading); font-weight:600; font-size:11px; margin-top:4px; color:var(--primary);">Mini-agentes</div>
+          <div style="font-size:10px; color:var(--primary-dim);">7 roles activos</div>
+        </div>
+        <div class="feat-card">
+          <i class="material-icons" style="font-size:18px; color:var(--accent-3);">bolt</i>
+          <div style="font-family:var(--font-heading); font-weight:600; font-size:11px; margin-top:4px; color:var(--primary);">MCP + Skills</div>
+          <div style="font-size:10px; color:var(--primary-dim);">Skills versionadas</div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="position:absolute; bottom:14px; left:18px; right:18px; display:flex; justify-content:space-between; font-family:var(--font-num); font-size:10px; color:var(--primary-dim); letter-spacing:0.06em;">
+        <span>LICENSE: MIT</span>
+        <span style="color:var(--accent-3);">● STATUS: PLANNING</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: ONBOARDING -->
+    <div class="hud-panel accent" style="width:540px; height:478px; padding:18px; position:relative;">
+      <span class="corner-bracket tl"></span>
+      <span class="corner-bracket tr"></span>
+      <span class="corner-bracket bl"></span>
+      <span class="corner-bracket br"></span>
+
+      <!-- Top progress -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim); letter-spacing:0.08em;">PASO 2 DE 4</span>
+        <span style="font-family:var(--font-pixel); font-size:9px; color:var(--accent);">ONBOARDING</span>
+      </div>
+      <div style="display:flex; gap:4px; margin-bottom:10px;">
+        <div style="flex:1; height:8px; background:var(--accent); box-shadow:0 0 8px rgba(34,211,238,0.4);"></div>
+        <div style="flex:1; height:8px; background:var(--surface-2); border:1px solid var(--border);"></div>
+        <div style="flex:1; height:8px; background:var(--surface-2); border:1px solid var(--border);"></div>
+        <div style="flex:1; height:8px; background:var(--surface-2); border:1px solid var(--border);"></div>
+      </div>
+
+      <!-- Stepper -->
+      <div style="display:flex; justify-content:space-between; font-family:var(--font-num); font-size:9px; color:var(--primary-dim); padding:0 2px 12px; letter-spacing:0.04em;">
+        <span style="color:var(--accent);">1.BÓVEDA ✓</span>
+        <span style="color:var(--accent);">2.LLM</span>
+        <span>3.MASCOTA</span>
+        <span>4.PRIMERA MEMORIA</span>
+      </div>
+
+      <!-- Body card -->
+      <div style="background:var(--bg-deep); border:1px solid var(--border); padding:14px 16px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <i class="material-icons" style="font-size:18px; color:var(--accent);">settings</i>
+          <span style="font-family:var(--font-pixel); font-size:10px; color:var(--accent);">PASO 2 · CONFIGURAR LLM</span>
+        </div>
+        <p style="font-size:11px; color:var(--primary-dim); margin-bottom:10px; line-height:1.45;">VNBOT necesita un motor de lenguaje. Puedes elegir un proveedor local o en la nube. Tus datos nunca salen sin tu consentimiento explícito.</p>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="display:flex; align-items:center; gap:8px; padding:7px 10px; background:var(--surface-2); border:1px solid var(--accent);">
+            <span style="width:10px; height:10px; border:2px solid var(--accent); background:var(--accent); border-radius:50%; box-shadow:0 0 8px var(--accent);"></span>
+            <span style="font-size:12px; color:var(--primary);">Ollama local</span>
+            <span style="margin-left:auto; font-family:var(--font-num); font-size:9px; color:var(--success); letter-spacing:0.06em;">RECOMENDADO</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; padding:7px 10px; background:var(--surface-2); border:1px solid var(--border);">
+            <span style="width:10px; height:10px; border:2px solid var(--border-bright); border-radius:50%;"></span>
+            <span style="font-size:12px; color:var(--primary-dim);">OpenAI API</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; padding:7px 10px; background:var(--surface-2); border:1px solid var(--border);">
+            <span style="width:10px; height:10px; border:2px solid var(--border-bright); border-radius:50%;"></span>
+            <span style="font-size:12px; color:var(--primary-dim);">Anthropic API</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Mascot + speech bubble -->
+      <div style="position:absolute; bottom:64px; right:18px; display:flex; align-items:flex-end; gap:8px;">
+        <div style="background:var(--accent); color:var(--bg-deep); font-size:11px; padding:7px 11px; font-family:var(--font-body); font-weight:600; position:relative;">
+          ¿Qué LLM prefieres?
+          <span style="position:absolute; bottom:-3px; right:14px; width:8px; height:8px; background:var(--accent); transform:rotate(45deg);"></span>
+        </div>
+        <div class="sprite s-64">
+          <div class="visor"></div>
+          <div class="mouth"></div>
+        </div>
+      </div>
+
+      <!-- Footer buttons -->
+      <div style="position:absolute; bottom:14px; left:18px; right:18px; display:flex; justify-content:space-between; align-items:center;">
+        <button class="pixel-btn ghost">← Atrás</button>
+        <button class="pixel-btn primary">Siguiente →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <span>CAP. 05 · LANDING+ONBOARD</span>
+    <span>27 / 39</span>
+  </div>
+
+  <aside data-notes class="hidden">
+    <ul>
+      <li>Landing presenta al Guardian como hero con 3 CTAs claros.</li>
+      <li>Onboarding de 4 pasos: Bóveda, LLM, Mascota, Primera memoria.</li>
+      <li>Mascota Chat Assistant acompaña con speech bubble contextual.</li>
+      <li>Cada paso tiene breadcrumb visible y CTA claro.</li>
+      <li>Landing muestra 3 features clave: grafo, agentes, MCP+Skills.</li>
+    </ul>
+  </aside>
+</div>
+</body>
+</html>

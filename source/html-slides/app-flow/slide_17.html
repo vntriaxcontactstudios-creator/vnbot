@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow — Cap. 4 Auth + Bóveda</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .ch-num { font-family: var(--font-pixel); font-size: 96px; line-height: 1; color: var(--success); text-shadow: 0 0 24px rgba(16,185,129,0.4); }
+  .ghost-num { font-family: var(--font-pixel); font-size: 480px; color: rgba(16,185,129,0.035); line-height: 1; letter-spacing: -0.05em; }
+  .ch-title { font-family: var(--font-heading); font-weight: 700; font-size: 48px; letter-spacing: 0.15em; color: var(--primary); }
+  .ch-tag { font-family: var(--font-body); font-size: 18px; color: var(--primary-dim); }
+  .ch-rule { width: 240px; height: 2px; background: var(--success); margin: 0 auto; }
+  .mini-state { font-family: var(--font-num); font-size: 10px; padding: 4px 8px; border: 1px solid currentColor; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl" data-decor style="border-color: var(--success);"></div>
+  <div class="corner-bracket tr" data-decor style="border-color: var(--success);"></div>
+  <div class="corner-bracket bl" data-decor style="border-color: var(--success);"></div>
+  <div class="corner-bracket br" data-decor style="border-color: var(--success);"></div>
+
+  <!-- Ghost watermark -->
+  <div class="absolute ghost-num" data-decor style="top: 100px; right: -40px; pointer-events: none;">04</div>
+
+  <!-- Top-left chapter badge -->
+  <div class="absolute" style="top: 40px; left: 56px;">
+    <span class="pixel-badge success">CAPÍTULO 04 / 10</span>
+  </div>
+
+  <!-- Top-right pixel decoration -->
+  <div class="absolute" data-decor style="top: 40px; right: 56px; display: grid; grid-template-columns: repeat(8, 4px); grid-template-rows: repeat(4, 4px); gap: 4px;">
+    <span style="background: var(--success);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--success);"></span><span style="background: var(--success);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--success);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--success);"></span>
+    <span style="background: var(--surface-2);"></span><span style="background: var(--success);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--success);"></span><span style="background: var(--success);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--success);"></span><span style="background: var(--surface-2);"></span>
+    <span style="background: var(--success);"></span><span style="background: var(--success);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--success);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--success);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--success);"></span>
+    <span style="background: var(--surface-2);"></span><span style="background: var(--success);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--success);"></span><span style="background: var(--success);"></span><span style="background: var(--surface-2);"></span><span style="background: var(--success);"></span><span style="background: var(--surface-2);"></span>
+  </div>
+
+  <!-- Center content -->
+  <div class="absolute" style="top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 100%;">
+    <div class="ch-num">04</div>
+    <div class="ch-rule mt-6"></div>
+    <h1 class="ch-title mt-6">AUTH + BÓVEDA</h1>
+    <p class="ch-tag mt-4">Sesión, desbloqueo y cierre — explícitos y reversibles.</p>
+  </div>
+
+  <!-- Bottom-right 3 mini state-badges -->
+  <div class="absolute" style="bottom: 50px; right: 56px;">
+    <div style="font-family: var(--font-num); font-size: 9px; color: var(--primary-dim); letter-spacing: 0.15em; text-align: right; margin-bottom: 8px;">// FLUJO AUTH</div>
+    <div class="flex items-center gap-2">
+      <span class="mini-state" style="color: var(--primary-dim);">AUTH_REQUIRED</span>
+      <span style="color: var(--border-bright); font-family: var(--font-num);">→</span>
+      <span class="mini-state" style="color: var(--primary-dim);">LOCKED</span>
+      <span style="color: var(--border-bright); font-family: var(--font-num);">→</span>
+      <span class="mini-state" style="color: var(--success);">READY</span>
+    </div>
+  </div>
+
+  <!-- Bottom-left meta -->
+  <div class="absolute" style="bottom: 50px; left: 56px; font-family: var(--font-num); font-size: 11px; color: var(--primary-dim); letter-spacing: 0.1em;">
+    <span style="color: var(--success);">●</span> 5 SLIDES · REGISTRO · LOGIN · MFA · UNLOCK
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- Cap. 4: Auth + Bóveda — sesión, desbloqueo y cierre.
+- Operaciones explícitas y reversibles.
+- MFA opcional: TOTP, WebAuthn, backup codes.
+- Unlock usa passphrase de bóveda (no contraseña de cuenta).
+- Sesión preservada entre recargas si bóveda desbloqueada.
+</aside>
+</body>
+</html>

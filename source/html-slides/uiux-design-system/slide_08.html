@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT — Anti-patrones y Restricciones</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .dont-card {
+    width: 100%;
+    height: 142px;
+    background: #111827;
+    border: 2px solid #EF4444;
+    clip-path: polygon(0 10px, 10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px));
+    padding: 12px 14px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .dont-card .head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .dont-card .head i {
+    color: #EF4444;
+    font-size: 22px;
+  }
+  .dont-card .head .num {
+    font-family: var(--font-num);
+    font-size: 10px;
+    color: #475569;
+    letter-spacing: 0.1em;
+    margin-left: auto;
+  }
+  .dont-card .t {
+    font-family: var(--font-pixel);
+    font-size: 11px;
+    color: #EF4444;
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .dont-card .d {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: #E5F1FF;
+    line-height: 1.4;
+  }
+  .dont-card::after {
+    content: '';
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 6px; height: 6px;
+    background: #EF4444;
+    box-shadow: 0 0 6px #EF4444;
+  }
+</style>
+</head>
+<body>
+<div class="slide grid-bg relative">
+  <!-- Corner brackets -->
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- Header -->
+  <div class="absolute" style="top: 28px; left: 56px;">
+    <span class="pixel-badge amber">01.5 // RESTRICCIONES</span>
+    <h1 class="mt-2" style="font-family:var(--font-heading);font-weight:700;font-size:32px;color:#E5F1FF;letter-spacing:0.02em;">
+      Anti-patrones y Restricciones
+    </h1>
+    <p class="mt-1" style="font-family:var(--font-body);font-size:14px;color:#94A3B8;">
+      Lo que VNBOT NO usa — por principio, no por gusto
+    </p>
+  </div>
+
+  <!-- Top-right marker -->
+  <div class="absolute" style="top: 38px; right: 56px;">
+    <span style="font-family:var(--font-num);font-size:10px;color:#EF4444;letter-spacing:0.12em;">9 RULES // HARD-NO</span>
+  </div>
+
+  <!-- 3x3 grid -->
+  <div class="absolute grid grid-cols-3 gap-3" style="top: 138px; left: 56px; right: 56px;">
+    <div class="dont-card">
+      <div class="head">
+        <i class="material-icons">blur_on</i>
+        <span class="num">01</span>
+      </div>
+      <div class="t">NO GLASSMORPHISM</div>
+      <div class="d">Sin backdrop-filter ni superficies translúcidas como estructura principal.</div>
+    </div>
+    <div class="dont-card">
+      <div class="head">
+        <i class="material-icons">blur_linear</i>
+        <span class="num">02</span>
+      </div>
+      <div class="t">NO BLUR</div>
+      <div class="d">El blur oculta píxeles y rompe la legibilidad del pixel art.</div>
+    </div>
+    <div class="dont-card">
+      <div class="head">
+        <i class="material-icons">gradient</i>
+        <span class="num">03</span>
+      </div>
+      <div class="t">NO GRADIENTES SUAVES</div>
+      <div class="d">Los degradados difuminados rompen el lenguaje HUD angular.</div>
+    </div>
+    <div class="dont-card">
+      <div class="head">
+        <i class="material-icons">layers</i>
+        <span class="num">04</span>
+      </div>
+      <div class="t">NO SOMBRAS DIFUSAS</div>
+      <div class="d">Los bordes definidos comunican jerarquía, no las sombras.</div>
+    </div>
+    <div class="dont-card">
+      <div class="head">
+        <i class="material-icons">animation</i>
+        <span class="num">05</span>
+      </div>
+      <div class="t">NO ANIMACIONES ALEATORIAS</div>
+      <div class="d">La mascota no se anima si el backend está detenido.</div>
+    </div>
+    <div class="dont-card">
+      <div class="head">
+        <i class="material-icons">text_fields</i>
+        <span class="num">06</span>
+      </div>
+      <div class="t">NO TEXTO EN SPRITES</div>
+      <div class="d">Las etiquetas van fuera de la imagen, como texto accesible.</div>
+    </div>
+    <div class="dont-card">
+      <div class="head">
+        <i class="material-icons">flash_auto</i>
+        <span class="num">07</span>
+      </div>
+      <div class="t">NO FLASHES EN ERROR</div>
+      <div class="d">Sin parpadeos &gt;3Hz por fotosensibilidad.</div>
+    </div>
+    <div class="dont-card">
+      <div class="head">
+        <i class="material-icons">image_search</i>
+        <span class="num">08</span>
+      </div>
+      <div class="t">NO INTERPOLACIÓN BILINEAR</div>
+      <div class="d">En pixel art siempre nearest-neighbor.</div>
+    </div>
+    <div class="dont-card">
+      <div class="head">
+        <i class="material-icons">mouse</i>
+        <span class="num">09</span>
+      </div>
+      <div class="t">NO HOVER COMO ÚNICA AFFORDANCE</div>
+      <div class="d">Touch-first; el hover es bonus, no dependencia.</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <span>CAP. 01 · RESTRICCIONES</span>
+    <span>08 / 39</span>
+  </div>
+</div>
+<aside data-notes class="hidden">
+- 9 restricciones no negociables del sistema.
+- Cada una responde a un principio: claridad, accesibilidad, rendimiento o integridad del pixel art.
+- Sin blur ni glassmorphism: el pixel art debe verse nítido.
+- Sin flashes >3Hz por fotosensibilidad.
+- Touch-first: el hover nunca es la única affordance.
+</aside>
+</body>
+</html>

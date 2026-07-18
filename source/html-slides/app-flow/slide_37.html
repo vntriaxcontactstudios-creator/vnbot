@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · Grafo — Navegación y Edición</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .mini-flow {
+    border: 1.5px solid;
+    background: var(--surface);
+    padding: 10px 12px;
+    clip-path: polygon(0 5px, 5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
+    height: 100%;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .mini-flow.cy { border-color: var(--accent); }
+  .mini-flow.am { border-color: var(--accent-3); }
+  .mini-flow.mg { border-color: var(--accent-2); }
+
+  .mf-head { display: flex; align-items: center; justify-content: space-between; padding-bottom: 5px; border-bottom: 1px dashed rgba(51,65,85,0.6); }
+  .mf-title { font-family: var(--font-pixel); font-size: 10px; letter-spacing: 0.06em; }
+  .mini-flow.cy .mf-title { color: var(--accent); }
+  .mini-flow.am .mf-title { color: var(--accent-3); }
+  .mini-flow.mg .mf-title { color: var(--accent-2); }
+
+  .mf-num { font-family: var(--font-num); font-size: 10px; color: var(--primary-dim); }
+
+  .mf-pipe { display: flex; flex-direction: column; gap: 4px; }
+  .mf-step {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 8px;
+    background: var(--bg);
+    border-left: 2px solid currentColor;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--primary);
+  }
+  .mini-flow.cy .mf-step { color: var(--accent); }
+  .mini-flow.am .mf-step { color: var(--accent-3); }
+  .mini-flow.mg .mf-step { color: var(--accent-2); }
+  .mf-step span.txt { color: var(--primary); flex: 1; }
+
+  .tab-row { display: flex; gap: 4px; flex-wrap: wrap; }
+  .tab-pill {
+    padding: 2px 6px;
+    border: 1px solid currentColor;
+    font-family: var(--font-num);
+    font-size: 9px;
+    color: currentColor;
+  }
+
+  .big-panel {
+    border: 1.5px solid;
+    background: var(--surface);
+    padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 10px;
+    clip-path: polygon(0 5px, 5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
+    height: 100%;
+  }
+  .big-panel.cy { border-color: var(--accent); }
+  .big-panel.mg { border-color: var(--accent-2); }
+
+  .bp-head { display: flex; align-items: center; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px dashed rgba(51,65,85,0.6); }
+  .bp-title { font-family: var(--font-pixel); font-size: 11px; letter-spacing: 0.06em; }
+  .big-panel.cy .bp-title { color: var(--accent); }
+  .big-panel.mg .bp-title { color: var(--accent-2); }
+
+  .bp-step {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px;
+    background: var(--bg);
+    border-left: 2px solid var(--accent);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: var(--primary);
+  }
+  .bp-step .n { font-family: var(--font-num); font-size: 11px; color: var(--accent); font-weight: 600; min-width: 18px; }
+  .big-panel.mg .bp-step { border-left-color: var(--accent-2); }
+  .big-panel.mg .bp-step .n { color: var(--accent-2); }
+
+  .bp-note { font-family: 'Inter', sans-serif; font-size: 11.5px; line-height: 1.4; padding: 6px 10px; margin-top: auto; }
+  .bp-note.cy { color: var(--accent); background: rgba(34,211,238,0.05); border-left: 2px solid var(--accent); }
+  .bp-note.am { color: var(--accent-3); background: rgba(251,191,36,0.05); border-left: 2px solid var(--accent-3); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- HEADER -->
+  <header class="absolute top-7 left-8 right-8">
+    <div class="flex items-end justify-between">
+      <div class="flex items-center gap-4">
+        <span class="pixel-badge">07.4 // GRAFO</span>
+        <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; letter-spacing:0.02em; color:var(--primary);">Grafo — <span style="color:var(--accent);">Navegación y Edición</span></h1>
+      </div>
+      <div class="flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+        <span class="material-icons" style="font-size:14px; color:var(--accent);">hub</span>
+        <span>3 NAVEGACIONES · 2 EDICIONES</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="absolute" style="top:108px; left:32px; right:32px; bottom:50px; display:flex; flex-direction:column; gap:14px;">
+
+    <!-- TOP: 3 mini-flows -->
+    <section style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:14px; height:200px;">
+      <!-- ABRIR GRAFO -->
+      <div class="mini-flow cy">
+        <div class="mf-head">
+          <span class="mf-title">1 · ABRIR GRAFO</span>
+          <span class="mf-num">5 PASOS</span>
+        </div>
+        <div class="mf-pipe">
+          <div class="mf-step"><span class="txt">Memoria</span></div>
+          <div class="mf-step"><span class="txt">Grafo</span></div>
+          <div class="mf-step"><span class="txt">Cargar subgrafo inicial</span></div>
+          <div class="mf-step"><span class="txt">Mostrar leyenda</span></div>
+          <div class="mf-step"><span class="txt">Búsqueda/filtros</span></div>
+        </div>
+      </div>
+
+      <!-- SELECCIONAR NODO -->
+      <div class="mini-flow am">
+        <div class="mf-head">
+          <span class="mf-title">2 · SELECCIONAR NODO</span>
+          <span class="mf-num">5 TABS</span>
+        </div>
+        <div class="mf-pipe">
+          <div class="mf-step"><span class="txt">Click nodo</span></div>
+          <div class="mf-step"><span class="txt">Inspector</span></div>
+          <div class="mf-step" style="background:transparent; border:none; padding:4px 0;">
+            <div class="tab-row">
+              <span class="tab-pill">Resumen</span>
+              <span class="tab-pill">Fuente</span>
+              <span class="tab-pill">Relaciones</span>
+              <span class="tab-pill">Historial</span>
+              <span class="tab-pill">Acciones</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPANDIR -->
+      <div class="mini-flow mg">
+        <div class="mf-head">
+          <span class="mf-title">3 · EXPANDIR</span>
+          <span class="mf-num">5 PASOS</span>
+        </div>
+        <div class="mf-pipe">
+          <div class="mf-step"><span class="txt">Expandir conexiones</span></div>
+          <div class="mf-step"><span class="txt">Solicitar profundidad/nodos</span></div>
+          <div class="mf-step"><span class="txt">Aplicar permisos</span></div>
+          <div class="mf-step"><span class="txt">Mostrar nuevos nodos</span></div>
+          <div class="mf-step"><span class="txt">Indicar truncamiento</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM: 2 columns editar arista + graphify -->
+    <section style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; flex:1;">
+      <!-- EDITAR ARISTA -->
+      <div class="big-panel cy">
+        <div class="bp-head">
+          <span class="bp-title">EDITAR ARISTA</span>
+          <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">5 PASOS · AUDITORÍA</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:5px;">
+          <div class="bp-step"><span class="n">1</span><span>Seleccionar relación</span></div>
+          <div class="bp-step"><span class="n">2</span><span>Ver procedencia <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">(quién, cuándo, cómo)</span></span></div>
+          <div class="bp-step"><span class="n">3</span><span>Editar o invalidar</span></div>
+          <div class="bp-step"><span class="n">4</span><span>Confirmar</span></div>
+          <div class="bp-step"><span class="n">5</span><span>Actualizar índices</span></div>
+        </div>
+        <div class="bp-note cy">Toda edición queda en auditoría.</div>
+      </div>
+
+      <!-- GRAPHIFY -->
+      <div class="big-panel mg">
+        <div class="bp-head">
+          <span class="bp-title">GRAPHIFY (OPCIONAL)</span>
+          <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">5 PASOS · READ-ONLY</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:5px;">
+          <div class="bp-step"><span class="n">1</span><span>Grafo → Fuentes externas</span></div>
+          <div class="bp-step"><span class="n">2</span><span>Ver Graphify conectado</span></div>
+          <div class="bp-step"><span class="n">3</span><span>Consultar solo lectura</span></div>
+          <div class="bp-step"><span class="n">4</span><span>Mostrar origen externo <span style="font-family:var(--font-num); font-size:10px; color:var(--accent-2);">(badge visible)</span></span></div>
+          <div class="bp-step"><span class="n">5</span><span>Crear referencia opcional</span></div>
+        </div>
+        <div class="bp-note am">Los datos externos deben marcarse visualmente como externos. No se mezclan con datos locales en la misma vista.</div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>CAP. 07 · GRAFO</span>
+    <span style="color:var(--accent);">VNBOT APP FLOW</span>
+    <span>37 / 57</span>
+  </footer>
+
+</div>
+
+<aside data-notes class="hidden">
+  <ul>
+    <li>3 flujos de navegación: abrir, seleccionar nodo (5 tabs), expandir.</li>
+    <li>Inspector con 5 tabs: Resumen, Fuente, Relaciones, Historial, Acciones.</li>
+    <li>Expandir aplica permisos antes de mostrar nuevos nodos; indica truncamiento.</li>
+    <li>Editar arista: 5 pasos, toda edición queda en auditoría.</li>
+    <li>Graphify opcional, read-only, datos externos marcados visualmente.</li>
+  </ul>
+</aside>
+</body>
+</html>

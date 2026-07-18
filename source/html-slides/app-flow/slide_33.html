@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · Capítulo 7 — Audio + Búsqueda + Grafo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .chapter-num {
+    font-family: var(--font-pixel);
+    font-size: 96px;
+    color: #A78BFA;
+    text-shadow: 0 0 24px rgba(167,139,250,0.4), 0 0 8px rgba(167,139,250,0.6);
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+  .sep-line {
+    width: 240px;
+    height: 2px;
+    background: #A78BFA;
+    box-shadow: 0 0 12px rgba(167,139,250,0.6);
+    margin: 28px auto;
+  }
+  .chapter-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 48px;
+    letter-spacing: 0.15em;
+    color: var(--primary);
+    text-align: center;
+  }
+  .tagline {
+    font-family: var(--font-body);
+    font-size: 18px;
+    color: #94A3B8;
+    text-align: center;
+    margin-top: 18px;
+  }
+  .corner-bracket.vi { border-color: #A78BFA; }
+
+  .icon-strip {
+    position: absolute;
+    bottom: 46px;
+    right: 60px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .icon-card {
+    width: 52px; height: 52px;
+    border: 1.5px solid #A78BFA;
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    color: #A78BFA;
+    clip-path: polygon(0 5px, 5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
+  }
+  .icon-card .material-icons { font-size: 26px; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg" style="display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative;">
+
+  <!-- Top-left chapter badge -->
+  <div style="position:absolute; top:46px; left:60px;">
+    <span class="pixel-badge" style="color:#A78BFA; border-color:#A78BFA; background:rgba(167,139,250,0.08);">CAPÍTULO 07 / 10</span>
+  </div>
+
+  <!-- Decorative ghost number background -->
+  <div data-decor aria-hidden="true" style="position:absolute; top:90px; right:-40px; font-family:var(--font-pixel); font-size:280px; color:rgba(167,139,250,0.05); line-height:1; pointer-events:none;">07</div>
+
+  <!-- Center content -->
+  <div style="display:flex; flex-direction:column; align-items:center; z-index:2;">
+    <div class="chapter-num">07</div>
+    <div class="sep-line"></div>
+    <h1 class="chapter-title">AUDIO + BÚSQUEDA + GRAFO</h1>
+    <p class="tagline">Multimodalidad y exploración visual.</p>
+  </div>
+
+  <!-- Bottom-right icons -->
+  <div class="icon-strip">
+    <div class="icon-card"><span class="material-icons">mic</span></div>
+    <div class="icon-card"><span class="material-icons">search</span></div>
+    <div class="icon-card"><span class="material-icons">hub</span></div>
+  </div>
+
+  <!-- Corner brackets -->
+  <span class="corner-bracket vi tl" style="top:24px; left:24px;"></span>
+  <span class="corner-bracket vi tr" style="top:24px; right:24px;"></span>
+  <span class="corner-bracket vi bl" style="bottom:24px; left:24px;"></span>
+  <span class="corner-bracket vi br" style="bottom:24px; right:24px;"></span>
+
+  <aside data-notes class="hidden">
+    <ul>
+      <li>Capítulo 7: audio + búsqueda + grafo — multimodalidad.</li>
+      <li>3 modos de entrada/salida: voz, texto-búsqueda, navegación visual.</li>
+      <li>Color violeta (#A78BFA) como color base del capítulo.</li>
+      <li>Política de retención de audio es clave para privacidad.</li>
+      <li>Grafo permite editar aristas y opcionalmente conectar a Graphify.</li>
+    </ul>
+  </aside>
+</div>
+</body>
+</html>

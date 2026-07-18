@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>VNBOT TRD Cover</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  @page { size: 210mm 297mm; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 210mm; height: 297mm;
+    background: #0B1220;
+    font-family: 'Inter', sans-serif;
+    color: #E5F1FF;
+    overflow: hidden;
+  }
+  .cover {
+    position: relative;
+    width: 210mm; height: 297mm;
+    background: #0B1220;
+    overflow: hidden;
+  }
+
+  /* Layer 1: Background grid */
+  .layer-bg {
+    position: absolute; inset: 0; z-index: 1;
+    overflow: hidden;
+    background-image:
+      linear-gradient(rgba(34, 211, 238, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(34, 211, 238, 0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Layer 1b: Watermark */
+  .watermark {
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    transform-origin: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.4em;
+    color: rgba(34, 211, 238, 0.10);
+    white-space: nowrap;
+    z-index: 1;
+  }
+
+  /* Layer 2: Structure */
+  .layer-structure { position: absolute; inset: 0; z-index: 2; }
+  .anchor-line {
+    position: absolute;
+    left: 12%; top: 10%;
+    width: 8px; height: 80%;
+    background: #22D3EE;
+  }
+
+  /* Corner brackets */
+  .corner-bracket {
+    position: absolute;
+    width: 24px; height: 24px;
+    border: 2px solid #22D3EE;
+    z-index: 2;
+  }
+  .cb-tl { top: 24px; left: 24px; border-right: none; border-bottom: none; }
+  .cb-tr { top: 24px; right: 24px; border-left: none; border-bottom: none; }
+  .cb-bl { bottom: 24px; left: 24px; border-right: none; border-top: none; }
+  .cb-br { bottom: 24px; right: 24px; border-left: none; border-top: none; }
+
+  /* Layer 3: Content */
+  .layer-content { position: absolute; inset: 0; z-index: 3; }
+
+  .kicker {
+    position: absolute;
+    left: calc(12% + 40px); top: 14%;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12pt; font-weight: 500;
+    letter-spacing: 0.3em;
+    color: #22D3EE;
+    opacity: 0.85;
+    text-transform: uppercase;
+  }
+  .kicker-sep { color: #94A3B8; margin: 0 12px; }
+
+  .hero {
+    position: absolute;
+    left: calc(12% + 40px); top: 24%;
+    right: 8%;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 64pt;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #E5F1FF;
+  }
+  .hero .accent { color: #22D3EE; }
+
+  .subtitle {
+    position: absolute;
+    left: calc(12% + 40px); top: 44%;
+    right: 8%;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 20pt;
+    line-height: 1.3;
+    color: #94A3B8;
+  }
+
+  .summary {
+    position: absolute;
+    left: calc(12% + 40px); top: 56%;
+    right: 14%;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 12pt;
+    line-height: 1.7;
+    color: #E5F1FF;
+    opacity: 0.85;
+    max-width: 70%;
+  }
+
+  .badges {
+    position: absolute;
+    left: calc(12% + 40px); top: 73%;
+    display: flex; gap: 10px; flex-wrap: wrap;
+  }
+  .pixel-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9pt; font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border: 1.5px solid currentColor;
+    color: #22D3EE;
+  }
+  .pixel-badge.amber { color: #FBBF24; }
+  .pixel-badge.magenta { color: #F472B6; }
+  .pixel-badge.green { color: #10B981; }
+
+  .meta {
+    position: absolute;
+    left: calc(12% + 40px); bottom: 8%;
+    right: 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .meta-block .label {
+    font-size: 8pt; color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 4px;
+  }
+  .meta-block .value {
+    font-size: 11pt; color: #E5F1FF; font-weight: 500;
+  }
+
+  .hud-dot {
+    position: absolute;
+    width: 6px; height: 6px;
+    background: #22D3EE;
+    border-radius: 50%;
+    z-index: 2;
+  }
+  .hud-dot.amber { background: #FBBF24; }
+  .hud-dot.magenta { background: #F472B6; }
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="layer-bg"></div>
+  <div class="watermark">VNBOT · ARCHITECTURE · BACKEND · INFRASTRUCTURE · OBSERVABILITY</div>
+
+  <div class="layer-structure">
+    <div class="anchor-line"></div>
+    <div class="corner-bracket cb-tl"></div>
+    <div class="corner-bracket cb-tr"></div>
+    <div class="corner-bracket cb-bl"></div>
+    <div class="corner-bracket cb-br"></div>
+    <div class="hud-dot" style="top: 14%; left: 10%;"></div>
+    <div class="hud-dot amber" style="top: 14%; left: 10.5%;"></div>
+    <div class="hud-dot magenta" style="top: 14%; left: 11%;"></div>
+  </div>
+
+  <div class="layer-content">
+    <div class="kicker">
+      VNBOT<span class="kicker-sep">//</span>TECHNICAL REQUIREMENTS DOCUMENT<span class="kicker-sep">//</span>v1.0.0-draft
+    </div>
+
+    <div class="hero">
+      VNBOT<br>
+      <span class="accent">TRD</span>
+    </div>
+
+    <div class="subtitle">
+      Arquitectura técnica, stack, módulos y criterios operativos para construir VNBOT como plataforma multiplataforma.
+    </div>
+
+    <div class="summary">
+      El TRD traduce los objetivos de producto del PRD a una arquitectura ejecutable. Especifica capas del sistema, aplicaciones cliente, servicios backend, persistencia, procesamiento asíncrono, multi-LLM, MCP, audio, memoria de grafo, caching, seguridad técnica, observabilidad, Docker y estrategia de escalabilidad. Referencia para construir VNBOT de forma modular y reproducible.
+    </div>
+
+    <div class="badges">
+      <span class="pixel-badge">MODULAR</span>
+      <span class="pixel-badge amber">LOCAL-FIRST</span>
+      <span class="pixel-badge magenta">OBSERVABLE</span>
+      <span class="pixel-badge green">DOCKER-READY</span>
+    </div>
+
+    <div class="meta">
+      <div class="meta-block">
+        <div class="label">Documento</div>
+        <div class="value">02-TRD-VNBOT.md</div>
+      </div>
+      <div class="meta-block">
+        <div class="label">Versión</div>
+        <div class="value">1.0.0-draft</div>
+      </div>
+      <div class="meta-block">
+        <div class="label">Fecha</div>
+        <div class="value">2026-07-16</div>
+      </div>
+      <div class="meta-block">
+        <div class="label">Licencia</div>
+        <div class="value">MIT (prevista)</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

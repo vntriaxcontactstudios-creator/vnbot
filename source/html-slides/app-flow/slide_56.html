@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · 56 / 57 — Mapa de Pruebas E2E</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .test-card { background: var(--surface); border: 1px solid; padding: 10px 12px; height: 100%; clip-path: polygon(0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px)); position:relative; display:flex; flex-direction:column; }
+  .test-id { font-family: var(--font-pixel); font-size: 13px; letter-spacing: 0.04em; }
+  .test-title { font-family: var(--font-heading); font-weight: 600; font-size: 12px; color: var(--primary); margin-top: 4px; line-height: 1.25; }
+  .test-pipe { font-family: var(--font-num); font-size: 9.5px; color: var(--primary-dim); line-height: 1.4; margin-top: 6px; flex:1; }
+  .test-crit { font-family: var(--font-body); font-size: 10px; color: var(--primary-dim); line-height: 1.35; padding-top: 6px; border-top: 1px dashed var(--border); margin-top: 4px; }
+  .pipe-arrow { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl"></div>
+  <div class="corner-bracket tr"></div>
+  <div class="corner-bracket bl"></div>
+  <div class="corner-bracket br"></div>
+
+  <div class="absolute" style="top:32px; left:48px; right:48px; display:flex; justify-content:space-between; align-items:center;">
+    <span class="pixel-badge">10.5 // E2E TESTS</span>
+    <span style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim); letter-spacing:0.08em;">CHAPTER 10 · CI</span>
+  </div>
+  <h1 style="position:absolute; top:62px; left:48px; font-family:var(--font-heading); font-weight:700; font-size:32px; color:var(--primary); letter-spacing:0.02em;">Mapa de Pruebas E2E — 10 Tests Críticos</h1>
+  <p style="position:absolute; top:104px; left:48px; font-family:var(--font-body); font-size:14px; color:var(--primary-dim);">Rutas críticas con cobertura obligatoria en CI.</p>
+
+  <!-- Grid 5x2 -->
+  <div style="position:absolute; top:138px; left:48px; right:48px; display:grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: 1fr 1fr; gap:12px; height:524px;">
+
+    <!-- E2E-01 -->
+    <div class="test-card" style="border-color:var(--success);">
+      <div class="test-id" style="color:var(--success);">E2E-01</div>
+      <div class="test-title">PRIMER ARRANQUE</div>
+      <div class="test-pipe">Abrir <span class="pipe-arrow">→</span> onboarding <span class="pipe-arrow">→</span> bóveda <span class="pipe-arrow">→</span> primer recordatorio <span class="pipe-arrow">→</span> Hoy</div>
+      <div class="test-crit"><i class="material-icons" style="font-size:11px; vertical-align:middle; color:var(--success);">check_circle</i> Usuario llega a Hoy con 1 recordatorio</div>
+    </div>
+
+    <!-- E2E-02 -->
+    <div class="test-card" style="border-color:var(--accent-3);">
+      <div class="test-id" style="color:var(--accent-3);">E2E-02</div>
+      <div class="test-title">RECORDATORIO AMBIGUO</div>
+      <div class="test-pipe">Chat <span class="pipe-arrow">→</span> fecha sin hora <span class="pipe-arrow">→</span> aclaración <span class="pipe-arrow">→</span> confirmación <span class="pipe-arrow">→</span> creación</div>
+      <div class="test-crit"><i class="material-icons" style="font-size:11px; vertical-align:middle; color:var(--accent-3);">help</i> Sistema pregunta, no inventa</div>
+    </div>
+
+    <!-- E2E-03 -->
+    <div class="test-card" style="border-color:var(--accent);">
+      <div class="test-id" style="color:var(--accent);">E2E-03</div>
+      <div class="test-title">RECORDATORIO RECURRENTE</div>
+      <div class="test-pipe">Chat <span class="pipe-arrow">→</span> recurrencia <span class="pipe-arrow">→</span> ocurrencia <span class="pipe-arrow">→</span> completar una <span class="pipe-arrow">→</span> siguiente permanece</div>
+      <div class="test-crit"><i class="material-icons" style="font-size:11px; vertical-align:middle; color:var(--accent);">repeat</i> Próxima ocurrencia generada correctamente</div>
+    </div>
+
+    <!-- E2E-04 -->
+    <div class="test-card" style="border-color:var(--accent-3);">
+      <div class="test-id" style="color:var(--accent-3);">E2E-04</div>
+      <div class="test-title">FALLO DE LLM</div>
+      <div class="test-pipe">Chat <span class="pipe-arrow">→</span> proveedor caído <span class="pipe-arrow">→</span> heurística <span class="pipe-arrow">→</span> propuesta visible</div>
+      <div class="test-crit"><i class="material-icons" style="font-size:11px; vertical-align:middle; color:var(--accent-3);">psychology</i> Fallback funciona, usuario informado</div>
+    </div>
+
+    <!-- E2E-05 -->
+    <div class="test-card" style="border-color:var(--error);">
+      <div class="test-id" style="color:var(--error);">E2E-05</div>
+      <div class="test-title">FALLO DE WORKER</div>
+      <div class="test-pipe">Crear recordatorio <span class="pipe-arrow">→</span> worker detenido <span class="pipe-arrow">→</span> estado pendiente <span class="pipe-arrow">→</span> worker recuperado <span class="pipe-arrow">→</span> delivery</div>
+      <div class="test-crit"><i class="material-icons" style="font-size:11px; vertical-align:middle; color:var(--error);">build</i> No se pierde, no se marca como completado antes</div>
+    </div>
+
+    <!-- E2E-06 -->
+    <div class="test-card" style="border-color:var(--accent-2);">
+      <div class="test-id" style="color:var(--accent-2);">E2E-06</div>
+      <div class="test-title">MEMORIA CONTRADICTORIA</div>
+      <div class="test-pipe">Guardar preferencia <span class="pipe-arrow">→</span> guardar contradicción <span class="pipe-arrow">→</span> comparar <span class="pipe-arrow">→</span> elegir versión</div>
+      <div class="test-crit"><i class="material-icons" style="font-size:11px; vertical-align:middle; color:var(--accent-2);">compare_arrows</i> Conflicto visible, usuario decide</div>
+    </div>
+
+    <!-- E2E-07 -->
+    <div class="test-card" style="border-color:var(--accent);">
+      <div class="test-id" style="color:var(--accent);">E2E-07</div>
+      <div class="test-title">OFFLINE</div>
+      <div class="test-pipe">Desconectar <span class="pipe-arrow">→</span> crear memoria <span class="pipe-arrow">→</span> reconectar <span class="pipe-arrow">→</span> sincronizar <span class="pipe-arrow">→</span> resolver conflicto</div>
+      <div class="test-crit"><i class="material-icons" style="font-size:11px; vertical-align:middle; color:var(--accent);">wifi_off</i> Datos no se pierden, conflicto se resuelve</div>
+    </div>
+
+    <!-- E2E-08 -->
+    <div class="test-card" style="border-color:var(--accent-2);">
+      <div class="test-id" style="color:var(--accent-2);">E2E-08</div>
+      <div class="test-title">MCP</div>
+      <div class="test-pipe">Conectar <span class="pipe-arrow">→</span> handshake <span class="pipe-arrow">→</span> scope <span class="pipe-arrow">→</span> tool call <span class="pipe-arrow">→</span> confirmación <span class="pipe-arrow">→</span> auditoría <span class="pipe-arrow">→</span> revocar</div>
+      <div class="test-crit"><i class="material-icons" style="font-size:11px; vertical-align:middle; color:var(--accent-2);">extension</i> Tool funciona, permisos respetados, revocable</div>
+    </div>
+
+    <!-- E2E-09 -->
+    <div class="test-card" style="border-color:var(--accent);">
+      <div class="test-id" style="color:var(--accent);">E2E-09</div>
+      <div class="test-title">AUDIO</div>
+      <div class="test-pipe">Permiso <span class="pipe-arrow">→</span> grabar <span class="pipe-arrow">→</span> transcribir <span class="pipe-arrow">→</span> revisar <span class="pipe-arrow">→</span> crear recordatorio</div>
+      <div class="test-crit"><i class="material-icons" style="font-size:11px; vertical-align:middle; color:var(--accent);">mic</i> Audio capturado, transcript editable, recordatorio creado</div>
+    </div>
+
+    <!-- E2E-10 -->
+    <div class="test-card" style="border-color:var(--error);">
+      <div class="test-id" style="color:var(--error);">E2E-10</div>
+      <div class="test-title">ELIMINACIÓN</div>
+      <div class="test-pipe">Exportar <span class="pipe-arrow">→</span> reautenticar <span class="pipe-arrow">→</span> eliminar <span class="pipe-arrow">→</span> revocar <span class="pipe-arrow">→</span> verificar ausencia</div>
+      <div class="test-crit"><i class="material-icons" style="font-size:11px; vertical-align:middle; color:var(--error);">delete_forever</i> Cuenta eliminada, integraciones revocadas, datos no accesibles</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>VNBOT // APP FLOW · CAP. 10 · E2E</span>
+    <span>56 / 57</span>
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- 10 tests E2E cubren rutas críticas del app flow.
+- Cobertura obligatoria en CI: cada PR debe pasar los 10.
+- Tipos: arranque, recordatorios (3), fallos (2), memoria, offline, MCP, audio, eliminación.
+- Criterios verificables: estado visible, no pérdida de datos, permisos respetados.
+- Eliminación: cuenta + integraciones + datos deben quedar inaccesibles.
+</aside>
+</body>
+</html>

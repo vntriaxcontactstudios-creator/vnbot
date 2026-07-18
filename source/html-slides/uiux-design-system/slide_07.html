@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT — Marco HUD Angular</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  /* PixelPanel mockup */
+  .mock-panel {
+    width: 440px;
+    height: 300px;
+    background: #111827;
+    border: 2px solid #334155;
+    clip-path: polygon(0 12px, 12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px));
+    padding: 20px;
+    position: relative;
+  }
+  .mock-panel .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed #334155;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+  }
+  .mock-panel .topbar .lbl {
+    font-family: var(--font-pixel);
+    font-size: 9px;
+    color: #22D3EE;
+    letter-spacing: 0.1em;
+  }
+  .mock-panel .topbar .dot {
+    display: flex; gap: 6px;
+  }
+  .mock-panel .topbar .dot span {
+    width: 8px; height: 8px; display: inline-block;
+  }
+  .mock-panel .lines {
+    margin-bottom: 16px;
+  }
+  .mock-panel .lines .ln {
+    height: 8px;
+    background: #1F2937;
+    margin-bottom: 8px;
+  }
+  .mock-panel .lines .ln:nth-child(1) { width: 90%; }
+  .mock-panel .lines .ln:nth-child(2) { width: 70%; }
+  .mock-panel .lines .ln:nth-child(3) { width: 85%; }
+  .mock-panel .mini-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .mock-panel .mini-cards .mc {
+    background: #0B1220;
+    border: 1px solid #334155;
+    padding: 12px;
+    height: 70px;
+    clip-path: polygon(0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+  .mock-panel .mini-cards .mc .t {
+    font-family: var(--font-num);
+    font-size: 9px;
+    color: #475569;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  .mock-panel .mini-cards .mc .v {
+    font-family: var(--font-num);
+    font-size: 18px;
+    color: #22D3EE;
+  }
+  .mock-panel .mini-cards .mc:nth-child(2) .v { color: #F472B6; }
+
+  /* Annotation lines */
+  .ann {
+    position: absolute;
+    font-family: var(--font-num);
+    font-size: 10px;
+    color: #22D3EE;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ann .ln {
+    height: 1px;
+    background: #22D3EE;
+    border-top: 1px dashed #22D3EE;
+    background: transparent;
+  }
+  .ann::before {
+    content: '◆';
+    color: #22D3EE;
+    font-size: 8px;
+  }
+
+  .variant {
+    width: 100%;
+    background: #111827;
+    border: 2px solid #334155;
+    clip-path: polygon(0 10px, 10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px));
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+  }
+  .variant.cyan { border-color: #22D3EE; }
+  .variant.magenta { border-color: #F472B6; }
+  .variant.amber { border-color: #FBBF24; }
+  .variant .icon-box {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #475569;
+    background: #0B1220;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .variant .icon-box i { font-size: 18px; color: #22D3EE; }
+  .variant.magenta .icon-box i { color: #F472B6; }
+  .variant.amber .icon-box i { color: #FBBF24; }
+  .variant .v-title {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    color: #E5F1FF;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+  .variant .v-desc {
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: #94A3B8;
+    line-height: 1.4;
+  }
+  .variant .v-tag {
+    position: absolute;
+    top: 6px; right: 10px;
+    font-family: var(--font-num);
+    font-size: 8px;
+    color: #475569;
+    letter-spacing: 0.1em;
+  }
+</style>
+</head>
+<body>
+<div class="slide grid-bg relative">
+  <!-- Corner brackets -->
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- Header -->
+  <div class="absolute" style="top: 30px; left: 56px;">
+    <span class="pixel-badge">01.4 // MARCO HUD</span>
+    <h1 class="mt-2" style="font-family:var(--font-heading);font-weight:700;font-size:32px;color:#E5F1FF;letter-spacing:0.02em;">
+      Marco HUD Angular
+    </h1>
+    <p class="mt-1" style="font-family:var(--font-body);font-size:13px;color:#94A3B8;">
+      Anatomía del PixelPanel · 5 variantes derivadas
+    </p>
+  </div>
+
+  <!-- Top-right marker -->
+  <div class="absolute" style="top: 38px; right: 56px;">
+    <span style="font-family:var(--font-num);font-size:10px;color:#94A3B8;letter-spacing:0.12em;">CLIP-PATH 12PX · NO SHADOWS</span>
+  </div>
+
+  <!-- Two columns -->
+  <div class="absolute flex gap-6" style="top: 138px; left: 56px; right: 56px;">
+    <!-- LEFT — PixelPanel mockup with annotations -->
+    <div style="width: 540px; position: relative;">
+      <div class="mock-panel" style="margin-left: 60px; margin-top: 20px;">
+        <span class="corner-bracket tl" style="border-color:#22D3EE;" data-decor></span>
+        <span class="corner-bracket tr" style="border-color:#22D3EE;" data-decor></span>
+        <span class="corner-bracket bl" style="border-color:#22D3EE;" data-decor></span>
+        <span class="corner-bracket br" style="border-color:#22D3EE;" data-decor></span>
+        <div class="topbar">
+          <span class="lbl">PIXELPANEL // v1</span>
+          <span class="dot">
+            <span style="background:#22D3EE;"></span>
+            <span style="background:#475569;"></span>
+            <span style="background:#475569;"></span>
+          </span>
+        </div>
+        <div class="lines">
+          <div class="ln"></div>
+          <div class="ln"></div>
+          <div class="ln"></div>
+        </div>
+        <div class="mini-cards">
+          <div class="mc">
+            <div class="t">CPU</div>
+            <div class="v">64%</div>
+          </div>
+          <div class="mc">
+            <div class="t">MEM</div>
+            <div class="v">1.2GB</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Annotations -->
+      <div class="ann" style="top: 30px; left: 8px; width: 110px;">
+        <span>borde 2px</span>
+      </div>
+      <div class="ann" style="top: 80px; left: 8px; width: 130px;">
+        <span>clip-path angular</span>
+      </div>
+      <div class="ann" style="top: 180px; left: 8px; width: 120px;">
+        <span>esquina 12px</span>
+      </div>
+      <div class="ann" style="top: 260px; left: 8px; width: 120px;">
+        <span>padding 20px</span>
+      </div>
+
+      <div style="margin-left: 60px; margin-top: 14px; font-family:var(--font-num);font-size:10px;color:#475569;letter-spacing:0.1em;">
+        FIG · 01 · PIXELPANEL — ANATOMÍA
+      </div>
+    </div>
+
+    <!-- RIGHT — 5 variants -->
+    <div style="width: 600px;" class="flex flex-col gap-2">
+      <div class="variant">
+        <span class="v-tag">V · 01</span>
+        <div class="icon-box"><i class="material-icons">crop_square</i></div>
+        <div>
+          <div class="v-title">PIXELPANEL</div>
+          <div class="v-desc">Contenedor base. Border 2px #334155. Uso: cards, modales, secciones.</div>
+        </div>
+      </div>
+      <div class="variant cyan">
+        <span class="v-tag">V · 02</span>
+        <div class="icon-box"><i class="material-icons">view_conveyor</i></div>
+        <div>
+          <div class="v-title">HUDFRAME</div>
+          <div class="v-desc">Consola técnica con tabs. Border cyan. Uso: Actividad, Integraciones, Diagnóstico.</div>
+        </div>
+      </div>
+      <div class="variant cyan">
+        <span class="v-tag">V · 03</span>
+        <div class="icon-box"><i class="material-icons">flash_on</i></div>
+        <div>
+          <div class="v-title">ACTIONCARD</div>
+          <div class="v-desc">Acción rápida. Icono 32px + label + hotkey. Border cyan. Uso: dashboard, hoy.</div>
+        </div>
+      </div>
+      <div class="variant magenta">
+        <span class="v-tag">V · 04</span>
+        <div class="icon-box"><i class="material-icons">memory</i></div>
+        <div>
+          <div class="v-title">MEMORYCARD</div>
+          <div class="v-desc">Memoria con tags + fecha. Border magenta. Uso: lista de memoria, grafo.</div>
+        </div>
+      </div>
+      <div class="variant amber">
+        <span class="v-tag">V · 05</span>
+        <div class="icon-box"><i class="material-icons">smart_toy</i></div>
+        <div>
+          <div class="v-title">AGENTCARD</div>
+          <div class="v-desc">Agente con sprite + estado. Border color del agente. Uso: selector de agentes.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <span>CAP. 01 · MARCO HUD</span>
+    <span>07 / 39</span>
+  </div>
+</div>
+<aside data-notes class="hidden">
+- PixelPanel es la base: contenedor angular con clip-path 12px.
+- 5 variantes derivadas por color y contenido, no por sombras.
+- Sin sombras difusas — los bordes definen la jerarquía.
+- Cada variante tiene rol semántico (técnico, acción, memoria, agente).
+- Mostrar la anatomía del mockup como referencia canónica.
+</aside>
+</body>
+</html>

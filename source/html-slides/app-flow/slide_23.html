@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · Chat — Vista Inicial</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  /* Chat mockup */
+  .chat-mock { display: flex; flex-direction: column; height: 100%; }
+  .chat-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .chat-header .avatar {
+    width: 48px; height: 48px;
+    background: var(--surface-2);
+    border: 2px solid var(--accent);
+    position: relative;
+    clip-path: polygon(0 6px, 6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%);
+  }
+  .chat-header .avatar::before {
+    content: '';
+    position: absolute;
+    top: 18px; left: 8px;
+    width: 32px; height: 6px;
+    background: var(--accent);
+    box-shadow: 0 0 6px rgba(34,211,238,0.5);
+  }
+  .chat-header .name { font-family: var(--font-heading); font-weight: 600; font-size: 14px; color: var(--primary); }
+  .chat-header .state { font-family: var(--font-num); font-size: 11px; color: var(--accent); display: flex; align-items: center; gap: 4px; }
+  .chat-header .state::before { content: '●'; color: var(--accent); }
+
+  .chat-body { flex: 1; padding: 16px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 14px; }
+  .empty-msg { font-family: 'Inter', sans-serif; font-size: 16px; color: #94A3B8; text-align: center; margin-top: 4px; }
+
+  .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 580px; }
+  .action-card {
+    border: 1.5px solid var(--accent);
+    background: rgba(34,211,238,0.04);
+    padding: 12px 14px;
+    display: flex; flex-direction: column; gap: 6px;
+    clip-path: polygon(0 6px, 6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%);
+  }
+  .action-card .top { display: flex; align-items: center; gap: 8px; }
+  .action-card .material-icons { font-size: 20px; color: var(--accent); }
+  .action-card .label { font-family: var(--font-pixel); font-size: 10px; color: var(--accent); letter-spacing: 0.06em; }
+  .action-card .desc { font-family: 'Inter', sans-serif; font-size: 12px; color: var(--primary); line-height: 1.3; }
+  .action-card .hk { font-family: var(--font-num); font-size: 10px; color: var(--primary-dim); align-self: flex-end; }
+
+  .input-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .input-bar .mic { color: var(--accent-3); font-size: 22px; }
+  .input-bar .field {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 7px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--primary-dim);
+    font-style: italic;
+  }
+  .input-bar .send {
+    background: var(--accent);
+    color: var(--bg);
+    font-family: var(--font-pixel);
+    font-size: 9px;
+    padding: 8px 12px;
+    letter-spacing: 0.08em;
+  }
+
+  /* Notes */
+  .note-row { display: flex; align-items: flex-start; gap: 8px; font-family: 'Inter', sans-serif; font-size: 12px; color: var(--primary); line-height: 1.35; padding: 4px 0; }
+  .note-row .material-icons { font-size: 14px; color: var(--success); margin-top: 1px; }
+  .note-row code { font-family: var(--font-num); color: var(--accent); background: rgba(34,211,238,0.08); padding: 1px 4px; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- HEADER -->
+  <header class="absolute top-7 left-8 right-8">
+    <div class="flex items-end justify-between">
+      <div class="flex items-center gap-4">
+        <span class="pixel-badge">05.1 // VISTA INICIAL</span>
+        <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; letter-spacing:0.02em; color:var(--primary);">Chat — Vista Inicial <span style="color:var(--accent);">Vacía</span></h1>
+      </div>
+      <div class="flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+        <span class="material-icons" style="font-size:14px; color:var(--accent);">forum</span>
+        <span>4 ENTRY POINTS</span>
+      </div>
+    </div>
+    <p style="font-family:'Inter',sans-serif; font-size:14px; color:#94A3B8; margin-top:6px;">4 entry points cuando no hay conversación activa.</p>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="absolute" style="top:128px; left:32px; right:32px; bottom:50px; display:flex; flex-direction:column; gap:14px;">
+
+    <!-- TOP: Chat mockup -->
+    <section class="hud-panel" style="padding:0; height:440px; overflow:hidden;">
+      <div class="chat-mock">
+        <div class="chat-header">
+          <div class="avatar"></div>
+          <div>
+            <div class="name">Chat Assistant</div>
+            <div class="state">idle</div>
+          </div>
+          <div style="margin-left:auto; font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">GMT-4 · CARACAS</div>
+        </div>
+
+        <div class="chat-body">
+          <p class="empty-msg">¿Qué quieres hacer?</p>
+
+          <div class="action-grid">
+            <div class="action-card">
+              <div class="top">
+                <span class="material-icons">edit</span>
+                <span class="label">CAPTURAR ALGO</span>
+              </div>
+              <div class="desc">Guarda una idea, nota o pensamiento</div>
+              <span class="hk">Ctrl+C</span>
+            </div>
+            <div class="action-card">
+              <div class="top">
+                <span class="material-icons">search</span>
+                <span class="label">PREGUNTAR A MI MEMORIA</span>
+              </div>
+              <div class="desc">Busca en lo que ya guardaste</div>
+              <span class="hk">Ctrl+K</span>
+            </div>
+            <div class="action-card">
+              <div class="top">
+                <span class="material-icons">alarm</span>
+                <span class="label">CREAR RECORDATORIO</span>
+              </div>
+              <div class="desc">Programa un aviso</div>
+              <span class="hk">Ctrl+R</span>
+            </div>
+            <div class="action-card">
+              <div class="top">
+                <span class="material-icons">list</span>
+                <span class="label">CREAR LISTA</span>
+              </div>
+              <div class="desc">Organiza tareas o items</div>
+              <span class="hk">Ctrl+L</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-bar">
+          <span class="material-icons mic">mic</span>
+          <div class="field">Escribe o captura...</div>
+          <span class="send">ENVIAR</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM: Annotations -->
+    <section class="hud-panel accent" style="padding:14px 18px;">
+      <div class="flex items-center justify-between mb-2">
+        <span style="font-family:var(--font-pixel); font-size:11px; color:var(--accent); letter-spacing:0.08em;">ANOTACIONES</span>
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">4 / 4</span>
+      </div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px 24px;">
+        <div class="note-row"><span class="material-icons">check</span><span>Cada card tiene hotkey: <code>Ctrl+C</code> capturar, <code>Ctrl+K</code> buscar, <code>Ctrl+R</code> recordatorio, <code>Ctrl+L</code> lista</span></div>
+        <div class="note-row"><span class="material-icons">check</span><span>Las 4 opciones llevan al mismo pipeline de interpretación</span></div>
+        <div class="note-row"><span class="material-icons">check</span><span>Usuario puede escribir libremente sin elegir card</span></div>
+        <div class="note-row"><span class="material-icons">check</span><span>Mascota idle estable hasta que usuario actúa</span></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>CAP. 05 · VISTA INICIAL</span>
+    <span style="color:var(--accent);">VNBOT APP FLOW</span>
+    <span>23 / 57</span>
+  </footer>
+
+</div>
+
+<aside data-notes class="hidden">
+  <ul>
+    <li>Vista inicial vacía con 4 ActionCards como entry points.</li>
+    <li>Hotkeys: Ctrl+C/K/R/L para capturar, buscar, recordatorio, lista.</li>
+    <li>Todos los entry points comparten el mismo pipeline de interpretación.</li>
+    <li>Usuario puede escribir libremente sin elegir card.</li>
+    <li>Mascota idle se mantiene estable hasta que el usuario actúa.</li>
+  </ul>
+</aside>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT UI/UX — Capítulo 8 · Multiplataforma</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .chapter-num {
+    font-family: var(--font-pixel);
+    font-size: 96px;
+    color: #22D3EE;
+    text-shadow: 0 0 24px rgba(34,211,238,0.4), 0 0 8px rgba(34,211,238,0.6);
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+  .sep-line {
+    width: 240px;
+    height: 2px;
+    background: #22D3EE;
+    box-shadow: 0 0 12px rgba(34,211,238,0.6);
+    margin: 28px auto;
+  }
+  .chapter-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 48px;
+    letter-spacing: 0.15em;
+    color: var(--primary);
+    text-align: center;
+  }
+  .tagline {
+    font-family: var(--font-body);
+    font-size: 18px;
+    color: #94A3B8;
+    text-align: center;
+    margin-top: 18px;
+    max-width: 760px;
+  }
+  .corner-bracket.cyan { border-color: #22D3EE; }
+  .pf-icons { position:absolute; bottom:46px; right:60px; display:flex; gap:14px; align-items:center; }
+  .pf-icon-box { width:44px; height:44px; border:1px solid var(--accent); background:rgba(34,211,238,0.08); display:flex; align-items:center; justify-content:center; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg" style="display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative;">
+
+  <!-- Top-left chapter badge -->
+  <div style="position:absolute; top:46px; left:60px;">
+    <span class="pixel-badge">CAPÍTULO 08 / 08</span>
+  </div>
+
+  <!-- Decorative ghost number background -->
+  <div data-decor aria-hidden="true" style="position:absolute; top:90px; right:-60px; font-family:var(--font-pixel); font-size:280px; color:rgba(34,211,238,0.05); line-height:1; pointer-events:none;">08</div>
+
+  <!-- Center content -->
+  <div style="display:flex; flex-direction:column; align-items:center; z-index:2;">
+    <div class="chapter-num">08</div>
+    <div class="sep-line"></div>
+    <h1 class="chapter-title">MULTIPLATAFORMA</h1>
+    <p class="tagline">Un design system, cuatro runtimes.</p>
+  </div>
+
+  <!-- Bottom-right platform icons -->
+  <div class="pf-icons">
+    <div class="pf-icon-box"><i class="material-icons" style="font-size:24px; color:var(--accent);">desktop_windows</i></div>
+    <div class="pf-icon-box"><i class="material-icons" style="font-size:24px; color:var(--accent);">phone_android</i></div>
+    <div class="pf-icon-box"><i class="material-icons" style="font-size:24px; color:var(--accent);">terminal</i></div>
+    <div class="pf-icon-box"><i class="material-icons" style="font-size:24px; color:var(--accent);">public</i></div>
+  </div>
+
+  <!-- Corner brackets -->
+  <span class="corner-bracket cyan tl" style="top:24px; left:24px;"></span>
+  <span class="corner-bracket cyan tr" style="top:24px; right:24px;"></span>
+  <span class="corner-bracket cyan bl" style="bottom:24px; left:24px;"></span>
+  <span class="corner-bracket cyan br" style="bottom:24px; right:24px;"></span>
+
+  <aside data-notes class="hidden">
+    <ul>
+      <li>Mismo lenguaje visual adaptado a 4 runtimes.</li>
+      <li>Cada runtime con sus restricciones únicas.</li>
+      <li>Web/PWA como base compartida.</li>
+      <li>Desktop añade atajos globales; APK prioriza touch.</li>
+      <li>CLI usa ASCII art para la mascota.</li>
+    </ul>
+  </aside>
+</div>
+</body>
+</html>

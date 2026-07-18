@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT · Catálogo de Cards</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .card-catalog {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    height: 100%;
+  }
+  .cat-card {
+    display: flex; flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+  }
+  .cat-head {
+    padding: 8px 12px;
+    border-bottom: 1px solid currentColor;
+    display:flex; align-items:center; justify-content:space-between;
+    background: rgba(255,255,255,0.02);
+  }
+  .cat-name {
+    font-family: var(--font-pixel);
+    font-size: 9px;
+    color: currentColor;
+    letter-spacing: 0.08em;
+  }
+  .cat-num { font-family: var(--font-num); font-size: 9px; color: var(--primary-dim); }
+
+  .cat-sample {
+    flex: 1;
+    background: #050912;
+    padding: 12px;
+    display: flex; flex-direction: column; gap: 8px;
+    min-height: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .cat-spec {
+    padding: 8px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .cat-spec .line { font-family: var(--font-num); font-size: 10px; color: var(--primary-dim); display:flex; gap:6px; align-items:center; line-height:1.5; }
+  .cat-spec .line .k { color: var(--accent); }
+  .cat-uso {
+    padding: 8px 12px;
+    background: rgba(34,211,238,0.04);
+  }
+  .cat-uso .lbl { font-family: var(--font-pixel); font-size: 7px; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 3px; }
+  .cat-uso .txt { font-family: 'Inter', sans-serif; font-size: 11px; color: var(--primary); line-height:1.3; }
+
+  /* Sample visual primitives */
+  .s-pp-head { font-family: var(--font-pixel); font-size: 7px; color: var(--accent); padding: 3px 6px; background: rgba(34,211,238,0.08); border:1px solid var(--border); display:inline-block; }
+  .s-line { height: 6px; background: var(--surface-2); border: 1px solid var(--border); }
+  .s-line.w60 { width:60%; } .s-line.w80 { width:80%; } .s-line.w100 { width:100%; }
+  .s-blocks { display:flex; gap:6px; } .s-blocks > div { flex:1; height:22px; background: var(--surface); border:1px solid var(--border); }
+
+  .s-tabs { display:flex; gap:4px; }
+  .s-tab { padding:3px 6px; font-family:var(--font-pixel); font-size:6px; color:#94A3B8; border:1px solid var(--border); }
+  .s-tab.active { color: var(--accent); border-color: var(--accent); background: rgba(34,211,238,0.08); }
+  .s-table { display:flex; flex-direction:column; gap:3px; }
+  .s-table .row { display:grid; grid-template-columns: 1fr 30px; gap:6px; }
+  .s-table .row > div { height:6px; background: var(--surface-2); border:1px solid var(--border); }
+  .s-table .row.head > div { background: rgba(34,211,238,0.2); }
+
+  .s-action-icon { font-size: 32px; color: var(--accent); }
+  .s-action-label { font-family: var(--font-pixel); font-size: 8px; color: var(--primary); letter-spacing: 0.08em; }
+  .s-hotkey { font-family: var(--font-num); font-size: 9px; color: var(--accent-3); border:1px solid var(--accent-3); padding:1px 5px; display:inline-block; }
+
+  .s-tag { font-family: var(--font-pixel); font-size: 7px; color: var(--accent-2); border:1px solid var(--accent-2); padding:2px 5px; background: rgba(244,114,182,0.08); display:inline-block; }
+  .s-mem-text { font-family: 'Inter',sans-serif; font-size: 11px; color: var(--primary); }
+  .s-mem-date { font-family: var(--font-num); font-size: 9px; color: #94A3B8; }
+  .s-mem-tags { display:flex; gap:4px; flex-wrap:wrap; }
+
+  .s-agent-thumb { width:40px; height:40px; background:#050912; border:2px solid var(--accent-3); display:flex; align-items:center; justify-content:center; clip-path:polygon(0 4px,4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%); position:relative; }
+  .s-agent-thumb .visor { width:22px; height:5px; background:var(--accent-3); box-shadow:0 0 4px var(--accent-3); }
+  .s-agent-thumb .acc { position:absolute; top:-2px; right:-2px; width:8px; height:8px; background:var(--accent-3); }
+  .s-agent-name { font-family: var(--font-pixel); font-size: 8px; color: var(--accent-3); letter-spacing: 0.08em; }
+  .s-agent-status { font-family: var(--font-num); font-size: 10px; color: var(--success); }
+  .s-agent-last { font-family: var(--font-num); font-size: 9px; color: #94A3B8; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- HEADER -->
+  <header class="absolute top-7 left-8 right-8">
+    <div class="flex items-end justify-between">
+      <div class="flex items-center gap-4">
+        <span class="pixel-badge">04.2 // CARDS</span>
+        <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; letter-spacing:0.02em; color:var(--primary);">Catálogo de Componentes <span style="color:var(--accent);">Card</span></h1>
+      </div>
+      <div class="flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+        <span class="material-icons" style="font-size:14px; color:var(--accent);">style</span>
+        <span>5 TIPOS · BASE DEL SISTEMA MODULAR</span>
+      </div>
+    </div>
+    <p style="font-family:'Inter',sans-serif; font-size:14px; color:#94A3B8; margin-top:6px;">5 tipos reutilizables — base del sistema modular.</p>
+  </header>
+
+  <!-- CARDS GRID -->
+  <main class="absolute" style="top:130px; left:32px; right:32px; bottom:50px;">
+    <div class="card-catalog">
+
+      <!-- 1 PIXELPANEL -->
+      <div class="hud-panel cat-card" style="color:var(--border-bright); border-color:var(--border-bright);">
+        <div class="cat-head"><span class="cat-name">PIXELPANEL</span><span class="cat-num">01/05</span></div>
+        <div class="cat-sample">
+          <div><span class="s-pp-head">PANEL</span></div>
+          <div class="s-line w100"></div>
+          <div class="s-line w80"></div>
+          <div class="s-line w60"></div>
+          <div class="s-blocks"><div></div><div></div></div>
+        </div>
+        <div class="cat-spec">
+          <div class="line"><span class="k">border:</span> 2px #334155</div>
+          <div class="line"><span class="k">padding:</span> 16px</div>
+          <div class="line"><span class="k">clip-path:</span> angular 12px</div>
+        </div>
+        <div class="cat-uso"><div class="lbl">USO</div><div class="txt">Contenedor base universal</div></div>
+      </div>
+
+      <!-- 2 HUDFRAME -->
+      <div class="hud-panel accent cat-card" style="color:var(--accent);">
+        <div class="cat-head"><span class="cat-name">HUDFRAME</span><span class="cat-num">02/05</span></div>
+        <div class="cat-sample">
+          <div class="s-tabs">
+            <span class="s-tab active">[ACTIVITY]</span>
+            <span class="s-tab">[LOGS]</span>
+            <span class="s-tab">[METRICS]</span>
+          </div>
+          <div class="s-table">
+            <div class="row head"><div></div><div></div></div>
+            <div class="row"><div></div><div></div></div>
+            <div class="row"><div></div><div></div></div>
+          </div>
+        </div>
+        <div class="cat-spec">
+          <div class="line"><span class="k">border:</span> 2px #22D3EE</div>
+          <div class="line"><span class="k">tabs:</span> internas</div>
+          <div class="line"><span class="k">header:</span> dot de estado</div>
+        </div>
+        <div class="cat-uso"><div class="lbl">USO</div><div class="txt">Actividad, Integraciones, Diagnóstico</div></div>
+      </div>
+
+      <!-- 3 ACTIONCARD -->
+      <div class="hud-panel accent cat-card" style="color:var(--accent);">
+        <div class="cat-head"><span class="cat-name">ACTIONCARD</span><span class="cat-num">03/05</span></div>
+        <div class="cat-sample" style="align-items:center; justify-content:center;">
+          <span class="material-icons s-action-icon">add</span>
+          <span class="s-action-label">CAPTURAR</span>
+          <span class="s-hotkey">Ctrl+N</span>
+        </div>
+        <div class="cat-spec">
+          <div class="line"><span class="k">click target:</span> 44px min</div>
+          <div class="line"><span class="k">hover:</span> border bright</div>
+          <div class="line"><span class="k">active:</span> inset</div>
+        </div>
+        <div class="cat-uso"><div class="lbl">USO</div><div class="txt">Dashboard, accesos rápidos</div></div>
+      </div>
+
+      <!-- 4 MEMORYCARD -->
+      <div class="hud-panel magenta cat-card" style="color:var(--accent-2);">
+        <div class="cat-head"><span class="cat-name">MEMORYCARD</span><span class="cat-num">04/05</span></div>
+        <div class="cat-sample">
+          <div><span class="s-tag">TASK</span></div>
+          <div class="s-mem-text">Llamar al dentista jueves</div>
+          <div class="s-mem-date">17 Jul · 14:00</div>
+          <div class="s-mem-tags">
+            <span class="s-tag">salud</span>
+            <span class="s-tag">telef</span>
+          </div>
+        </div>
+        <div class="cat-spec">
+          <div class="line"><span class="k">border:</span> 2px #F472B6</div>
+          <div class="line"><span class="k">tags:</span> pixel-badge</div>
+          <div class="line"><span class="k">hover:</span> eleva 1px</div>
+        </div>
+        <div class="cat-uso"><div class="lbl">USO</div><div class="txt">Lista de memoria, resultados búsqueda</div></div>
+      </div>
+
+      <!-- 5 AGENTCARD -->
+      <div class="hud-panel cat-card" style="color:var(--accent-3); border-color:var(--accent-3);">
+        <div class="cat-head"><span class="cat-name">AGENTCARD</span><span class="cat-num">05/05</span></div>
+        <div class="cat-sample" style="align-items:center;">
+          <div class="s-agent-thumb"><div class="visor"></div><div class="acc"></div></div>
+          <div class="s-agent-name">BEACON</div>
+          <div class="s-agent-status">● idle</div>
+          <div class="s-agent-last">hace 3m</div>
+        </div>
+        <div class="cat-spec">
+          <div class="line"><span class="k">border:</span> color del agente</div>
+          <div class="line"><span class="k">content:</span> sprite + estado</div>
+          <div class="line"><span class="k">click:</span> abre detalle</div>
+        </div>
+        <div class="cat-uso"><div class="lbl">USO</div><div class="txt">Selector de agentes, grid</div></div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>CAP. 04 · CARDS</span>
+    <span style="color:var(--accent);">VNBOT UI/UX · DESIGN SYSTEM</span>
+    <span>22 / 39</span>
+  </footer>
+
+</div>
+
+<aside data-notes class="hidden">
+- 5 cards componen toda la UI de VNBOT.
+- PixelPanel es la base — las otras 4 son especializaciones.
+- Patrones de Elementx aplicados a la jerarquía visual.
+- Cada card tiene un rol único — no se mezclan funciones.
+- ActionCard cumple 44px mínimo de click target (WCAG).
+</aside>
+</body>
+</html>

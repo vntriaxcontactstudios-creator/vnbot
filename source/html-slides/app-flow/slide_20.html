@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · Sesión Caducada + Cierre</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .col-panel { padding: 18px 22px; display: flex; flex-direction: column; gap: 12px; }
+  .col-head { display: flex; align-items: center; gap: 12px; padding-bottom: 10px; border-bottom: 1px dashed rgba(51,65,85,0.6); }
+  .col-head .material-icons { font-size: 32px; }
+  .col-title { font-family: var(--font-pixel); font-size: 12px; letter-spacing: 0.08em; }
+  .step-row { display: flex; align-items: center; gap: 10px; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--primary); line-height: 1.35; }
+  .step-num { font-family: var(--font-num); font-size: 11px; color: var(--accent-3); border: 1px solid var(--accent-3); padding: 2px 6px; background: rgba(251,191,36,0.06); min-width: 22px; text-align: center; }
+  .step-num.mg { color: var(--accent-2); border-color: var(--accent-2); background: rgba(244,114,182,0.06); }
+  .check-row { display: flex; align-items: flex-start; gap: 10px; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--primary); line-height: 1.35; }
+  .check-row .material-icons { font-size: 16px; color: var(--accent-2); margin-top: 1px; }
+  .note-strip { display: flex; align-items: flex-start; gap: 8px; padding: 8px 12px; font-family: 'Inter', sans-serif; font-size: 12px; border-left: 2px solid; }
+  .note-strip.cy { color: var(--accent); border-color: var(--accent); background: rgba(34,211,238,0.05); }
+  .note-strip.am { color: var(--accent-3); border-color: var(--accent-3); background: rgba(251,191,36,0.05); }
+  .principle-bar { display: flex; align-items: center; gap: 14px; padding: 16px 24px; }
+  .principle-bar .lbl { font-family: var(--font-pixel); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; flex-shrink: 0; }
+  .principle-bar .body { font-family: 'Inter', sans-serif; font-size: 13px; color: var(--primary); line-height: 1.4; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- HEADER -->
+  <header class="absolute top-7 left-8 right-8">
+    <div class="flex items-end justify-between">
+      <div class="flex items-center gap-4">
+        <span class="pixel-badge amber">04.3 // EDGE CASES</span>
+        <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; letter-spacing:0.02em; color:var(--primary);">Sesión Caducada <span style="color:var(--accent-3);">y Cierre</span></h1>
+      </div>
+      <div class="flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+        <span class="material-icons" style="font-size:14px; color:var(--accent-3);">shield</span>
+        <span>AUTOMATIZAR · PRESERVAR · CONFIRMAR</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="absolute" style="top:108px; left:32px; right:32px; bottom:50px; display:flex; flex-direction:column; gap:14px;">
+
+    <!-- Two columns -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; flex:1;">
+
+      <!-- LEFT: Sesión Caducada -->
+      <section class="hud-panel amber col-panel">
+        <div class="col-head">
+          <span class="material-icons" style="color:var(--accent-3);">schedule</span>
+          <span class="col-title" style="color:var(--accent-3);">SESIÓN CADUCADA</span>
+          <span style="margin-left:auto; font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">7 PASOS</span>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div class="step-row"><span class="step-num">1</span><span>Detectar token expirado</span></div>
+          <div class="step-row"><span class="step-num">2</span><span>Guardar borrador local automáticamente</span></div>
+          <div class="step-row"><span class="step-num">3</span><span><b style="color:var(--accent-3);">NO</b> eliminar información escrita</span></div>
+          <div class="step-row"><span class="step-num">4</span><span>Mostrar <span style="font-family:var(--font-num); color:var(--accent-3);">'Sesión caducada'</span></span></div>
+          <div class="step-row"><span class="step-num">5</span><span>Solicitar login</span></div>
+          <div class="step-row"><span class="step-num">6</span><span>Revalidar workspace</span></div>
+          <div class="step-row"><span class="step-num">7</span><span>Reanudar operación o descartar</span></div>
+        </div>
+
+        <div class="note-strip cy" style="margin-top:auto;">
+          <span class="material-icons" style="font-size:14px;">save</span>
+          <span>El borrador se preserva. El usuario no pierde su trabajo.</span>
+        </div>
+      </section>
+
+      <!-- RIGHT: Cierre de Sesión -->
+      <section class="hud-panel magenta col-panel">
+        <div class="col-head">
+          <span class="material-icons" style="color:var(--accent-2);">logout</span>
+          <span class="col-title" style="color:var(--accent-2);">CIERRE DE SESIÓN</span>
+          <span style="margin-left:auto; font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">5 PASOS</span>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:9px;">
+          <div class="check-row"><span class="material-icons">check</span><span>Revocar sesión remota <span style="font-family:var(--font-num); color:var(--accent-2);">(DELETE /auth/session)</span></span></div>
+          <div class="check-row"><span class="material-icons">check</span><span>Bloquear bóveda local</span></div>
+          <div class="check-row"><span class="material-icons">check</span><span>Limpiar tokens temporales</span></div>
+          <div class="check-row"><span class="material-icons">check</span><span>Mantener datos cifrados locales</span></div>
+          <div class="check-row"><span class="material-icons">check</span><span>Preguntar si eliminar sesión del dispositivo</span></div>
+        </div>
+
+        <div class="note-strip am" style="margin-top:auto;">
+          <span class="material-icons" style="font-size:14px;">lock</span>
+          <span>Datos cifrados se conservan. Sesión se puede reactivar con unlock.</span>
+        </div>
+      </section>
+    </div>
+
+    <!-- Principle bar -->
+    <div class="hud-panel accent principle-bar">
+      <span class="lbl">PRINCIPIO</span>
+      <span class="body">La app <b style="color:var(--accent-3);">nunca</b> debe eliminar automáticamente información escrita por el usuario sin su consentimiento explícito.</span>
+      <span class="material-icons" style="color:var(--accent); font-size:22px; margin-left:auto;">verified_user</span>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>CAP. 04 · EDGE CASES</span>
+    <span style="color:var(--accent);">VNBOT APP FLOW</span>
+    <span>20 / 57</span>
+  </footer>
+
+</div>
+
+<aside data-notes class="hidden">
+  <ul>
+    <li>Caso de borde: token expira mientras el usuario escribe.</li>
+    <li>Sistema guarda borrador automáticamente y reanuda al volver.</li>
+    <li>Cierre voluntario revoca sesión remota pero conserva datos cifrados.</li>
+    <li>Principio rector: nunca eliminar input del usuario sin consentimiento.</li>
+    <li>Autolock configurable protege tras inactividad.</li>
+  </ul>
+</aside>
+</body>
+</html>

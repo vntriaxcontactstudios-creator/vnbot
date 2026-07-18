@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT — Plantillas Base y Escalas</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .tpl-card {
+    background: #111827;
+    border: 2px solid #22D3EE;
+    clip-path: polygon(0 10px, 10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px));
+    padding: 12px 10px 10px;
+    position: relative;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .tpl-card .top-tag {
+    position: absolute;
+    top: 6px; right: 8px;
+    font-family: var(--font-num);
+    font-size: 8px;
+    color: #475569;
+    letter-spacing: 0.1em;
+  }
+  .tpl-card .sprite-box {
+    width: 80px;
+    height: 80px;
+    background: #0B1220;
+    border: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    margin-top: 4px;
+  }
+  /* CSS golem placeholder — same silhouette, different sizes */
+  .golem-16 { width: 16px; height: 16px; position: relative; }
+  .golem-32 { width: 32px; height: 32px; position: relative; }
+  .golem-64 { width: 64px; height: 64px; position: relative; }
+  .golem-128 { width: 80px; height: 80px; position: relative; }
+
+  .golem-16 .body { position:absolute; bottom:0; left:2px; width:12px; height:9px; background:#475569; }
+  .golem-16 .head { position:absolute; top:0; left:4px; width:8px; height:7px; background:#64748B; }
+  .golem-16 .visor { position:absolute; top:2px; left:5px; width:6px; height:2px; background:#22D3EE; box-shadow:0 0 3px #22D3EE; }
+
+  .golem-32 .body { position:absolute; bottom:0; left:4px; width:24px; height:18px; background:#475569; border:1px solid #0B1220; }
+  .golem-32 .head { position:absolute; top:0; left:8px; width:16px; height:14px; background:#64748B; border:1px solid #0B1220; }
+  .golem-32 .visor { position:absolute; top:5px; left:11px; width:10px; height:3px; background:#22D3EE; box-shadow:0 0 4px #22D3EE; }
+
+  .golem-64 .body { position:absolute; bottom:0; left:8px; width:48px; height:36px; background:#475569; border:1px solid #0B1220; }
+  .golem-64 .head { position:absolute; top:0; left:16px; width:32px; height:24px; background:#64748B; border:1px solid #0B1220; }
+  .golem-64 .visor { position:absolute; top:9px; left:22px; width:20px; height:5px; background:#22D3EE; box-shadow:0 0 6px #22D3EE; }
+
+  .golem-128 .body { position:absolute; bottom:0; left:10px; width:60px; height:44px; background:#475569; border:2px solid #0B1220; }
+  .golem-128 .head { position:absolute; top:0; left:20px; width:40px; height:30px; background:#64748B; border:2px solid #0B1220; }
+  .golem-128 .visor { position:absolute; top:11px; left:27px; width:26px; height:6px; background:#22D3EE; box-shadow:0 0 8px #22D3EE; }
+  /* Hover variant — wider, flatter body */
+  .golem-hover { width: 64px; height: 64px; position: relative; }
+  .golem-hover .body { position:absolute; bottom:8px; left:4px; width:56px; height:24px; background:#475569; border:1px solid #0B1220; border-radius: 12px 12px 0 0; }
+  .golem-hover .head { position:absolute; top:24px; left:18px; width:28px; height:20px; background:#64748B; border:1px solid #0B1220; }
+  .golem-hover .visor { position:absolute; top:32px; left:23px; width:18px; height:5px; background:#22D3EE; box-shadow:0 0 6px #22D3EE; }
+  /* Sentinel — square base, antenna */
+  .golem-sentinel { width: 64px; height: 64px; position: relative; }
+  .golem-sentinel .body { position:absolute; bottom:0; left:14px; width:36px; height:36px; background:#475569; border:1px solid #0B1220; }
+  .golem-sentinel .head { position:absolute; bottom:34px; left:24px; width:16px; height:16px; background:#64748B; border:1px solid #0B1220; }
+  .golem-sentinel .visor { position:absolute; bottom:42px; left:28px; width:8px; height:3px; background:#22D3EE; box-shadow:0 0 6px #22D3EE; }
+  .golem-sentinel .antenna { position:absolute; bottom:50px; left:31px; width:2px; height:8px; background:#FBBF24; }
+  .golem-sentinel .antenna::after { content:''; position:absolute; top:-3px; left:-2px; width:6px; height:6px; background:#FBBF24; box-shadow:0 0 6px #FBBF24; }
+  /* Archivist — body + book */
+  .golem-arch { width: 64px; height: 64px; position: relative; }
+  .golem-arch .body { position:absolute; bottom:0; left:10px; width:44px; height:38px; background:#475569; border:1px solid #0B1220; }
+  .golem-arch .head { position:absolute; top:0; left:18px; width:28px; height:22px; background:#64748B; border:1px solid #0B1220; }
+  .golem-arch .visor { position:absolute; top:8px; left:24px; width:16px; height:4px; background:#A78BFA; box-shadow:0 0 6px #A78BFA; }
+  .golem-arch .book { position:absolute; bottom:8px; right:0; width:14px; height:18px; background:#A78BFA; border:1px solid #0B1220; }
+
+  .tpl-card .name {
+    font-family: var(--font-pixel);
+    font-size: 9px;
+    color: #22D3EE;
+    letter-spacing: 0.06em;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .tpl-card .desc {
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: #94A3B8;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .tpl-card .size {
+    position: absolute;
+    bottom: 6px; left: 8px;
+    font-family: var(--font-num);
+    font-size: 9px;
+    color: #FBBF24;
+    letter-spacing: 0.06em;
+  }
+
+  .rule-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .rule-row i {
+    color: #10B981;
+    font-size: 18px;
+  }
+  .rule-row .t {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: #E5F1FF;
+  }
+  .rule-row .t b {
+    color: #22D3EE;
+    font-weight: 600;
+  }
+  .code-block {
+    background: #0B1220;
+    border: 1px solid #334155;
+    padding: 10px 14px;
+    font-family: var(--font-num);
+    font-size: 12px;
+    color: #FBBF24;
+    letter-spacing: 0.04em;
+    margin-top: 12px;
+    clip-path: polygon(0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+  .code-block .c { color: #475569; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg relative">
+  <!-- Corner brackets -->
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- Header -->
+  <div class="absolute" style="top: 26px; left: 56px;">
+    <span class="pixel-badge magenta">02.2 // PLANTILLAS</span>
+    <h1 class="mt-2" style="font-family:var(--font-heading);font-weight:700;font-size:30px;color:#E5F1FF;letter-spacing:0.02em;">
+      Plantillas Base y Escalas
+    </h1>
+    <p class="mt-1" style="font-family:var(--font-body);font-size:13px;color:#94A3B8;">
+      7 plantillas cubren todos los tamaños · 4 reglas de renderizado
+    </p>
+  </div>
+
+  <!-- Top-right marker -->
+  <div class="absolute" style="top: 36px; right: 56px;">
+    <span style="font-family:var(--font-num);font-size:10px;color:#94A3B8;letter-spacing:0.12em;">7 TEMPLATES · 4 RENDER RULES</span>
+  </div>
+
+  <!-- Top section: 7 templates grid -->
+  <div class="absolute grid grid-cols-7 gap-2" style="top: 122px; left: 56px; right: 56px;">
+    <div class="tpl-card">
+      <span class="top-tag">T·01</span>
+      <div class="sprite-box"><div class="golem-16"><div class="body"></div><div class="head"></div><div class="visor"></div></div></div>
+      <div class="name">golem_biped_16</div>
+      <div class="desc">UI emotes</div>
+      <span class="size">16px</span>
+    </div>
+    <div class="tpl-card">
+      <span class="top-tag">T·02</span>
+      <div class="sprite-box"><div class="golem-32"><div class="body"></div><div class="head"></div><div class="visor"></div></div></div>
+      <div class="name">golem_biped_32</div>
+      <div class="desc">Badges, lista agentes</div>
+      <span class="size">32px</span>
+    </div>
+    <div class="tpl-card">
+      <span class="top-tag">T·03</span>
+      <div class="sprite-box"><div class="golem-64"><div class="body"></div><div class="head"></div><div class="visor"></div></div></div>
+      <div class="name">golem_biped_64</div>
+      <div class="desc">Chat, cards</div>
+      <span class="size">64px</span>
+    </div>
+    <div class="tpl-card">
+      <span class="top-tag">T·04</span>
+      <div class="sprite-box"><div class="golem-128"><div class="body"></div><div class="head"></div><div class="visor"></div></div></div>
+      <div class="name">golem_biped_128</div>
+      <div class="desc">Landing, onboarding</div>
+      <span class="size">128px</span>
+    </div>
+    <div class="tpl-card" style="border-color:#F472B6;">
+      <span class="top-tag">T·05</span>
+      <div class="sprite-box"><div class="golem-hover"><div class="body"></div><div class="head"></div><div class="visor"></div></div></div>
+      <div class="name" style="color:#F472B6;">golem_hover_64</div>
+      <div class="desc">Beacon, hover idle</div>
+      <span class="size">64px</span>
+    </div>
+    <div class="tpl-card" style="border-color:#10B981;">
+      <span class="top-tag">T·06</span>
+      <div class="sprite-box"><div class="golem-sentinel"><div class="body"></div><div class="head"></div><div class="visor"></div><div class="antenna"></div></div></div>
+      <div class="name" style="color:#10B981;">golem_sentinel_64</div>
+      <div class="desc">Sentinel, bóveda</div>
+      <span class="size">64px</span>
+    </div>
+    <div class="tpl-card" style="border-color:#A78BFA;">
+      <span class="top-tag">T·07</span>
+      <div class="sprite-box"><div class="golem-arch"><div class="body"></div><div class="head"></div><div class="visor"></div><div class="book"></div></div></div>
+      <div class="name" style="color:#A78BFA;">golem_archivist_64</div>
+      <div class="desc">Archivist, memoria</div>
+      <span class="size">64px</span>
+    </div>
+  </div>
+
+  <!-- Bottom section: Render rules -->
+  <div class="absolute hud-panel" style="top: 340px; left: 56px; right: 56px; height: 308px; padding: 16px 22px;">
+    <div class="flex justify-between items-center mb-1">
+      <span class="pixel-badge">REGLAS DE RENDERIZADO</span>
+      <span style="font-family:var(--font-num);font-size:10px;color:#475569;letter-spacing:0.1em;">FIG · 03</span>
+    </div>
+    <div class="hud-divider"></div>
+    <div class="grid grid-cols-2 gap-x-8">
+      <div>
+        <div class="rule-row">
+          <i class="material-icons">check_circle</i>
+          <span class="t"><b>Escalado nearest-neighbor</b> — sin interpolación bilinear</span>
+        </div>
+        <div class="rule-row">
+          <i class="material-icons">check_circle</i>
+          <span class="t"><b>Movimiento en píxeles enteros</b> — sin subpixel</span>
+        </div>
+      </div>
+      <div>
+        <div class="rule-row">
+          <i class="material-icons">check_circle</i>
+          <span class="t"><b>Pausar animación cuando no es visible</b> — performance</span>
+        </div>
+        <div class="rule-row">
+          <i class="material-icons">check_circle</i>
+          <span class="t"><b>Frame estático de fallback</b> — reduced-motion</span>
+        </div>
+      </div>
+    </div>
+    <div class="code-block">
+      <span class="c">// CSS — pixel-perfect rendering</span><br>
+      image-rendering: pixelated;
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <span>CAP. 02 · PLANTILLAS</span>
+    <span>11 / 39</span>
+  </div>
+</div>
+<aside data-notes class="hidden">
+- 7 plantillas cubren todos los tamaños y tipos de agente.
+- 16px para emotes, 128px para landing — misma silueta base.
+- Variantes hover/sentinel/archivist tienen forma única pero mismo lenguaje.
+- 4 reglas de renderizado: nearest-neighbor, píxeles enteros, pausa off-screen, fallback reduced-motion.
+- CSS: image-rendering: pixelated es la base técnica.
+</aside>
+</body>
+</html>

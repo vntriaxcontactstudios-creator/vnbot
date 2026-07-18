@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT UI/UX — Capítulo 6 · Estados del Sistema</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .chapter-num {
+    font-family: var(--font-pixel);
+    font-size: 96px;
+    color: #EF4444;
+    text-shadow: 0 0 24px rgba(239,68,68,0.4), 0 0 8px rgba(239,68,68,0.6);
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+  .sep-line {
+    width: 240px;
+    height: 2px;
+    background: #EF4444;
+    box-shadow: 0 0 12px rgba(239,68,68,0.6);
+    margin: 28px auto;
+  }
+  .chapter-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 48px;
+    letter-spacing: 0.15em;
+    color: var(--primary);
+    text-align: center;
+  }
+  .tagline {
+    font-family: var(--font-body);
+    font-size: 18px;
+    color: #94A3B8;
+    text-align: center;
+    margin-top: 18px;
+    max-width: 760px;
+  }
+  .corner-bracket.red { border-color: #EF4444; }
+  .state-badges { position:absolute; bottom:46px; right:60px; display:flex; gap:8px; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg" style="display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative;">
+
+  <!-- Top-left chapter badge -->
+  <div style="position:absolute; top:46px; left:60px;">
+    <span class="pixel-badge error">CAPÍTULO 06 / 08</span>
+  </div>
+
+  <!-- Decorative ghost number background -->
+  <div data-decor aria-hidden="true" style="position:absolute; top:90px; right:-60px; font-family:var(--font-pixel); font-size:280px; color:rgba(239,68,68,0.05); line-height:1; pointer-events:none;">06</div>
+
+  <!-- Center content -->
+  <div style="display:flex; flex-direction:column; align-items:center; z-index:2;">
+    <div class="chapter-num">06</div>
+    <div class="sep-line"></div>
+    <h1 class="chapter-title">ESTADOS DEL SISTEMA</h1>
+    <p class="tagline">Loading · empty · error · offline · sync — cada estado visible y significativo.</p>
+  </div>
+
+  <!-- Bottom-right pixel badges -->
+  <div class="state-badges">
+    <span class="pixel-badge">LOADING</span>
+    <span class="pixel-badge magenta">EMPTY</span>
+    <span class="pixel-badge error">ERROR</span>
+    <span class="pixel-badge amber">OFFLINE</span>
+  </div>
+
+  <!-- Corner brackets -->
+  <span class="corner-bracket red tl" style="top:24px; left:24px;"></span>
+  <span class="corner-bracket red tr" style="top:24px; right:24px;"></span>
+  <span class="corner-bracket red bl" style="bottom:24px; left:24px;"></span>
+  <span class="corner-bracket red br" style="bottom:24px; right:24px;"></span>
+
+  <aside data-notes class="hidden">
+    <ul>
+      <li>Capítulo dedicado a estados del sistema.</li>
+      <li>Patrón UI/UX Pro Max: loading/empty/error siempre visibles.</li>
+      <li>Offline y sync conflict como estados críticos.</li>
+      <li>Cada estado tendrá mascota, mensaje y acción de recovery.</li>
+      <li>Color rojo para señalar urgencia y atención.</li>
+    </ul>
+  </aside>
+</div>
+</body>
+</html>

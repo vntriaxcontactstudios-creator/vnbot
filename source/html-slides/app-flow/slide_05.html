@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow — Ciclo Central</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .cycle-step { width: 138px; min-height: 110px; padding: 10px 8px; display: flex; flex-direction: column; gap: 4px; align-items: center; text-align: center; }
+  .cycle-step .step-num { font-family: var(--font-pixel); font-size: 14px; line-height: 1; }
+  .cycle-step .step-label { font-family: var(--font-heading); font-weight: 700; font-size: 11px; letter-spacing: 0.05em; color: var(--primary); }
+  .cycle-step .step-desc { font-family: var(--font-body); font-size: 10px; color: var(--primary-dim); line-height: 1.3; }
+  .cycle-arrow { color: var(--accent); font-family: var(--font-num); font-size: 22px; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 2px; }
+  .role-card { padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+  .role-title { font-family: var(--font-pixel); font-size: 10px; letter-spacing: 0.08em; }
+  .role-body { font-family: var(--font-body); font-size: 12px; color: var(--primary); line-height: 1.4; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl" data-decor></div>
+  <div class="corner-bracket tr" data-decor></div>
+  <div class="corner-bracket bl" data-decor></div>
+  <div class="corner-bracket br" data-decor></div>
+
+  <!-- Header -->
+  <div class="absolute" style="top: 30px; left: 56px; right: 56px; display: flex; justify-content: space-between; align-items: flex-end;">
+    <div>
+      <span class="pixel-badge">01.2 // CICLO</span>
+      <h1 class="mt-2" style="font-family: var(--font-heading); font-weight: 700; font-size: 32px; letter-spacing: 0.02em; color: var(--primary);">Ciclo Central de VNBOT</h1>
+      <p class="mt-1" style="font-family: var(--font-body); font-size: 14px; color: var(--primary-dim); max-width: 800px;">El modelo de IA interpreta y propone. El dominio valida. El sistema de permisos autoriza. El backend registra.</p>
+    </div>
+    <div style="font-family: var(--font-num); font-size: 11px; color: var(--primary-dim); letter-spacing: 0.08em; text-align: right;">
+      <div>7 ETAPAS</div>
+      <div style="color: var(--accent);">// CICLO OPERATIVO</div>
+    </div>
+  </div>
+
+  <!-- Main pipeline container -->
+  <div class="hud-panel accent absolute" style="top: 168px; left: 56px; width: 1168px; height: 280px; padding: 24px 22px;">
+    <div style="font-family: var(--font-num); font-size: 9px; color: var(--accent); letter-spacing: 0.15em; margin-bottom: 16px;">// PIPELINE CIRCULAR · 7 ETAPAS</div>
+    <div class="flex items-stretch justify-between" style="gap: 4px;">
+
+      <div class="hud-panel cycle-step c-cyan">
+        <i class="material-icons" style="color: var(--accent); font-size: 22px;">mic</i>
+        <div class="step-num" style="color: var(--accent);">01</div>
+        <div class="step-label">CAPTURAR</div>
+        <div class="step-desc">Usuario escribe o habla</div>
+      </div>
+      <div class="cycle-arrow">→</div>
+
+      <div class="hud-panel cycle-step c-cyan">
+        <i class="material-icons" style="color: var(--accent); font-size: 22px;">psychology</i>
+        <div class="step-num" style="color: var(--accent);">02</div>
+        <div class="step-label">INTERPRETAR</div>
+        <div class="step-desc">LLM clasifica intención + extrae entidades</div>
+      </div>
+      <div class="cycle-arrow">→</div>
+
+      <div class="hud-panel cycle-step c-cyan">
+        <i class="material-icons" style="color: var(--accent); font-size: 22px;">chat</i>
+        <div class="step-num" style="color: var(--accent);">03</div>
+        <div class="step-label">EXPLICAR</div>
+        <div class="step-desc">Sistema muestra qué entendió</div>
+      </div>
+      <div class="cycle-arrow">→</div>
+
+      <div class="hud-panel cycle-step" style="border-color: var(--accent-3);">
+        <i class="material-icons" style="color: var(--accent-3); font-size: 22px;">verified_user</i>
+        <div class="step-num" style="color: var(--accent-3);">04</div>
+        <div class="step-label">CONFIRMAR</div>
+        <div class="step-desc" style="color: var(--accent-3);">Si hay riesgo, usuario confirma</div>
+      </div>
+      <div class="cycle-arrow" style="color: var(--accent-3);">→</div>
+
+      <div class="hud-panel cycle-step c-cyan">
+        <i class="material-icons" style="color: var(--accent); font-size: 22px;">play_arrow</i>
+        <div class="step-num" style="color: var(--accent);">05</div>
+        <div class="step-label">EJECUTAR</div>
+        <div class="step-desc">Dominio valida + ejecuta acción</div>
+      </div>
+      <div class="cycle-arrow">→</div>
+
+      <div class="hud-panel cycle-step c-cyan">
+        <i class="material-icons" style="color: var(--accent); font-size: 22px;">receipt_long</i>
+        <div class="step-num" style="color: var(--accent);">06</div>
+        <div class="step-label">AUDITAR</div>
+        <div class="step-desc">Backend registra resultado + timeline</div>
+      </div>
+      <div class="cycle-arrow" style="color: var(--success);">→</div>
+
+      <div class="hud-panel cycle-step" style="border-color: var(--success);">
+        <i class="material-icons" style="color: var(--success); font-size: 22px;">replay</i>
+        <div class="step-num" style="color: var(--success);">07</div>
+        <div class="step-label">RECUPERAR / CORREGIR</div>
+        <div class="step-desc" style="color: var(--success);">Si falla, recovery + corrección</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 role panels -->
+  <div class="absolute grid grid-cols-3 gap-4" style="top: 470px; left: 56px; width: 1168px;">
+    <div class="hud-panel role-card c-cyan" style="border-color: var(--accent);">
+      <div class="flex items-center gap-2">
+        <i class="material-icons" style="color: var(--accent); font-size: 18px;">smart_toy</i>
+        <span class="role-title" style="color: var(--accent);">MODELO IA</span>
+      </div>
+      <div class="role-body">Interpreta y propone, no decide.</div>
+    </div>
+    <div class="hud-panel role-card" style="border-color: var(--accent-2);">
+      <div class="flex items-center gap-2">
+        <i class="material-icons" style="color: var(--accent-2); font-size: 18px;">storage</i>
+        <span class="role-title" style="color: var(--accent-2);">DOMINIO</span>
+      </div>
+      <div class="role-body">Valida, ejecuta y persiste.</div>
+    </div>
+    <div class="hud-panel role-card" style="border-color: var(--accent-3);">
+      <div class="flex items-center gap-2">
+        <i class="material-icons" style="color: var(--accent-3); font-size: 18px;">history_edu</i>
+        <span class="role-title" style="color: var(--accent-3);">BACKEND</span>
+      </div>
+      <div class="role-body">Registra resultado, audita y recupera.</div>
+    </div>
+  </div>
+
+  <!-- Amber note -->
+  <div class="absolute" style="bottom: 50px; left: 56px; right: 56px; padding: 10px 14px; border-left: 3px solid var(--accent-3); background: rgba(251,191,36,0.05); display: flex; align-items: center; gap: 10px;">
+    <i class="material-icons" style="color: var(--accent-3); font-size: 18px;">info</i>
+    <span style="font-family: var(--font-body); font-size: 13px; color: var(--accent-3); line-height: 1.4;">El usuario siempre puede revisar qué entendió el sistema, qué memoria utilizó, qué agente actuó, qué herramienta se llamó y cuál fue el resultado.</span>
+  </div>
+
+  <div class="page-footer">
+    <span>CAP. 01 · CICLO</span>
+    <span>05 / 57</span>
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- El ciclo central de VNBOT tiene 7 etapas conectadas linealmente.
+- La etapa CONFIRMAR (4) es condicional — solo si hay riesgo.
+- 3 roles separados: IA propone, Dominio valida, Backend audita.
+- La separación de roles evita que el LLM decida directamente acciones.
+- El usuario siempre puede auditar qué se entendió y qué se ejecutó.
+</aside>
+</body>
+</html>

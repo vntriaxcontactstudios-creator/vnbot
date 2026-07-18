@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT · Grafo de Memoria Visual</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  /* Graph container */
+  .graph-wrap {
+    height: 100%;
+    background: #050912;
+    border: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    clip-path: polygon(0 6px, 6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%);
+    overflow: hidden;
+  }
+  .graph-top {
+    height: 38px; padding: 0 10px;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .graph-top .grp { display:flex; align-items:center; gap:4px; padding:4px 8px; background:#0B1220; border:1px solid var(--border); font-family:var(--font-num); font-size:10px; color:var(--primary-dim); }
+  .graph-top .grp .material-icons { font-size:13px; color:var(--accent); }
+  .graph-top .chip { padding:3px 8px; font-family:var(--font-pixel); font-size:7px; letter-spacing:0.06em; border:1px solid; clip-path: polygon(0 3px, 3px 0, 100% 0, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0 100%); }
+  .chip.cy { color:var(--accent); border-color:var(--accent); background:rgba(34,211,238,0.08); }
+  .chip.am { color:var(--accent-3); border-color:var(--accent-3); background:rgba(251,191,36,0.08); }
+  .chip.mg { color:var(--accent-2); border-color:var(--accent-2); background:rgba(244,114,182,0.08); }
+  .chip.vi { color:#A78BFA; border-color:#A78BFA; background:rgba(167,139,250,0.08); }
+
+  .graph-canvas {
+    flex: 1; position: relative;
+    background-image:
+      linear-gradient(rgba(34,211,238,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(34,211,238,0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+    display: grid; grid-template-columns: 1fr 200px;
+  }
+  .graph-area { position: relative; }
+
+  .node {
+    position: absolute;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: #050912;
+    border: 2px solid currentColor;
+    display: flex; align-items: center; justify-content: center;
+    transform: translate(-50%, -50%);
+  }
+  .node .icon { color: currentColor; font-family: var(--font-pixel); font-size: 10px; }
+  .node .lbl {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 50%; transform: translateX(-50%);
+    font-family: var(--font-pixel); font-size: 9px;
+    color: currentColor; letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .node.cy { color: var(--accent); }
+  .node.am { color: var(--accent-3); }
+  .node.mg { color: var(--accent-2); }
+  .node.vi { color: #A78BFA; }
+  .node.root { width: 64px; height: 64px; }
+  .node.selected {
+    border-width: 4px;
+    box-shadow: 0 0 12px currentColor, 0 0 24px currentColor;
+  }
+
+  .conn {
+    position: absolute;
+    height: 1px;
+    background: var(--accent);
+    transform-origin: 0 0;
+    opacity: 0.7;
+  }
+
+  .detail-panel {
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    padding: 10px;
+    display: flex; flex-direction: column; gap: 6px;
+    overflow: hidden;
+  }
+  .detail-panel .head { font-family: var(--font-pixel); font-size: 9px; color: var(--accent); letter-spacing: 0.06em; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+  .detail-panel .row { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-num); font-size: 10px; color: var(--primary-dim); }
+  .detail-panel .row .v { color: var(--primary); }
+  .detail-panel .row .v.cy { color: var(--accent); }
+  .detail-panel .tags { display: flex; gap: 4px; flex-wrap: wrap; }
+  .detail-panel .tag { font-family: var(--font-pixel); font-size: 7px; padding: 2px 5px; border: 1px solid var(--accent-2); color: var(--accent-2); background: rgba(244,114,182,0.08); }
+  .detail-panel .rel { font-family: 'Inter', sans-serif; font-size: 10px; color: var(--primary); display: flex; align-items: center; gap: 4px; }
+  .detail-panel .rel::before { content:''; width:6px; height:6px; background: var(--accent); border-radius:50%; }
+  .detail-panel .edit { margin-top: auto; padding: 6px; text-align: center; font-family: var(--font-pixel); font-size: 8px; color: var(--accent-3); border: 1px solid var(--accent-3); background: rgba(251,191,36,0.08); letter-spacing: 0.08em; }
+
+  /* right side rules */
+  .rule-row { display: flex; gap: 8px; align-items: flex-start; padding: 7px 0; border-bottom: 1px dashed rgba(51,65,85,0.5); font-family: 'Inter', sans-serif; font-size: 12px; color: var(--primary); line-height: 1.4; }
+  .rule-row:last-child { border-bottom: none; }
+  .rule-row .material-icons { font-size: 14px; color: var(--success); margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- HEADER -->
+  <header class="absolute top-7 left-8 right-8">
+    <div class="flex items-end justify-between">
+      <div class="flex items-center gap-4">
+        <span class="pixel-badge">04.4 // GRAFO</span>
+        <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; letter-spacing:0.02em; color:var(--primary);">Grafo de Memoria <span style="color:var(--accent);">Visual</span></h1>
+      </div>
+      <div class="flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+        <span class="material-icons" style="font-size:14px; color:var(--accent);">hub</span>
+        <span>WIREFRAME · 12 NODOS · 8 CONEXIONES</span>
+      </div>
+    </div>
+    <p style="font-family:'Inter',sans-serif; font-size:14px; color:#94A3B8; margin-top:6px;">Limitado y legible — no radial completo.</p>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="absolute" style="top:130px; left:32px; right:32px; bottom:50px; display:grid; grid-template-columns: 720px 1fr; gap:24px;">
+
+    <!-- LEFT: graph mockup -->
+    <section class="hud-panel" style="padding:8px;">
+      <div class="flex items-center justify-between mb-2 px-1">
+        <span style="font-family:var(--font-pixel); font-size:9px; color:var(--accent); letter-spacing:0.08em;">MEMORIA · VISTA GRAFO</span>
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">12 nodos · tipo: 4 categorías</span>
+      </div>
+
+      <div class="graph-wrap">
+        <!-- top bar -->
+        <div class="graph-top">
+          <div class="grp"><span class="material-icons">remove</span><span>100%</span><span class="material-icons">add</span></div>
+          <div class="grp"><span class="material-icons">view_list</span>LISTA</div>
+          <div class="grp" style="color:var(--accent);"><span class="material-icons">hub</span>GRAFO</div>
+          <div style="margin-left:auto; display:flex; gap:4px;">
+            <span class="chip cy">MEM</span>
+            <span class="chip am">TASK</span>
+            <span class="chip mg">PERSONA</span>
+            <span class="chip vi">EVENTO</span>
+          </div>
+        </div>
+
+        <!-- canvas -->
+        <div class="graph-canvas">
+          <div class="graph-area">
+            <!-- Connections (8 lines) -->
+            <!-- 1. Salud(240,200) → Dentista(120,90): dx=-120,dy=-110,len=163,angle=-137.5° -->
+            <div class="conn" style="left:240px; top:200px; width:163px; transform: rotate(-137.5deg);"></div>
+            <!-- 2. Salud(240,200) → Jueves(380,80): dx=140,dy=-120,len=184,angle=-40.6° -->
+            <div class="conn" style="left:240px; top:200px; width:184px; transform: rotate(-40.6deg);"></div>
+            <!-- 3. Salud(240,200) → Apunte(240,140): dx=0,dy=-60,len=60,angle=-90° -->
+            <div class="conn" style="left:240px; top:200px; width:60px; transform: rotate(-90deg);"></div>
+            <!-- 4. Salud(240,200) → Dr.Pérez(240,310): dx=0,dy=110,len=110,angle=90° -->
+            <div class="conn" style="left:240px; top:200px; width:110px; transform: rotate(90deg);"></div>
+            <!-- 5. Dentista(120,90) → Llamar(120,300): dx=0,dy=210,len=210,angle=90° -->
+            <div class="conn" style="left:120px; top:90px; width:210px; transform: rotate(90deg);"></div>
+            <!-- 6. Jueves(380,80) → Receta(425,180): dx=45,dy=100,len=110,angle=65.8° -->
+            <div class="conn" style="left:380px; top:80px; width:110px; transform: rotate(65.8deg);"></div>
+            <!-- 7. María(240,40) → Apunte(240,140): dx=0,dy=100,len=100,angle=90° -->
+            <div class="conn" style="left:240px; top:40px; width:100px; transform: rotate(90deg);"></div>
+            <!-- 8. Llamar(120,300) → Dr.Pérez(240,310): dx=120,dy=10,len=120,angle=4.8° -->
+            <div class="conn" style="left:120px; top:300px; width:120px; transform: rotate(4.8deg);"></div>
+
+            <!-- Nodes (12) -->
+            <!-- 1. Salud (root, cyan, selected, large) -->
+            <div class="node cy root selected" style="left:240px; top:200px;">
+              <span class="icon">+</span>
+              <span class="lbl">SALUD</span>
+            </div>
+            <!-- 2. Dentista (cyan) -->
+            <div class="node cy" style="left:120px; top:90px;">
+              <span class="icon">●</span>
+              <span class="lbl">DENTISTA</span>
+            </div>
+            <!-- 3. Jueves 15:00 (amber) -->
+            <div class="node am" style="left:380px; top:80px;">
+              <span class="icon">!</span>
+              <span class="lbl">JUEVES 15:00</span>
+            </div>
+            <!-- 4. María (magenta) -->
+            <div class="node mg" style="left:240px; top:40px;">
+              <span class="icon">M</span>
+              <span class="lbl">MARÍA</span>
+            </div>
+            <!-- 5. Standup (violet) -->
+            <div class="node vi" style="left:50px; top:200px;">
+              <span class="icon">▣</span>
+              <span class="lbl">STANDUP</span>
+            </div>
+            <!-- 6. Receta (cyan) -->
+            <div class="node cy" style="left:425px; top:180px;">
+              <span class="icon">★</span>
+              <span class="lbl">RECETA</span>
+            </div>
+            <!-- 7. Llamar (amber) -->
+            <div class="node am" style="left:120px; top:300px;">
+              <span class="icon">!</span>
+              <span class="lbl">LLAMAR</span>
+            </div>
+            <!-- 8. Dr. Pérez (magenta) -->
+            <div class="node mg" style="left:240px; top:310px;">
+              <span class="icon">D</span>
+              <span class="lbl">DR. PÉREZ</span>
+            </div>
+            <!-- 9. Reunión (violet) -->
+            <div class="node vi" style="left:380px; top:300px;">
+              <span class="icon">▣</span>
+              <span class="lbl">REUNIÓN</span>
+            </div>
+            <!-- 10. Tag:salud (cyan) -->
+            <div class="node cy" style="left:55px; top:310px;">
+              <span class="icon">#</span>
+              <span class="lbl">SALUD</span>
+            </div>
+            <!-- 11. Reminder (amber) -->
+            <div class="node am" style="left:425px; top:310px;">
+              <span class="icon">!</span>
+              <span class="lbl">REMINDER</span>
+            </div>
+            <!-- 12. Apunte (cyan) -->
+            <div class="node cy" style="left:240px; top:140px;">
+              <span class="icon">●</span>
+              <span class="lbl">APUNTE</span>
+            </div>
+          </div>
+
+          <!-- detail panel (right side of mockup) -->
+          <div class="detail-panel">
+            <div class="head">DETALLE · NODO</div>
+            <div class="row"><span>NOMBRE</span><span class="v cy">SALUD</span></div>
+            <div class="row"><span>TIPO</span><span class="v cy">memoria</span></div>
+            <div class="row"><span>FECHA</span><span class="v">17 Jul 14:02</span></div>
+            <div class="row" style="flex-direction:column; align-items:flex-start;">
+              <span>TAGS (3)</span>
+              <div class="tags mt-1">
+                <span class="tag">salud</span>
+                <span class="tag">telef</span>
+                <span class="tag">dentista</span>
+              </div>
+            </div>
+            <div class="row" style="flex-direction:column; align-items:flex-start;">
+              <span>RELACIONADAS (2)</span>
+              <div class="rel">Dentista</div>
+              <div class="rel">Llamar jueves</div>
+            </div>
+            <div class="edit">EDITAR ▸</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: rules panel -->
+    <section style="display:flex; flex-direction:column; gap:14px;">
+      <div class="hud-panel" style="padding:14px 16px; flex:1; display:flex; flex-direction:column;">
+        <div class="flex items-center justify-between mb-3">
+          <span style="font-family:var(--font-pixel); font-size:11px; color:var(--accent); letter-spacing:0.08em;">REGLAS DEL GRAFO</span>
+          <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">6 / 6</span>
+        </div>
+
+        <div class="rule-row"><span class="material-icons">check</span><div><span style="color:var(--accent); font-weight:600;">Máximo 12-20 nodos visibles</span> — sobre ese umbral, paginar.</div></div>
+        <div class="rule-row"><span class="material-icons">check</span><div><span style="color:var(--accent); font-weight:600;">Agrupación por tipo (color)</span> — cyan, amber, magenta, violet.</div></div>
+        <div class="rule-row"><span class="material-icons">check</span><div><span style="color:var(--accent); font-weight:600;">Conexiones finas 1px cyan</span> — sin flechas pesadas.</div></div>
+        <div class="rule-row"><span class="material-icons">check</span><div><span style="color:var(--accent); font-weight:600;">Zoom y pan suaves</span> — sin saltos bruscos.</div></div>
+        <div class="rule-row"><span class="material-icons">check</span><div><span style="color:var(--accent); font-weight:600;">Click → panel lateral detalle</span> — sin modal.</div></div>
+        <div class="rule-row"><span class="material-icons" style="color:var(--error);">close</span><div><span style="color:var(--error); font-weight:600;">NO radial completo</span> — reservado para MCP/permisos.</div></div>
+
+        <!-- amber note -->
+        <div class="mt-3 flex items-start gap-2" style="background:rgba(251,191,36,0.06); border-left:2px solid var(--accent-3); padding:8px 10px;">
+          <span class="material-icons" style="color:var(--accent-3); font-size:14px; margin-top:1px;">filter_alt</span>
+          <span style="font-family:'Inter',sans-serif; font-size:12px; color:var(--accent-3);">Si el usuario tiene 100+ memorias, el grafo muestra solo las más conectadas. Resto accesible vía lista.</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>CAP. 04 · GRAFO</span>
+    <span style="color:var(--accent);">VNBOT UI/UX · DESIGN SYSTEM</span>
+    <span>24 / 39</span>
+  </footer>
+
+</div>
+
+<aside data-notes class="hidden">
+- Grafo limitado por diseño a 12-20 nodos visibles.
+- Radial se reserva para permisos MCP — no para memoria.
+- Legibilidad primero — sin saturación visual.
+- Click en nodo abre panel lateral, no modal.
+- 100+ memorias → solo muestra las más conectadas, resto vía lista.
+</aside>
+</body>
+</html>

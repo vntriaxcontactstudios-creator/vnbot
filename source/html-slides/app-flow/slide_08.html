@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow — 12 Estados Globales</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .state-cell { width: 280px; height: 56px; padding: 6px 12px; display: flex; flex-direction: column; justify-content: center; gap: 2px; background: var(--surface); border: 1px solid var(--border); clip-path: polygon(0 8px,8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px)); }
+  .state-name { font-family: var(--font-num); font-size: 12px; font-weight: 700; letter-spacing: 0.04em; }
+  .state-desc { font-family: var(--font-body); font-size: 10px; color: var(--primary-dim); line-height: 1.25; }
+  .s-cyan    .state-name { color: var(--accent);    } .s-cyan    { border-color: var(--accent); }
+  .s-amber   .state-name { color: var(--accent-3);  } .s-amber   { border-color: var(--accent-3); }
+  .s-magenta .state-name { color: var(--accent-2);  } .s-magenta { border-color: var(--accent-2); }
+  .s-green   .state-name { color: var(--success);   } .s-green   { border-color: var(--success); }
+  .s-red     .state-name { color: var(--error);     } .s-red     { border-color: var(--error); }
+  .s-dim     .state-name { color: var(--primary-dim); } .s-dim   { border-color: var(--border-bright); }
+
+  .tnode { background: var(--surface); border: 1px solid currentColor; padding: 4px 8px; font-family: var(--font-num); font-size: 10px; font-weight: 700; letter-spacing: 0.04em; display: inline-block; clip-path: polygon(0 5px,5px 0,calc(100% - 5px) 0,100% 5px,100% calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,0 calc(100% - 5px)); }
+  .tarr { color: var(--border-bright); font-family: var(--font-num); font-size: 14px; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl" data-decor></div>
+  <div class="corner-bracket tr" data-decor></div>
+  <div class="corner-bracket bl" data-decor></div>
+  <div class="corner-bracket br" data-decor></div>
+
+  <!-- Header -->
+  <div class="absolute" style="top: 28px; left: 56px; right: 56px; display: flex; justify-content: space-between; align-items: flex-end;">
+    <div>
+      <span class="pixel-badge magenta">02.1 // ESTADOS</span>
+      <h1 class="mt-2" style="font-family: var(--font-heading); font-weight: 700; font-size: 28px; letter-spacing: 0.02em; color: var(--primary);">12 Estados Globales de la App</h1>
+      <p class="mt-1" style="font-family: var(--font-body); font-size: 13px; color: var(--primary-dim);">Máquina de estados con transiciones explícitas.</p>
+    </div>
+    <div style="font-family: var(--font-num); font-size: 11px; color: var(--primary-dim); letter-spacing: 0.08em; text-align: right;">
+      <div>12 ESTADOS · 6 TIPOS</div>
+      <div style="color: var(--accent-2);">// STATE MACHINE</div>
+    </div>
+  </div>
+
+  <!-- 4x3 grid of states -->
+  <div class="absolute grid grid-cols-4 gap-2" style="top: 122px; left: 56px; width: 1168px;">
+    <div class="state-cell s-cyan"><span class="state-name">BOOTING</span><span class="state-desc">Carga config, comprueba schema, inicializa DB</span></div>
+    <div class="state-cell s-cyan"><span class="state-name">FIRST_RUN</span><span class="state-desc">No existe bóveda, va a onboarding</span></div>
+    <div class="state-cell s-dim"><span class="state-name">AUTH_REQUIRED</span><span class="state-desc">Servidor requiere autenticación</span></div>
+    <div class="state-cell s-dim"><span class="state-name">LOCKED</span><span class="state-desc">Bóveda cerrada, requiere passphrase</span></div>
+
+    <div class="state-cell s-green"><span class="state-name">READY</span><span class="state-desc">Todas capacidades disponibles</span></div>
+    <div class="state-cell s-dim"><span class="state-name">OFFLINE</span><span class="state-desc">Sin conexión, capacidades locales</span></div>
+    <div class="state-cell s-cyan"><span class="state-name">SYNC_PENDING</span><span class="state-desc">Cambios locales sin sincronizar</span></div>
+    <div class="state-cell s-amber"><span class="state-name">DEGRADED_LLM</span><span class="state-desc">LLM no disponible, heurística</span></div>
+
+    <div class="state-cell s-red"><span class="state-name">DEGRADED_WORKER</span><span class="state-desc">API ok, worker no responde</span></div>
+    <div class="state-cell s-magenta"><span class="state-name">MCP_REAUTH_REQUIRED</span><span class="state-desc">MCP requiere reconectar</span></div>
+    <div class="state-cell s-amber"><span class="state-name">MAINTENANCE</span><span class="state-desc">Modo mantenimiento</span></div>
+    <div class="state-cell s-red"><span class="state-name">FATAL_ERROR</span><span class="state-desc">Error crítico, diagnóstico</span></div>
+  </div>
+
+  <!-- Transitions diagram -->
+  <div class="hud-panel absolute" style="top: 320px; left: 56px; width: 1168px; height: 280px; padding: 16px 20px; border-color: var(--accent-2);">
+    <div style="font-family: var(--font-num); font-size: 10px; color: var(--accent-2); letter-spacing: 0.15em; margin-bottom: 14px;">// TRANSICIONES PRINCIPALES · 8 NODOS CLAVE</div>
+
+    <!-- Top row: BOOTING chain -->
+    <div class="flex items-center justify-center gap-3" style="margin-bottom: 12px;">
+      <span class="tnode" style="color: var(--accent);">BOOTING</span>
+      <span class="tarr">→</span>
+      <span class="tnode" style="color: var(--accent);">FIRST_RUN</span>
+      <span class="tarr">→</span>
+      <span style="font-family: var(--font-body); font-size: 10px; color: var(--primary-dim); font-style: italic;">(onboarding)</span>
+    </div>
+
+    <div class="flex items-center justify-center" style="margin-bottom: 8px;">
+      <span class="tarr">↓</span>
+    </div>
+
+    <!-- Mid row: AUTH chain -->
+    <div class="flex items-center justify-center gap-3" style="margin-bottom: 14px;">
+      <span class="tnode" style="color: var(--primary-dim);">BOOTING</span>
+      <span class="tarr">→</span>
+      <span class="tnode" style="color: var(--primary-dim);">AUTH_REQUIRED</span>
+      <span class="tarr">→</span>
+      <span class="tnode" style="color: var(--primary-dim);">LOCKED</span>
+      <span class="tarr">→</span>
+      <span class="tnode" style="color: var(--success);">READY</span>
+    </div>
+
+    <!-- READY center cross -->
+    <div class="flex items-center justify-center gap-2" style="margin-top: 16px;">
+      <div class="flex flex-col items-center gap-1">
+        <span class="tnode" style="color: var(--primary-dim);">OFFLINE</span>
+        <span class="tarr">↕</span>
+      </div>
+      <span class="tarr">→</span>
+      <div class="flex flex-col items-center gap-1">
+        <span class="tnode" style="color: var(--accent);">SYNC_PENDING</span>
+        <span class="tarr">→</span>
+      </div>
+      <span class="tnode" style="color: var(--success); font-size: 12px; padding: 6px 12px;">READY</span>
+      <span class="tarr">↔</span>
+      <div class="flex flex-col items-center gap-1">
+        <span class="tnode" style="color: var(--accent-3);">DEGRADED_LLM</span>
+      </div>
+      <span class="tarr">·</span>
+      <div class="flex flex-col items-center gap-1">
+        <span class="tnode" style="color: var(--error);">DEGRADED_WORKER</span>
+      </div>
+      <span class="tarr">·</span>
+      <div class="flex flex-col items-center gap-1">
+        <span class="tnode" style="color: var(--error);">FATAL_ERROR</span>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-center" style="margin-top: 14px; gap: 14px; font-family: var(--font-num); font-size: 9px; color: var(--primary-dim); letter-spacing: 0.1em;">
+      <span><span style="color: var(--accent);">●</span> CICLO NORMAL</span>
+      <span><span style="color: var(--primary-dim);">●</span> IDLE</span>
+      <span><span style="color: var(--accent-3);">●</span> DEGRADADO</span>
+      <span><span style="color: var(--error);">●</span> ERROR</span>
+      <span><span style="color: var(--success);">●</span> OPERATIVO</span>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>CAP. 02 · ESTADOS</span>
+    <span>08 / 57</span>
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- 12 estados globales organizados en 4 categorías visuales.
+- BOOTING y FIRST_RUN son los estados de arranque.
+- READY es el estado operativo — todas las capacidades disponibles.
+- Estados degradados: LLM (amber), WORKER (red), MCP (magenta).
+- FATAL_ERROR requiere diagnóstico — no hay auto-recuperación.
+</aside>
+</body>
+</html>

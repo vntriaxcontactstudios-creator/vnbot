@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · 52 / 57 — Estados de Error Globales</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .err-mini { background: var(--surface); border: 1px solid; padding: 12px 14px; height: 100%; clip-path: polygon(0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px)); position:relative; }
+  .err-mini.fatal { box-shadow: 0 0 18px rgba(239,68,68,0.25); }
+  .err-title { font-family: var(--font-pixel); font-size: 10px; letter-spacing: 0.06em; margin-top: 4px; }
+  .err-body { font-family: var(--font-body); font-size: 11px; line-height: 1.4; color: var(--primary); margin-top: 6px; }
+  .sev-tag { font-family: var(--font-num); font-size: 9px; color: var(--primary-dim); position:absolute; top:10px; right:12px; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl"></div>
+  <div class="corner-bracket tr"></div>
+  <div class="corner-bracket bl"></div>
+  <div class="corner-bracket br"></div>
+
+  <div class="absolute" style="top:32px; left:48px; right:48px; display:flex; justify-content:space-between; align-items:center;">
+    <span class="pixel-badge">10.1 // ERRORES</span>
+    <span style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim); letter-spacing:0.08em;">CHAPTER 10 · ERROR STATES</span>
+  </div>
+  <h1 style="position:absolute; top:62px; left:48px; font-family:var(--font-heading); font-weight:700; font-size:32px; color:var(--primary); letter-spacing:0.02em;">Estados de Error Globales</h1>
+  <p style="position:absolute; top:104px; left:48px; font-family:var(--font-body); font-size:14px; color:var(--primary-dim);">8 tipos de error. Cada uno con su manejo explícito.</p>
+
+  <!-- Grid 4x2 -->
+  <div style="position:absolute; top:138px; left:48px; right:48px; display:grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: 1fr 1fr; gap:14px; height:520px;">
+
+    <!-- 1. VALIDACIÓN -->
+    <div class="err-mini" style="border-color:var(--accent-3);">
+      <span class="sev-tag">SEV: WARN</span>
+      <i class="material-icons" style="font-size:24px; color:var(--accent-3);">rule</i>
+      <div class="err-title" style="color:var(--accent-3);">VALIDACIÓN</div>
+      <p class="err-body">Mostrar campo y corrección recomendada.</p>
+      <div style="position:absolute; bottom:8px; left:14px; font-family:var(--font-num); font-size:9px; color:var(--primary-dim);">→ field-level</div>
+    </div>
+
+    <!-- 2. AUTH -->
+    <div class="err-mini" style="border-color:var(--accent-2);">
+      <span class="sev-tag">SEV: AUTH</span>
+      <i class="material-icons" style="font-size:24px; color:var(--accent-2);">lock_clock</i>
+      <div class="err-title" style="color:var(--accent-2);">AUTH</div>
+      <p class="err-body">Preservar borrador local y solicitar sesión.</p>
+      <div style="position:absolute; bottom:8px; left:14px; font-family:var(--font-num); font-size:9px; color:var(--primary-dim);">→ re-login</div>
+    </div>
+
+    <!-- 3. LLM -->
+    <div class="err-mini" style="border-color:var(--accent-3);">
+      <span class="sev-tag">SEV: DEGRAD</span>
+      <i class="material-icons" style="font-size:24px; color:var(--accent-3);">psychology</i>
+      <div class="err-title" style="color:var(--accent-3);">LLM</div>
+      <p class="err-body">Activar heurística y mostrar degradación.</p>
+      <div style="position:absolute; bottom:8px; left:14px; font-family:var(--font-num); font-size:9px; color:var(--primary-dim);">→ fallback</div>
+    </div>
+
+    <!-- 4. MCP -->
+    <div class="err-mini" style="border-color:var(--accent-2);">
+      <span class="sev-tag">SEV: ISOL</span>
+      <i class="material-icons" style="font-size:24px; color:var(--accent-2);">extension_off</i>
+      <div class="err-title" style="color:var(--accent-2);">MCP</div>
+      <p class="err-body">Mantener la integración aislada y el resto operativo.</p>
+      <div style="position:absolute; bottom:8px; left:14px; font-family:var(--font-num); font-size:9px; color:var(--primary-dim);">→ isolate</div>
+    </div>
+
+    <!-- 5. DB -->
+    <div class="err-mini" style="border-color:var(--error);">
+      <span class="sev-tag">SEV: HIGH</span>
+      <i class="material-icons" style="font-size:24px; color:var(--error);">storage</i>
+      <div class="err-title" style="color:var(--error);">DB</div>
+      <p class="err-body">No aceptar acciones que no puedan persistirse.</p>
+      <div style="position:absolute; bottom:8px; left:14px; font-family:var(--font-num); font-size:9px; color:var(--primary-dim);">→ read-only</div>
+    </div>
+
+    <!-- 6. NOTIF -->
+    <div class="err-mini" style="border-color:var(--accent-3);">
+      <span class="sev-tag">SEV: LOW</span>
+      <i class="material-icons" style="font-size:24px; color:var(--accent-3);">notifications_off</i>
+      <div class="err-title" style="color:var(--accent-3);">NOTIF</div>
+      <p class="err-body">Conservar recordatorio como pendiente.</p>
+      <div style="position:absolute; bottom:8px; left:14px; font-family:var(--font-num); font-size:9px; color:var(--primary-dim);">→ re-queue</div>
+    </div>
+
+    <!-- 7. STORAGE -->
+    <div class="err-mini" style="border-color:var(--error);">
+      <span class="sev-tag">SEV: HIGH</span>
+      <i class="material-icons" style="font-size:24px; color:var(--error);">sd_card_alert</i>
+      <div class="err-title" style="color:var(--error);">STORAGE</div>
+      <p class="err-body">No descartar audio/archivo sin informar.</p>
+      <div style="position:absolute; bottom:8px; left:14px; font-family:var(--font-num); font-size:9px; color:var(--primary-dim);">→ warn user</div>
+    </div>
+
+    <!-- 8. FATAL -->
+    <div class="err-mini fatal" style="border-color:var(--error); border-width:2px;">
+      <span class="sev-tag" style="color:var(--error);">SEV: FATAL</span>
+      <i class="material-icons" style="font-size:24px; color:var(--error);">crisis_alert</i>
+      <div class="err-title" style="color:var(--error);">FATAL</div>
+      <p class="err-body">Mostrar diagnóstico, versión, request_id y opción de exportar logs sanitizados.</p>
+      <div style="position:absolute; bottom:8px; left:14px; font-family:var(--font-num); font-size:9px; color:var(--error);">→ export</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>VNBOT // APP FLOW · CAP. 10 · ERRORES</span>
+    <span>52 / 57</span>
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- 8 tipos de error global con severidad y acción explícita.
+- VALIDACIÓN, AUTH, LLM, MCP son recuperables en caliente.
+- DB y STORAGE bloquean operaciones que no pueden persistirse.
+- FATAL muestra diagnóstico, versión, request_id y exporta logs sanitizados.
+- MCP mantiene aislamiento: una integración caída no arrastra el resto.
+</aside>
+</body>
+</html>

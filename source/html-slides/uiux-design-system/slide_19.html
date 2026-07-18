@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT · Correspondencia Sprite → Pantalla</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .map-row {
+    display: grid;
+    grid-template-columns: 220px 280px 1fr;
+    gap: 14px;
+    padding: 8px 16px;
+    border-bottom: 1px solid rgba(51,65,85,0.5);
+    align-items: center;
+    min-height: 36px;
+  }
+  .map-row:last-child { border-bottom: none; }
+  .map-row:nth-child(even) { background: rgba(31,41,55,0.4); }
+  .map-screen { font-family: var(--font-pixel); font-size: 10px; color: var(--accent); letter-spacing: 0.06em; display:flex; align-items:center; gap:6px; }
+  .map-screen .material-icons { font-size: 14px; color: var(--accent); }
+  .map-agent { font-family: var(--font-num); font-size: 12px; color: var(--primary); }
+  .map-notes { font-family: 'Inter', sans-serif; font-size: 12px; color: #94A3B8; }
+  .map-head {
+    display: grid;
+    grid-template-columns: 220px 280px 1fr;
+    gap: 14px;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--accent);
+    font-family: var(--font-pixel);
+    font-size: 9px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+  }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- HEADER -->
+  <header class="absolute top-7 left-8 right-8">
+    <div class="flex items-end justify-between">
+      <div class="flex items-center gap-4">
+        <span class="pixel-badge">03.4 // CORRESPONDENCIA</span>
+        <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; letter-spacing:0.02em; color:var(--primary);">Sprite por <span style="color:var(--accent);">Pantalla</span></h1>
+      </div>
+      <div class="flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+        <span class="material-icons" style="font-size:14px; color:var(--accent);">grid_on</span>
+        <span>13 MAPEOS · TABLA COMPLETA</span>
+      </div>
+    </div>
+    <p style="font-family:'Inter',sans-serif; font-size:14px; color:#94A3B8; margin-top:6px;">Cada pantalla tiene un agente asignado. La mascota nunca es aleatoria.</p>
+  </header>
+
+  <!-- BIG MAPPING TABLE -->
+  <main class="absolute" style="top:128px; left:40px; right:40px; bottom:60px;">
+    <div class="hud-panel accent" style="padding:0; height:100%; display:flex; flex-direction:column;">
+
+      <div class="flex items-center justify-between" style="padding:10px 16px; border-bottom:1px solid var(--accent); background:rgba(34,211,238,0.04);">
+        <span style="font-family:var(--font-pixel); font-size:10px; color:var(--accent); letter-spacing:0.08em;">MAPEO · SPRITE → PANTALLA</span>
+        <div class="flex items-center gap-3" style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">
+          <span>13 PANTALLAS</span><span>·</span><span>7 AGENTES</span><span>·</span><span>10 ESTADOS</span>
+        </div>
+      </div>
+
+      <div class="map-head">
+        <span>PANTALLA</span>
+        <span>AGENTE / SPRITE</span>
+        <span>NOTAS</span>
+      </div>
+
+      <div style="flex:1; overflow:hidden;">
+        <div class="map-row">
+          <span class="map-screen"><span class="material-icons">home</span>LANDING</span>
+          <span class="map-agent">Guardian 128/64</span>
+          <span class="map-notes">Primera impresión, tagline MIT</span>
+        </div>
+        <div class="map-row">
+          <span class="map-screen" style="color:var(--success);"><span class="material-icons" style="color:var(--success);">lock</span>LOGIN / BÓVEDA</span>
+          <span class="map-agent">Sentinel</span>
+          <span class="map-notes">Seguridad, permisos visibles</span>
+        </div>
+        <div class="map-row">
+          <span class="map-screen"><span class="material-icons">rocket_launch</span>ONBOARDING</span>
+          <span class="map-agent">Guardian → Chat</span>
+          <span class="map-notes">Transición narrativa paso a paso</span>
+        </div>
+        <div class="map-row">
+          <span class="map-screen" style="color:#E5F1FF;"><span class="material-icons" style="color:#E5F1FF;">forum</span>CHAT</span>
+          <span class="map-agent">Chat Assistant + emotes</span>
+          <span class="map-notes">Emotes en burbujas y toasts</span>
+        </div>
+        <div class="map-row">
+          <span class="map-screen" style="color:var(--accent-3);"><span class="material-icons" style="color:var(--accent-3);">today</span>HOY / DASHBOARD</span>
+          <span class="map-agent">Beacon</span>
+          <span class="map-notes">Recordatorios, tareas del día</span>
+        </div>
+        <div class="map-row">
+          <span class="map-screen" style="color:#A78BFA;"><span class="material-icons" style="color:#A78BFA;">menu_book</span>MEMORIA</span>
+          <span class="map-agent">Archivist</span>
+          <span class="map-notes">Lista, búsqueda, edición</span>
+        </div>
+        <div class="map-row">
+          <span class="map-screen" style="color:#A78BFA;"><span class="material-icons" style="color:#A78BFA;">hub</span>GRAFO</span>
+          <span class="map-agent">Archivist / Navigator</span>
+          <span class="map-notes">Vista visual limitada</span>
+        </div>
+        <div class="map-row">
+          <span class="map-screen"><span class="material-icons">grid_view</span>AGENTES</span>
+          <span class="map-agent">Todos (grid)</span>
+          <span class="map-notes">Selector con 7 AgentCards</span>
+        </div>
+        <div class="map-row">
+          <span class="map-screen" style="color:var(--accent-2);"><span class="material-icons" style="color:var(--accent-2);">construction</span>SKILLS</span>
+          <span class="map-agent">Forge / Core</span>
+          <span class="map-notes">Inventario versionado</span>
+        </div>
+        <div class="map-row">
+          <span class="map-screen" style="color:#60A5FA;"><span class="material-icons" style="color:#60A5FA;">cable</span>MCP</span>
+          <span class="map-agent">Sentinel / Navigator</span>
+          <span class="map-notes">Conexiones, permisos radiales</span>
+        </div>
+        <div class="map-row">
+          <span class="map-screen" style="color:var(--accent-2);"><span class="material-icons" style="color:var(--accent-2);">precision_manufacturing</span>JOBS</span>
+          <span class="map-agent">Forge + drones</span>
+          <span class="map-notes">Workers activos, progreso</span>
+        </div>
+        <div class="map-row">
+          <span class="map-screen" style="color:var(--error);"><span class="material-icons" style="color:var(--error);">error_outline</span>ERRORES</span>
+          <span class="map-agent">State error</span>
+          <span class="map-notes">Sin flashes, mensaje claro</span>
+        </div>
+        <div class="map-row">
+          <span class="map-screen" style="color:#6B7280;"><span class="material-icons" style="color:#6B7280;">cloud_off</span>OFFLINE / SLEEP</span>
+          <span class="map-agent">State offline/sleeping</span>
+          <span class="map-notes">Banner amber, queue local</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>CAP. 03 · MAPEO</span>
+    <span style="color:var(--accent);">VNBOT UI/UX · DESIGN SYSTEM</span>
+    <span>19 / 39</span>
+  </footer>
+
+</div>
+
+<aside data-notes class="hidden">
+- 13 mapeos explícitos pantalla → sprite/agente.
+- La mascota refuerza la función de la pantalla, no decora.
+- Errores y offline no usan flashes — mensaje claro y banner amber.
+- AGENTES es el único caso donde aparecen los 7 al mismo tiempo.
+- Onboarding usa transición narrativa Guardian → Chat Assistant.
+</aside>
+</body>
+</html>

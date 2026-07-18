@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · 47 / 57 — Flujo Offline</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .fl-node { padding: 7px 11px; border: 1px solid var(--border-bright); background: var(--surface); font-family: var(--font-body); font-size: 11px; color: var(--primary); display:inline-flex; align-items:center; gap:6px; clip-path: polygon(0 6px, 6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px)); }
+  .fl-arrow { text-align:center; color:var(--primary-dim); font-family:var(--font-num); font-size:13px; line-height:1; }
+  .field-row { font-family: var(--font-num); font-size: 11px; line-height: 1.5; color: var(--primary); padding: 3px 0; border-bottom: 1px dashed var(--border); }
+  .field-key { color: var(--accent); }
+  .check-line { font-family: var(--font-body); font-size: 12px; line-height: 1.55; color: var(--primary); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl"></div>
+  <div class="corner-bracket tr"></div>
+  <div class="corner-bracket bl"></div>
+  <div class="corner-bracket br"></div>
+
+  <div class="absolute" style="top:32px; left:48px; right:48px; display:flex; justify-content:space-between; align-items:center;">
+    <span class="pixel-badge">09.3 // FLUJO OFFLINE</span>
+    <span style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim); letter-spacing:0.08em;">CHAPTER 09 · OUTBOX</span>
+  </div>
+  <h1 style="position:absolute; top:62px; left:48px; font-family:var(--font-heading); font-weight:700; font-size:32px; color:var(--primary); letter-spacing:0.02em;">Flujo de Modo Offline</h1>
+
+  <!-- LEFT: Flow diagram -->
+  <div class="hud-panel" style="position:absolute; top:118px; left:48px; width:660px; height:548px; padding:14px 18px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+      <i class="material-icons" style="font-size:16px; color:var(--accent);">timeline</i>
+      <span style="font-family:var(--font-pixel); font-size:10px; color:var(--accent);">DIAGRAMA · OFFLINE → SYNC</span>
+      <div style="flex:1; height:1px; background:var(--border-bright);"></div>
+    </div>
+
+    <div style="text-align:center;">
+      <div class="fl-node" style="border-color:var(--error); color:var(--error);"><i class="material-icons" style="font-size:13px;">link_off</i> Se pierde conexión</div>
+      <div class="fl-arrow">↓</div>
+      <span class="state-badge offline">MOSTRAR OFFLINE</span>
+      <div class="fl-arrow">↓</div>
+
+      <!-- Decision diamond (rendered as styled box for clarity) -->
+      <div style="display:inline-flex; align-items:center; justify-content:center; padding:9px 14px; border:2px solid var(--accent-3); color:var(--accent-3); background:var(--surface); transform:rotate(0deg); font-family:var(--font-body); font-size:11px; font-weight:600; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); width:160px; height:80px;">
+        <span>¿Operación local?</span>
+      </div>
+    </div>
+
+    <!-- Two branches -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:14px;">
+      <div style="text-align:center;">
+        <div style="font-family:var(--font-pixel); font-size:9px; color:var(--success); margin-bottom:6px;">SÍ →</div>
+        <div class="fl-node" style="border-color:var(--accent); color:var(--accent);">Ejecutar</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-family:var(--font-pixel); font-size:9px; color:var(--error); margin-bottom:6px;">NO →</div>
+        <div class="fl-node" style="border-color:var(--accent-3); color:var(--accent-3);">Guardar en outbox</div>
+      </div>
+    </div>
+
+    <!-- Sync path -->
+    <div style="text-align:center; margin-top:8px;">
+      <div class="fl-arrow">↓</div>
+      <span class="state-badge sync">SYNC_PENDING</span>
+      <div class="fl-arrow">↓</div>
+      <div class="fl-node" style="border-color:var(--accent-3); color:var(--accent-3);"><i class="material-icons" style="font-size:13px;">wifi</i> Vuelve conexión</div>
+      <div class="fl-arrow">↓</div>
+      <div class="fl-node" style="border-color:var(--accent); color:var(--accent);"><i class="material-icons" style="font-size:13px;">verified_user</i> Validar sesión</div>
+      <div class="fl-arrow">↓</div>
+      <div class="fl-node" style="border-color:var(--accent); color:var(--accent);">Enviar outbox con idempotency key</div>
+      <div class="fl-arrow">↓</div>
+      <div class="fl-node" style="border-color:var(--accent-3); color:var(--accent-3);">Resolver conflictos</div>
+      <div class="fl-arrow">↓</div>
+      <span class="state-badge ready">SYNCED</span>
+    </div>
+  </div>
+
+  <!-- RIGHT: Outbox & idempotency -->
+  <div class="hud-panel accent" style="position:absolute; top:118px; left:728px; width:504px; height:548px; padding:16px 20px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+      <i class="material-icons" style="font-size:18px; color:var(--accent);">queue</i>
+      <span style="font-family:var(--font-pixel); font-size:11px; color:var(--accent);">QUEUE LOCAL DE OPERACIONES</span>
+    </div>
+
+    <div style="font-family:var(--font-body); font-size:11px; color:var(--primary-dim); margin-bottom:6px;">CAMPOS POR OPERACIÓN ENCOLADA:</div>
+
+    <div style="background:var(--bg-deep); border:1px solid var(--border); padding:10px 12px; margin-bottom:14px;">
+      <div class="field-row"><span class="field-key">operation_type:</span> create | update | delete</div>
+      <div class="field-row"><span class="field-key">entity_type:</span> memory | reminder | ...</div>
+      <div class="field-row"><span class="field-key">entity_id:</span> UUID v4</div>
+      <div class="field-row"><span class="field-key">timestamp_local:</span> ISO 8601</div>
+      <div class="field-row" style="border-bottom:none;"><span class="field-key">version_vector:</span> device + counter</div>
+      <div class="field-row" style="border-bottom:none;"><span class="field-key">idempotency_key:</span> SHA-256(payload + ts)</div>
+    </div>
+
+    <div style="font-family:var(--font-pixel); font-size:10px; color:var(--accent-3); margin-bottom:6px;">PROCESAMIENTO:</div>
+    <div class="check-line" style="color:var(--success);"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check</i> FIFO al reconectar</div>
+    <div class="check-line" style="color:var(--success);"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check</i> Backoff exponencial en fallos</div>
+    <div class="check-line" style="color:var(--success);"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check</i> Máximo 3 intentos antes de conflicto manual</div>
+    <div class="check-line" style="color:var(--success);"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check</i> Conflictos van a vista de resolución</div>
+
+    <div style="position:absolute; bottom:14px; left:20px; right:20px; padding-top:10px; border-top:1px solid var(--border-bright);">
+      <p style="font-family:var(--font-body); font-size:12px; color:var(--accent-3); line-height:1.4;"><i class="material-icons" style="font-size:13px; vertical-align:middle;">info</i> Las operaciones no se pierden. Se encolan y se reintentan con idempotencia para evitar duplicados.</p>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>VNBOT // APP FLOW · CAP. 09 · FLUJO OFFLINE</span>
+    <span>47 / 57</span>
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- Decisión "¿Operación local?" parte el flujo en ejecución inmediata vs encolado.
+- Outbox guarda tipo, entidad, timestamp, vector de versión y key idempotente.
+- Reconexión: validar sesión → enviar outbox → resolver conflictos → SYNCED.
+- Backoff exponencial, máx 3 intentos antes de conflicto manual.
+- Idempotency key evita duplicados en reintentos.
+</aside>
+</body>
+</html>

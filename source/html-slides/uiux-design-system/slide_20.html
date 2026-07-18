@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT · Capítulo 4 — Layout y Componentes</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .chapter-num {
+    font-family: var(--font-pixel);
+    font-size: 96px;
+    color: var(--accent);
+    text-shadow: 0 0 24px rgba(34,211,238,0.4), 0 0 48px rgba(34,211,238,0.18);
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+  .cyan-rule {
+    width: 240px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent) 30%, var(--accent) 70%, transparent);
+    margin: 26px auto;
+  }
+  .chapter-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 48px;
+    letter-spacing: 0.15em;
+    color: var(--primary);
+    text-align: center;
+  }
+  .chapter-tagline {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    color: #94A3B8;
+    text-align: center;
+    margin-top: 16px;
+    letter-spacing: 0.02em;
+  }
+  .ghost-grid {
+    background-image:
+      linear-gradient(rgba(34,211,238,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(34,211,238,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .scanline {
+    position: absolute; left:0; right:0; height:1px;
+    background: rgba(34,211,238,0.18);
+  }
+  .mini-card-stack {
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .mini-card-stack > div {
+    width: 140px; height: 18px;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    clip-path: polygon(0 4px, 4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+    display:flex; align-items:center; gap:6px; padding: 0 8px;
+    font-family: var(--font-pixel); font-size: 7px; color: var(--accent); letter-spacing: 0.08em;
+  }
+  .mini-card-stack > div::before { content:''; width:6px; height:6px; background:var(--accent); }
+  .mini-card-stack > div.magenta { border-color: var(--accent-2); color: var(--accent-2); }
+  .mini-card-stack > div.magenta::before { background: var(--accent-2); }
+  .mini-card-stack > div.amber { border-color: var(--accent-3); color: var(--accent-3); }
+  .mini-card-stack > div.amber::before { background: var(--accent-3); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg" style="position:relative;">
+
+  <div class="absolute inset-0 ghost-grid" data-decor></div>
+  <div class="scanline" style="top:140px;" data-decor></div>
+  <div class="scanline" style="top:580px;" data-decor></div>
+
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- Top-left chapter badge -->
+  <div class="absolute top-9 left-9 flex items-center gap-3">
+    <span class="pixel-badge">CAPÍTULO 04 / 08</span>
+    <span style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim); letter-spacing:0.1em;">// SECTION BREAK</span>
+  </div>
+
+  <!-- Top-right tiny status -->
+  <div class="absolute top-9 right-9 flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+    <span class="material-icons" style="font-size:14px; color:var(--accent);">dashboard</span>
+    <span>LAYOUT + COMPONENTS</span>
+  </div>
+
+  <!-- Vertical center stack -->
+  <div class="absolute inset-0 flex flex-col items-center justify-center" style="padding-top:30px;">
+    <div class="chapter-num">04</div>
+    <div class="cyan-rule"></div>
+    <h1 class="chapter-title">LAYOUT Y COMPONENTES</h1>
+    <p class="chapter-tagline">Shell de consola + catálogo de cards modulares.</p>
+  </div>
+
+  <!-- Bottom-right: 4 mini-cards stacked -->
+  <div class="absolute" style="bottom:60px; right:36px;">
+    <div class="mini-card-stack">
+      <div>PIXELPANEL</div>
+      <div class="magenta">MEMORYCARD</div>
+      <div>ACTIONCARD</div>
+      <div class="magenta">AGENTCARD</div>
+    </div>
+  </div>
+
+  <!-- Bottom-left footer brand -->
+  <div class="absolute" style="bottom:36px; left:36px; font-family:var(--font-num); font-size:11px; color:var(--primary-dim); letter-spacing:0.08em;">
+    VNBOT · UI/UX DESIGN SYSTEM
+  </div>
+
+</div>
+
+<aside data-notes class="hidden">
+- Cómo se estructura la app: shell base + cards reutilizables.
+- Lógica combinada de Elementx + ZeusUi + UI/UX Pro Max.
+- Shell = sidebar + main + agent dock (3 zonas).
+- 5 tipos de cards componen toda la superficie.
+- Cada card tiene un propósito único — no se mezclan roles.
+</aside>
+</body>
+</html>

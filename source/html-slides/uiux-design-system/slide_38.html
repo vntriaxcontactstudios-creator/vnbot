@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT UI/UX — Web/PWA · Desktop · APK · CLI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .pf-panel { padding:14px 16px; position:relative; height:248px; display:flex; flex-direction:column; }
+  .pf-head { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .pf-title { font-family:var(--font-pixel); font-size:12px; letter-spacing:0.06em; }
+  .pf-body { font-family:var(--font-body); font-size:13px; color:var(--primary); line-height:1.45; margin-bottom:10px; }
+  .pf-specs { font-family:var(--font-num); font-size:11px; color:var(--primary-dim); line-height:1.55; border-top:1px solid var(--border); padding-top:8px; }
+  .pf-specs .lbl { color:var(--primary); }
+  .pf-specs .val { color:var(--primary-dim); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <!-- Header -->
+  <div style="position:absolute; top:30px; left:50px; right:50px;">
+    <div class="pixel-badge">08 // PLATAFORMAS</div>
+    <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; margin-top:8px; color:var(--primary);">Web/PWA · Desktop · APK · CLI</h1>
+    <p style="font-family:var(--font-body); font-size:14px; color:#94A3B8; margin-top:2px;">Mismo lenguaje visual, distintas restricciones por runtime.</p>
+  </div>
+
+  <!-- 2x2 grid -->
+  <div style="position:absolute; top:140px; left:50px; right:50px; display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+
+    <!-- 1. WEB / PWA -->
+    <div class="hud-panel accent pf-panel">
+      <span class="corner-bracket tl"></span>
+      <span class="corner-bracket tr"></span>
+      <span class="corner-bracket bl"></span>
+      <span class="corner-bracket br"></span>
+
+      <div class="pf-head">
+        <i class="material-icons" style="font-size:32px; color:var(--accent);">public</i>
+        <span class="pf-title" style="color:var(--accent);">WEB / PWA</span>
+        <span style="margin-left:auto; font-family:var(--font-num); font-size:9px; color:var(--primary-dim); border:1px solid var(--border); padding:2px 6px;">BASE</span>
+      </div>
+
+      <div class="pf-body">Responsive 360-1920px. IndexedDB offline. Service worker cache. Instalable como PWA.</div>
+
+      <div class="pf-specs">
+        <div><span class="lbl">Breakpoints:</span> <span class="val">360 / 768 / 1280 / 1920</span></div>
+        <div><span class="lbl">Storage:</span> <span class="val">IndexedDB</span></div>
+        <div><span class="lbl">Offline:</span> <span class="val">service worker + cache strategies</span></div>
+        <div><span class="lbl">Distribución:</span> <span class="val">GitHub Pages</span></div>
+      </div>
+    </div>
+
+    <!-- 2. DESKTOP -->
+    <div class="hud-panel magenta pf-panel">
+      <span class="corner-bracket tl" style="border-color:var(--accent-2);"></span>
+      <span class="corner-bracket tr" style="border-color:var(--accent-2);"></span>
+      <span class="corner-bracket bl" style="border-color:var(--accent-2);"></span>
+      <span class="corner-bracket br" style="border-color:var(--accent-2);"></span>
+
+      <div class="pf-head">
+        <i class="material-icons" style="font-size:32px; color:var(--accent-2);">desktop_windows</i>
+        <span class="pf-title" style="color:var(--accent-2);">DESKTOP</span>
+        <span style="margin-left:auto; font-family:var(--font-num); font-size:9px; color:var(--primary-dim); border:1px solid var(--border); padding:2px 6px;">NATIVE</span>
+      </div>
+
+      <div class="pf-body">Windows, Linux, macOS. Ventana nativa con marco HUD. Atajos de teclado globales. SQLite local.</div>
+
+      <div class="pf-specs">
+        <div><span class="lbl">Framework:</span> <span class="val">Tauri o Electron</span></div>
+        <div><span class="lbl">Storage:</span> <span class="val">SQLite local</span></div>
+        <div><span class="lbl">Atajos:</span> <span class="val">globales + locales</span></div>
+        <div><span class="lbl">Distribución:</span> <span class="val">GitHub Releases</span></div>
+      </div>
+    </div>
+
+    <!-- 3. APK ANDROID -->
+    <div class="hud-panel amber pf-panel">
+      <span class="corner-bracket tl" style="border-color:var(--accent-3);"></span>
+      <span class="corner-bracket tr" style="border-color:var(--accent-3);"></span>
+      <span class="corner-bracket bl" style="border-color:var(--accent-3);"></span>
+      <span class="corner-bracket br" style="border-color:var(--accent-3);"></span>
+
+      <div class="pf-head">
+        <i class="material-icons" style="font-size:32px; color:var(--accent-3);">phone_android</i>
+        <span class="pf-title" style="color:var(--accent-3);">APK ANDROID</span>
+        <span style="margin-left:auto; font-family:var(--font-num); font-size:9px; color:var(--primary-dim); border:1px solid var(--border); padding:2px 6px;">TOUCH</span>
+      </div>
+
+      <div class="pf-body">Touch-first. Gestos nativos. Notificaciones push. Share intent. Mascota en widget de home.</div>
+
+      <div class="pf-specs">
+        <div><span class="lbl">Min SDK:</span> <span class="val">26 (Android 8+)</span></div>
+        <div><span class="lbl">Storage:</span> <span class="val">Room (SQLite)</span></div>
+        <div><span class="lbl">Notif:</span> <span class="val">FCM o self-hosted</span></div>
+        <div><span class="lbl">Distribución:</span> <span class="val">GitHub Releases + F-Droid</span></div>
+      </div>
+    </div>
+
+    <!-- 4. CLI -->
+    <div class="hud-panel pf-panel" style="border-color:var(--success);">
+      <span class="corner-bracket tl" style="border-color:var(--success);"></span>
+      <span class="corner-bracket tr" style="border-color:var(--success);"></span>
+      <span class="corner-bracket bl" style="border-color:var(--success);"></span>
+      <span class="corner-bracket br" style="border-color:var(--success);"></span>
+
+      <div class="pf-head">
+        <i class="material-icons" style="font-size:32px; color:var(--success);">terminal</i>
+        <span class="pf-title" style="color:var(--success);">CLI</span>
+        <span style="margin-left:auto; font-family:var(--font-num); font-size:9px; color:var(--primary-dim); border:1px solid var(--border); padding:2px 6px;">TERMINAL</span>
+      </div>
+
+      <div class="pf-body">Output formateado ANSI. Mascota como ASCII art opcional. Subcomandos: <span style="font-family:var(--font-num); color:var(--accent);">capture, search, agents, sync</span>. TTY y pipe-friendly.</div>
+
+      <div class="pf-specs">
+        <div><span class="lbl">Binario:</span> <span class="val">estático, sin runtime</span></div>
+        <div><span class="lbl">Output:</span> <span class="val">ANSI / JSON / YAML</span></div>
+        <div><span class="lbl">Mascota:</span> <span class="val">ASCII art (--mascot)</span></div>
+        <div><span class="lbl">Distribución:</span> <span class="val">npm + brew + cargo</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <span>CAP. 08 · PLATAFORMAS</span>
+    <span>38 / 39</span>
+  </div>
+
+  <aside data-notes class="hidden">
+    <ul>
+      <li>4 runtimes comparten el design system VNBOT.</li>
+      <li>Web es la base — PWA instalable.</li>
+      <li>Desktop añade atajos globales y SQLite local.</li>
+      <li>APK prioriza touch, gestos y widget con mascota.</li>
+      <li>CLI usa ASCII art opcional con flag --mascot.</li>
+    </ul>
+  </aside>
+</div>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT · Shell Layout</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  /* mini wireframe primitives */
+  .wf-shell { background:#050912; border:1px solid var(--accent); padding:8px; display:flex; flex-direction:column; gap:8px; height:100%; }
+  .wf-topbar {
+    height: 38px; background: var(--surface); border:1px solid var(--border);
+    display:grid; grid-template-columns: 200px 1fr 200px; gap:8px; padding: 0 8px; align-items:center;
+    clip-path: polygon(0 4px, 4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+  }
+  .wf-logo { display:flex; align-items:center; gap:6px; font-family:var(--font-pixel); font-size:9px; color:var(--accent); letter-spacing:0.1em; }
+  .wf-logo .mark { width:16px; height:16px; background:var(--accent); clip-path:polygon(0 4px,4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%); }
+  .wf-search { background:#0B1220; border:1px solid var(--border); height:24px; padding: 0 8px; display:flex; align-items:center; gap:6px; font-family:var(--font-num); font-size:10px; color:#94A3B8; }
+  .wf-search .material-icons { font-size:13px; color:var(--accent); }
+  .wf-search .mic { margin-left:auto; color:var(--accent-2); }
+  .wf-indic { display:flex; align-items:center; justify-content:flex-end; gap:8px; font-family:var(--font-num); font-size:10px; color:#94A3B8; }
+  .wf-indic .ok { color: var(--success); }
+  .wf-indic .avatar { width:20px; height:20px; background:var(--accent-2); border:1px solid var(--accent-2); }
+
+  .wf-body { flex:1; display:grid; grid-template-columns: 200px 1fr 110px; gap:8px; min-height:0; }
+
+  .wf-sidebar {
+    background: var(--surface); border:1px solid var(--border); padding:8px;
+    display:flex; flex-direction:column; gap:4px;
+    clip-path: polygon(0 4px, 4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+  }
+  .wf-nav-item {
+    display:flex; align-items:center; gap:8px; padding: 5px 8px;
+    font-family:var(--font-num); font-size:11px; color:#94A3B8;
+    border-left: 2px solid transparent;
+  }
+  .wf-nav-item .material-icons { font-size:14px; color:#94A3B8; }
+  .wf-nav-item.active { color: var(--accent); background: rgba(34,211,238,0.08); border-left-color: var(--accent); }
+  .wf-nav-item.active .material-icons { color: var(--accent); }
+  .wf-sidebar-foot { margin-top:auto; padding-top:6px; border-top:1px dashed var(--border); font-family:var(--font-num); font-size:9px; color:#6B7280; line-height:1.4; }
+
+  .wf-main {
+    background: var(--surface); border:1px solid var(--border); padding:10px;
+    display:flex; flex-direction:column; gap:8px;
+    clip-path: polygon(0 4px, 4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+  }
+  .wf-page-head { font-family:var(--font-heading); font-size:13px; font-weight:700; color:var(--primary); display:flex; justify-content:space-between; align-items:center; }
+  .wf-page-head .date { font-family:var(--font-num); font-size:10px; color:var(--accent); }
+  .wf-action-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:6px; }
+  .wf-action-cell {
+    background:#0B1220; border:1px solid var(--border); padding:8px 6px;
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    clip-path: polygon(0 4px, 4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+  }
+  .wf-action-cell .material-icons { font-size:18px; color:var(--accent); }
+  .wf-action-cell span { font-family:var(--font-pixel); font-size:7px; color:var(--primary); letter-spacing:0.06em; }
+  .wf-reminders { display:flex; flex-direction:column; gap:3px; }
+  .wf-reminders .head { font-family:var(--font-pixel); font-size:8px; color:var(--accent-3); letter-spacing:0.08em; }
+  .wf-reminder-item { display:flex; align-items:center; gap:6px; font-family:var(--font-num); font-size:10px; color:#94A3B8; padding:3px 6px; background:#0B1220; border-left:2px solid var(--accent-3); }
+  .wf-reminder-item .time { color:var(--accent-3); }
+  .wf-mini-graph { display:flex; align-items:flex-end; gap:4px; height:30px; padding-top:4px; border-top:1px dashed var(--border); }
+  .wf-mini-graph .bar { flex:1; background:var(--accent); opacity:0.7; }
+
+  .wf-dock {
+    background: var(--surface); border:1px solid var(--accent-2); padding:8px;
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+    clip-path: polygon(0 4px, 4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+  }
+  .wf-mascot { width:48px; height:48px; background:#050912; border:2px solid var(--accent-3); display:flex; align-items:center; justify-content:center; clip-path:polygon(0 4px,4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%); position:relative; }
+  .wf-mascot .visor { width:24px; height:6px; background:var(--accent-3); box-shadow:0 0 6px var(--accent-3); }
+  .wf-mascot .acc { position:absolute; top:-2px; right:-2px; width:8px; height:8px; background:var(--accent-3); }
+  .wf-dock-name { font-family:var(--font-pixel); font-size:8px; color:var(--accent-3); letter-spacing:0.08em; }
+  .wf-dock-btns { display:flex; flex-direction:column; gap:6px; width:100%; }
+  .wf-dock-btn { display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 0; background:#0B1220; border:1px solid var(--border); font-family:var(--font-pixel); font-size:6px; color:#94A3B8; letter-spacing:0.06em; }
+  .wf-dock-btn .material-icons { font-size:14px; color:var(--accent); }
+
+  .annot-line { font-family:var(--font-num); font-size:11px; color:var(--accent); padding:6px 12px; border-left:2px solid var(--accent); background:rgba(34,211,238,0.04); display:flex; align-items:center; gap:6px; }
+  .annot-line .bp { color:var(--accent-3); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- HEADER -->
+  <header class="absolute top-7 left-8 right-8">
+    <div class="flex items-end justify-between">
+      <div class="flex items-center gap-4">
+        <span class="pixel-badge">04.1 // SHELL</span>
+        <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; letter-spacing:0.02em; color:var(--primary);">Shell Base de la <span style="color:var(--accent);">App</span></h1>
+      </div>
+      <div class="flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+        <span class="material-icons" style="font-size:14px; color:var(--accent);">view_quilt</span>
+        <span>WIREFRAME · 1100×440 · 3 BREAKPOINTS</span>
+      </div>
+    </div>
+    <p style="font-family:'Inter',sans-serif; font-size:14px; color:#94A3B8; margin-top:6px;">Sidebar + main + agent dock — responsive de 360 a 1920px.</p>
+  </header>
+
+  <!-- WIREFRAME -->
+  <main class="absolute" style="top:130px; left:40px; right:40px;">
+    <div class="hud-panel accent" style="padding:10px; height:430px;">
+      <div class="flex items-center justify-between mb-2 px-1">
+        <span style="font-family:var(--font-pixel); font-size:9px; color:var(--accent); letter-spacing:0.08em;">VNBOT SHELL · BREAKPOINT 1280px</span>
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">sidebar 200 · main flex · dock 110</span>
+      </div>
+
+      <div class="wf-shell">
+        <!-- TOP BAR -->
+        <div class="wf-topbar">
+          <div class="wf-logo"><span class="mark"></span><span>VNBOT v0.4</span></div>
+          <div class="wf-search">
+            <span class="material-icons">search</span>
+            <span>Capturar o buscar...</span>
+            <span class="material-icons mic">mic</span>
+          </div>
+          <div class="wf-indic">
+            <span>UTC-4</span>
+            <span class="ok">● SYNC</span>
+            <span class="avatar"></span>
+          </div>
+        </div>
+
+        <!-- BODY: 3 columns -->
+        <div class="wf-body">
+          <!-- SIDEBAR -->
+          <div class="wf-sidebar">
+            <div class="wf-nav-item"><span class="material-icons">today</span>HOY</div>
+            <div class="wf-nav-item"><span class="material-icons">forum</span>CHAT</div>
+            <div class="wf-nav-item"><span class="material-icons">menu_book</span>MEMORIA</div>
+            <div class="wf-nav-item"><span class="material-icons">hub</span>GRAFO</div>
+            <div class="wf-nav-item active"><span class="material-icons">grid_view</span>AGENTES</div>
+            <div class="wf-nav-item"><span class="material-icons">construction</span>SKILLS</div>
+            <div class="wf-nav-item"><span class="material-icons">cable</span>INTEGR.</div>
+            <div class="wf-nav-item"><span class="material-icons">lock</span>BÓVEDA</div>
+            <div class="wf-nav-item"><span class="material-icons">settings</span>AJUSTES</div>
+            <div class="wf-sidebar-foot">v0.4.2 · LLM: GLM-4.6</div>
+          </div>
+
+          <!-- MAIN -->
+          <div class="wf-main">
+            <div class="wf-page-head"><span>Hoy · 17 Jul</span><span class="date">3 recordatorios</span></div>
+            <div class="wf-action-grid">
+              <div class="wf-action-cell"><span class="material-icons">mic</span><span>CAPTURAR</span></div>
+              <div class="wf-action-cell"><span class="material-icons">search</span><span>BUSCAR</span></div>
+              <div class="wf-action-cell"><span class="material-icons">grid_view</span><span>AGENTES</span></div>
+              <div class="wf-action-cell"><span class="material-icons">construction</span><span>SKILLS</span></div>
+            </div>
+            <div class="wf-reminders">
+              <div class="head">RECORDATORIOS</div>
+              <div class="wf-reminder-item"><span class="time">15:00</span> Llamar al dentista</div>
+              <div class="wf-reminder-item"><span class="time">17:30</span> Standup VNBOT</div>
+              <div class="wf-reminder-item"><span class="time">21:00</span> Apagar server</div>
+            </div>
+            <div class="wf-mini-graph">
+              <div class="bar" style="height:40%;"></div>
+              <div class="bar" style="height:65%;"></div>
+              <div class="bar" style="height:30%;"></div>
+              <div class="bar" style="height:80%;"></div>
+              <div class="bar" style="height:55%;"></div>
+              <div class="bar" style="height:90%;"></div>
+              <div class="bar" style="height:50%;"></div>
+            </div>
+          </div>
+
+          <!-- AGENT DOCK -->
+          <div class="wf-dock">
+            <div class="wf-mascot"><div class="visor"></div><div class="acc"></div></div>
+            <div class="wf-dock-name">BEACON</div>
+            <div class="wf-dock-btns">
+              <div class="wf-dock-btn"><span class="material-icons">add_alert</span>NUEVO</div>
+              <div class="wf-dock-btn"><span class="material-icons">mic</span>VOZ</div>
+              <div class="wf-dock-btn"><span class="material-icons">lock</span>BÓVEDA</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANNOTATIONS -->
+    <div class="grid grid-cols-3 gap-3 mt-3">
+      <div class="annot-line"><span class="bp">&lt; 768px:</span> sidebar colapsa a iconos · agent dock se mueve a bottom bar</div>
+      <div class="annot-line"><span class="bp">768-1280px:</span> sidebar 200px · dock 80px</div>
+      <div class="annot-line"><span class="bp">&gt; 1280px:</span> sidebar 240px · dock 120px con mini-stats</div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>CAP. 04 · SHELL</span>
+    <span style="color:var(--accent);">VNBOT UI/UX · DESIGN SYSTEM</span>
+    <span>21 / 39</span>
+  </footer>
+
+</div>
+
+<aside data-notes class="hidden">
+- 3 zonas fijas: sidebar nav, main content, agent dock.
+- Responsive con 3 breakpoints: &lt;768, 768-1280, &gt;1280.
+- Mascota siempre visible a la derecha (dock) en desktop.
+- En móvil el dock baja a bottom bar y la sidebar colapsa a iconos.
+- Topbar con búsqueda central — VNBOT es captura-first.
+</aside>
+</body>
+</html>

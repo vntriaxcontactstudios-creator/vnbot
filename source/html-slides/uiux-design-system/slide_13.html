@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT — Estados como Datos</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .code-window {
+    background: #0B1220;
+    border: 2px solid #22D3EE;
+    clip-path: polygon(0 12px, 12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px));
+    overflow: hidden;
+  }
+  .code-window .tabs {
+    background: #111827;
+    border-bottom: 1px solid #334155;
+    padding: 8px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .code-window .tabs .file {
+    font-family: var(--font-num);
+    font-size: 11px;
+    color: #22D3EE;
+    letter-spacing: 0.04em;
+  }
+  .code-window .tabs .dots {
+    display: flex;
+    gap: 5px;
+  }
+  .code-window .tabs .dots span {
+    width: 8px; height: 8px;
+    display: inline-block;
+  }
+  .code-window pre {
+    font-family: var(--font-num);
+    font-size: 12px;
+    line-height: 1.55;
+    color: #E5F1FF;
+    padding: 14px 16px;
+    margin: 0;
+    overflow: hidden;
+    letter-spacing: 0.02em;
+  }
+  .code-window pre .kw { color: #F472B6; }   /* keywords */
+  .code-window pre .ty { color: #22D3EE; }   /* types */
+  .code-window pre .st { color: #FBBF24; }   /* strings */
+  .code-window pre .cm { color: #475569; }   /* comments */
+  .code-window pre .pn { color: #94A3B8; }   /* punctuation */
+  .code-window pre .ln {
+    display: inline-block;
+    width: 22px;
+    color: #334155;
+    text-align: right;
+    margin-right: 10px;
+    user-select: none;
+  }
+
+  .map-table {
+    background: #111827;
+    border: 2px solid #334155;
+    clip-path: polygon(0 12px, 12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px));
+    padding: 12px 14px;
+  }
+  .map-table .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .map-table .row {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 10px;
+    padding: 7px 4px;
+    border-bottom: 1px dashed #1F2937;
+    align-items: center;
+  }
+  .map-table .row:last-child { border-bottom: none; }
+  .map-table .row .st {
+    font-family: var(--font-num);
+    font-size: 11px;
+    color: #22D3EE;
+    letter-spacing: 0.04em;
+  }
+  .map-table .row .vis {
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: #E5F1FF;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .map-table .row .vis .dot {
+    width: 8px; height: 8px;
+    flex-shrink: 0;
+    display: inline-block;
+  }
+  .note-strip {
+    background: #0B1220;
+    border: 1px dashed #334155;
+    padding: 10px 14px;
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: #94A3B8;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    clip-path: polygon(0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+  .note-strip i {
+    color: #FBBF24;
+    font-size: 18px;
+  }
+</style>
+</head>
+<body>
+<div class="slide grid-bg relative">
+  <!-- Corner brackets -->
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- Header -->
+  <div class="absolute" style="top: 26px; left: 56px;">
+    <span class="pixel-badge magenta">02.4 // ESTADOS</span>
+    <h1 class="mt-2" style="font-family:var(--font-heading);font-weight:700;font-size:30px;color:#E5F1FF;letter-spacing:0.02em;">
+      Estados como Datos, no como Sprites
+    </h1>
+    <p class="mt-1" style="font-family:var(--font-body);font-size:13px;color:#94A3B8;">
+      El componente es puro: recibe data, renderiza. Sin animación decorativa.
+    </p>
+  </div>
+
+  <!-- Top-right marker -->
+  <div class="absolute" style="top: 36px; right: 56px;">
+    <span style="font-family:var(--font-num);font-size:10px;color:#94A3B8;letter-spacing:0.12em;">TYPESCRIPT · 10 STATES</span>
+  </div>
+
+  <!-- Two columns -->
+  <div class="absolute flex gap-5" style="top: 122px; left: 56px; right: 56px;">
+    <!-- LEFT — Code window -->
+    <div style="width: 620px;">
+      <div class="code-window">
+        <div class="tabs">
+          <span class="file">[ mascot-state.ts ]</span>
+          <span class="dots">
+            <span style="background:#EF4444;"></span>
+            <span style="background:#FBBF24;"></span>
+            <span style="background:#10B981;"></span>
+          </span>
+        </div>
+<pre><span class="ln">1</span><span class="kw">type</span> <span class="ty">MascotState</span> <span class="pn">=</span>
+<span class="ln">2</span>  <span class="pn">|</span> <span class="st">'idle'</span>
+<span class="ln">3</span>  <span class="pn">|</span> <span class="st">'listening'</span>
+<span class="ln">4</span>  <span class="pn">|</span> <span class="st">'thinking'</span>
+<span class="ln">5</span>  <span class="pn">|</span> <span class="st">'processing'</span>
+<span class="ln">6</span>  <span class="pn">|</span> <span class="st">'waiting_confirmation'</span>
+<span class="ln">7</span>  <span class="pn">|</span> <span class="st">'success'</span>
+<span class="ln">8</span>  <span class="pn">|</span> <span class="st">'warning'</span>
+<span class="ln">9</span>  <span class="pn">|</span> <span class="st">'error'</span>
+<span class="ln">10</span> <span class="pn">|</span> <span class="st">'offline'</span>
+<span class="ln">11</span> <span class="pn">|</span> <span class="st">'sleeping'</span><span class="pn">;</span>
+<span class="ln">12</span>
+<span class="ln">13</span><span class="kw">interface</span> <span class="ty">AgentConfig</span> <span class="pn">{</span>
+<span class="ln">14</span>  <span class="ty">agent_id</span><span class="pn">:</span> <span class="ty">string</span><span class="pn">;</span>
+<span class="ln">15</span>  <span class="ty">base_template</span><span class="pn">:</span> <span class="ty">string</span><span class="pn">;</span>
+<span class="ln">16</span>  <span class="ty">palette</span><span class="pn">:</span> <span class="ty">string</span><span class="pn">;</span>
+<span class="ln">17</span>  <span class="ty">visor_pattern</span><span class="pn">:</span> <span class="ty">string</span><span class="pn">;</span>
+<span class="ln">18</span>  <span class="ty">accessory</span><span class="pn">:</span> <span class="ty">string</span><span class="pn">;</span>
+<span class="ln">19</span>  <span class="ty">idle_animation</span><span class="pn">:</span> <span class="ty">string</span><span class="pn">;</span>
+<span class="ln">20</span>  <span class="ty">states</span><span class="pn">:</span> <span class="ty">MascotState</span><span class="pn">[];</span>
+<span class="ln">21</span><span class="pn">}</span>
+<span class="ln">22</span>
+<span class="ln">23</span><span class="cm">// Uso</span>
+<span class="ln">24</span><span class="pn">&lt;</span><span class="ty">MascotStateView</span>
+<span class="ln">25</span>  <span class="ty">agent</span><span class="pn">=</span><span class="st">"beacon"</span>
+<span class="ln">26</span>  <span class="ty">state</span><span class="pn">=</span><span class="st">"processing"</span>
+<span class="ln">27</span>  <span class="ty">size</span><span class="pn">=</span><span class="pn">{</span><span class="st">64</span><span class="pn">}</span>
+<span class="ln">28</span>  <span class="ty">reducedMotion</span><span class="pn">=</span><span class="pn">{</span><span class="ty">prefersReducedMotion</span><span class="pn">}</span>
+<span class="ln">29</span><span class="pn">/&gt;</span></pre>
+      </div>
+    </div>
+
+    <!-- RIGHT — Backend → Visual mapping table -->
+    <div style="width: 500px;">
+      <div class="map-table">
+        <div class="head">
+          <span class="pixel-badge">BACKEND → VISUAL</span>
+          <span style="font-family:var(--font-num);font-size:10px;color:#475569;letter-spacing:0.1em;">10 STATES</span>
+        </div>
+        <div class="row">
+          <span class="st">idle</span>
+          <span class="vis"><span class="dot" style="background:#22D3EE;box-shadow:0 0 6px #22D3EE;"></span>Visor cyan estable</span>
+        </div>
+        <div class="row">
+          <span class="st">listening</span>
+          <span class="vis"><span class="dot" style="background:#22D3EE;"></span>Visor con señal</span>
+        </div>
+        <div class="row">
+          <span class="st">thinking</span>
+          <span class="vis"><span class="dot" style="background:#22D3EE;"></span>Visor con puntos</span>
+        </div>
+        <div class="row">
+          <span class="st">processing</span>
+          <span class="vis"><span class="dot" style="background:linear-gradient(90deg,#22D3EE,#F472B6,#FBBF24);"></span>Anillo multicolor</span>
+        </div>
+        <div class="row">
+          <span class="st">waiting_confirm</span>
+          <span class="vis"><span class="dot" style="background:#FBBF24;box-shadow:0 0 6px #FBBF24;"></span>Visor amber</span>
+        </div>
+        <div class="row">
+          <span class="st">success</span>
+          <span class="vis"><span class="dot" style="background:#10B981;box-shadow:0 0 6px #10B981;"></span>Verde, pose abierta</span>
+        </div>
+        <div class="row">
+          <span class="st">warning</span>
+          <span class="vis"><span class="dot" style="background:#FBBF24;"></span>Amber, partículas</span>
+        </div>
+        <div class="row">
+          <span class="st">error</span>
+          <span class="vis"><span class="dot" style="background:#EF4444;box-shadow:0 0 6px #EF4444;"></span>Rojo, postura alerta</span>
+        </div>
+        <div class="row">
+          <span class="st">offline</span>
+          <span class="vis"><span class="dot" style="background:#6B7280;"></span>Visor apagado</span>
+        </div>
+        <div class="row">
+          <span class="st">sleeping</span>
+          <span class="vis"><span class="dot" style="background:#475569;"></span>Pose compacta</span>
+        </div>
+      </div>
+
+      <div class="note-strip">
+        <i class="material-icons">info</i>
+        <span>El componente recibe el estado desde el store/stream de operaciones. Sin animación decorativa.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <span>CAP. 02 · ESTADOS</span>
+    <span>13 / 39</span>
+  </div>
+</div>
+<aside data-notes class="hidden">
+- Los estados son tipos TypeScript, no strings sueltos.
+- El componente es puro: recibe data, renderiza.
+- Sin lógica de animación aleatoria.
+- Cada estado mapea a una expresión visual predefinida.
+- 10 estados cubren todo el ciclo de vida del agente.
+</aside>
+</body>
+</html>

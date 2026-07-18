@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · Flujo de Audio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .pipe-step {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 12px;
+    background: var(--surface);
+    border-left: 2px solid var(--accent);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: var(--primary);
+  }
+  .pipe-step .num { font-family: var(--font-num); font-size: 11px; color: var(--accent); font-weight: 600; min-width: 22px; }
+  .pipe-step.am { border-left-color: var(--accent-3); }
+  .pipe-step.am .num { color: var(--accent-3); }
+  .pipe-step.gr { border-left-color: var(--success); background: rgba(16,185,129,0.04); }
+  .pipe-step.gr .num { color: var(--success); }
+  .pipe-step.rd { border-left-color: var(--error); background: rgba(239,68,68,0.04); }
+  .pipe-step.rd .num { color: var(--error); }
+
+  .decision-line { display: flex; align-items: center; gap: 10px; padding: 5px 10px; padding-left: 30px; font-family: 'Inter', sans-serif; font-size: 11.5px; color: var(--primary); }
+  .branch-row { display: flex; gap: 10px; padding-left: 50px; align-items: center; }
+  .branch-label { font-family: var(--font-pixel); font-size: 9px; padding: 2px 6px; border: 1px solid; letter-spacing: 0.06em; }
+  .branch-label.no { color: var(--error); border-color: var(--error); background: rgba(239,68,68,0.08); }
+  .branch-label.si { color: var(--accent-3); border-color: var(--accent-3); background: rgba(251,191,36,0.08); }
+
+  .state-pill {
+    font-family: var(--font-num);
+    font-size: 10px;
+    padding: 3px 8px;
+    border: 1px solid var(--accent-3);
+    color: var(--accent-3);
+    background: rgba(251,191,36,0.06);
+  }
+  .state-pill.cy { color: var(--accent); border-color: var(--accent); background: rgba(34,211,238,0.06); }
+
+  .rule-row { display: flex; align-items: flex-start; gap: 8px; font-family: 'Inter', sans-serif; font-size: 12px; color: var(--primary); line-height: 1.35; padding: 5px 0; border-bottom: 1px dashed rgba(51,65,85,0.5); }
+  .rule-row:last-child { border-bottom: none; }
+  .rule-row .material-icons { font-size: 14px; color: var(--success); margin-top: 1px; }
+
+  .mini-pipe { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+  .mp-step {
+    background: var(--bg);
+    border: 1px solid var(--accent-2);
+    color: var(--accent-2);
+    padding: 4px 8px;
+    font-family: var(--font-num);
+    font-size: 10px;
+    clip-path: polygon(0 3px, 3px 0, 100% 0, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0 100%);
+  }
+  .mp-arr { color: var(--accent-2); font-family: var(--font-num); font-size: 11px; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- HEADER -->
+  <header class="absolute top-7 left-8 right-8">
+    <div class="flex items-end justify-between">
+      <div class="flex items-center gap-4">
+        <span class="pixel-badge">07.1 // AUDIO</span>
+        <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; letter-spacing:0.02em; color:var(--primary);">Flujo de <span style="color:var(--accent);">Audio</span></h1>
+      </div>
+      <div class="flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+        <span class="material-icons" style="font-size:14px; color:var(--accent);">mic</span>
+        <span>10 PASOS · 1 DECISIÓN · TRANSCRIPT</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="absolute" style="top:108px; left:32px; right:32px; bottom:50px; display:grid; grid-template-columns: 620px 1fr; gap:20px;">
+
+    <!-- LEFT: pipeline -->
+    <section class="hud-panel" style="padding:14px 18px; display:flex; flex-direction:column;">
+      <div class="flex items-center justify-between mb-2">
+        <span style="font-family:var(--font-pixel); font-size:10px; color:var(--accent); letter-spacing:0.08em;">PIPELINE · AUDIO</span>
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">10 NODOS</span>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:5px;">
+        <div class="pipe-step"><span class="num">1</span><span>Pulsar micrófono</span></div>
+
+        <div class="decision-line">
+          <span style="font-family:var(--font-num); font-size:11px; color:var(--accent-3);">2.</span>
+          <span style="font-family:var(--font-pixel); font-size:9px; color:var(--accent-3);">&lt;¿Permiso concedido?&gt;</span>
+        </div>
+        <div class="branch-row">
+          <span class="branch-label no">NO</span>
+          <span class="pipe-step rd" style="padding:4px 8px; font-size:11px;"><span class="num">↳</span>Explicar permiso + ofrecer texto</span>
+        </div>
+        <div class="branch-row" style="padding-left:50px;">
+          <span class="branch-label si">SÍ</span>
+          <span style="color:var(--accent-3); font-size:11px;">↓</span>
+        </div>
+
+        <div class="pipe-step am"><span class="num">3</span><span class="state-pill" style="margin-left:auto;">LISTENING</span></div>
+        <div class="pipe-step"><span class="num">4</span><span>Grabación <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">— mostrar tiempo, pausa, cancelar</span></span></div>
+        <div class="pipe-step"><span class="num">5</span><span>Detener grabación</span></div>
+        <div class="pipe-step"><span class="num">6</span><span>Guardar audio temporal</span></div>
+        <div class="pipe-step am"><span class="num">7</span><span>Elegir transcripción: <span style="font-family:var(--font-num); color:var(--accent-3);">local | cloud</span></span></div>
+        <div class="pipe-step"><span class="num">8</span><span>Crear job</span></div>
+        <div class="pipe-step"><span class="num">9</span><span class="state-pill cy" style="margin-left:auto;">TRANSCRIBING</span></div>
+        <div class="pipe-step gr"><span class="num">10</span><span>Mostrar transcript editable</span></div>
+      </div>
+    </section>
+
+    <!-- RIGHT: rules + mini-pipe -->
+    <section style="display:flex; flex-direction:column; gap:14px;">
+
+      <div class="hud-panel accent" style="padding:14px 18px; flex:1;">
+        <div class="flex items-center justify-between mb-2">
+          <span style="font-family:var(--font-pixel); font-size:11px; color:var(--accent); letter-spacing:0.08em;">REGLAS DE GRABACIÓN</span>
+          <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">6 / 6</span>
+        </div>
+        <div class="rule-row"><span class="material-icons">check</span><span>Mostrar tiempo de grabación</span></div>
+        <div class="rule-row"><span class="material-icons">check</span><span>Permitir pausa</span></div>
+        <div class="rule-row"><span class="material-icons">check</span><span>Permitir cancelar</span></div>
+        <div class="rule-row"><span class="material-icons">check</span><span>Mostrar estado de micrófono</span></div>
+        <div class="rule-row"><span class="material-icons">check</span><span>No grabar al cerrar accidentalmente sin advertencia</span></div>
+        <div class="rule-row"><span class="material-icons">check</span><span>Si se cierra: <span style="font-family:var(--font-num); color:var(--accent);">'¿Descartar grabación?'</span></span></div>
+      </div>
+
+      <div class="hud-panel magenta" style="padding:12px 16px;">
+        <div class="flex items-center justify-between mb-2">
+          <span style="font-family:var(--font-pixel); font-size:11px; color:var(--accent-2); letter-spacing:0.08em;">PROCESAR TRANSCRIPT</span>
+          <span class="material-icons" style="font-size:14px; color:var(--accent-2);">arrow_forward</span>
+        </div>
+        <div class="mini-pipe">
+          <span class="mp-step">Transcript revisado</span>
+          <span class="mp-arr">→</span>
+          <span class="mp-step">Enviar al chat</span>
+          <span class="mp-arr">→</span>
+          <span class="mp-step">Detectar intent</span>
+          <span class="mp-arr">→</span>
+          <span class="mp-step">Proponer acción</span>
+          <span class="mp-arr">→</span>
+          <span class="mp-step">Confirmar según riesgo</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>CAP. 07 · AUDIO</span>
+    <span style="color:var(--accent);">VNBOT APP FLOW</span>
+    <span>34 / 57</span>
+  </footer>
+
+</div>
+
+<aside data-notes class="hidden">
+  <ul>
+    <li>10 pasos con 1 decisión (¿permiso concedido?) — si NO, ofrecer texto como fallback.</li>
+    <li>Estados destacados: LISTENING (ámbar) y TRANSCRIBING (cyan).</li>
+    <li>Transcripción local o cloud según preferencia del usuario.</li>
+    <li>6 reglas de grabación protegen al usuario (pausa, cancelar, advertencia al cerrar).</li>
+    <li>Transcript editable entra al mismo pipeline del chat.</li>
+  </ul>
+</aside>
+</body>
+</html>

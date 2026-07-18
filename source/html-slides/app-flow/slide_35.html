@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · Audio — Retención</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .opt-card {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1.5px solid;
+    clip-path: polygon(0 5px, 5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
+  }
+  .opt-card.gr { border-color: var(--success); background: rgba(16,185,129,0.04); }
+  .opt-card.cy { border-color: var(--accent); }
+  .opt-card.am { border-color: var(--accent-3); }
+
+  .radio {
+    width: 16px; height: 16px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .radio.on::after {
+    content: '';
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 8px; height: 8px;
+    background: currentColor;
+    border-radius: 50%;
+  }
+  .opt-card.gr .radio { color: var(--success); }
+  .opt-card.cy .radio { color: var(--accent); }
+  .opt-card.am .radio { color: var(--accent-3); }
+
+  .opt-icon {
+    width: 36px; height: 36px;
+    border: 1.5px solid currentColor;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    clip-path: polygon(0 4px, 4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+  }
+  .opt-icon .material-icons { font-size: 22px; color: currentColor; }
+  .opt-card.gr .opt-icon { color: var(--success); }
+  .opt-card.cy .opt-icon { color: var(--accent); }
+  .opt-card.am .opt-icon { color: var(--accent-3); }
+
+  .opt-content { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .opt-title { font-family: var(--font-pixel); font-size: 11px; letter-spacing: 0.06em; }
+  .opt-card.gr .opt-title { color: var(--success); }
+  .opt-card.cy .opt-title { color: var(--accent); }
+  .opt-card.am .opt-title { color: var(--accent-3); }
+  .opt-body { font-family: 'Inter', sans-serif; font-size: 11.5px; color: var(--primary); line-height: 1.35; }
+  .opt-rec { font-family: var(--font-num); font-size: 10px; color: var(--primary-dim); margin-top: 2px; }
+
+  .rule-row { display: flex; align-items: flex-start; gap: 8px; font-family: 'Inter', sans-serif; font-size: 12px; color: var(--primary); line-height: 1.35; padding: 5px 0; border-bottom: 1px dashed rgba(51,65,85,0.5); }
+  .rule-row:last-child { border-bottom: none; }
+  .rule-row .material-icons { font-size: 14px; color: var(--success); margin-top: 1px; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- HEADER -->
+  <header class="absolute top-7 left-8 right-8">
+    <div class="flex items-end justify-between">
+      <div class="flex items-center gap-4">
+        <span class="pixel-badge">07.2 // RETENCIÓN</span>
+        <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; letter-spacing:0.02em; color:var(--primary);">Audio — Política de <span style="color:var(--accent);">Retención</span></h1>
+      </div>
+      <div class="flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+        <span class="material-icons" style="font-size:14px; color:var(--accent);">policy</span>
+        <span>3 OPCIONES · 6 REGLAS</span>
+      </div>
+    </div>
+    <p style="font-family:'Inter',sans-serif; font-size:14px; color:#94A3B8; margin-top:6px;">La decisión debe ser visible antes o inmediatamente después del procesamiento.</p>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="absolute" style="top:128px; left:32px; right:32px; bottom:50px; display:grid; grid-template-columns: 620px 1fr; gap:20px;">
+
+    <!-- LEFT: 3 options -->
+    <section style="display:flex; flex-direction:column; gap:10px;">
+      <div class="flex items-center justify-between" style="padding:0 4px;">
+        <span style="font-family:var(--font-pixel); font-size:11px; color:var(--accent); letter-spacing:0.08em;">PANEL DE RETENCIÓN</span>
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">3 OPCIONES</span>
+      </div>
+
+      <div class="opt-card gr">
+        <div class="radio on"></div>
+        <div class="opt-icon"><span class="material-icons">delete</span></div>
+        <div class="opt-content">
+          <div class="opt-title">1 · ELIMINAR</div>
+          <div class="opt-body">El audio se elimina inmediatamente después de generar el transcript. Solo se conserva el texto.</div>
+          <div class="opt-rec">Recomendado para: usuarios con privacidad estricta</div>
+        </div>
+      </div>
+
+      <div class="opt-card cy">
+        <div class="radio"></div>
+        <div class="opt-icon"><span class="material-icons">save</span></div>
+        <div class="opt-content">
+          <div class="opt-title">2 · CONSERVAR</div>
+          <div class="opt-body">El audio se guarda cifrado en la bóveda. Útil para re-transcribir con mejores modelos futuros.</div>
+          <div class="opt-rec">Recomendado para: archivos importantes, mentoría, reuniones</div>
+        </div>
+      </div>
+
+      <div class="opt-card am">
+        <div class="radio"></div>
+        <div class="opt-icon"><span class="material-icons">schedule</span></div>
+        <div class="opt-content">
+          <div class="opt-title">3 · CONSERVAR N DÍAS</div>
+          <div class="opt-body">Selector de días <span style="font-family:var(--font-num); color:var(--accent-3);">(7 / 30 / 90)</span>. Pasado el periodo, eliminación automática verificada.</div>
+          <div class="opt-rec">Recomendado para: uso diario, balance privacidad/utilidad</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: rules -->
+    <section class="hud-panel accent" style="padding:14px 18px; display:flex; flex-direction:column;">
+      <div class="flex items-center justify-between mb-2">
+        <span style="font-family:var(--font-pixel); font-size:11px; color:var(--accent); letter-spacing:0.08em;">REGLAS DE RETENCIÓN</span>
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">6 / 6</span>
+      </div>
+
+      <div class="rule-row"><span class="material-icons">check</span><span>Política visible <b style="color:var(--accent);">ANTES</b> de grabar (default configurable)</span></div>
+      <div class="rule-row"><span class="material-icons">check</span><span>Confirmación inmediatamente después de procesar</span></div>
+      <div class="rule-row"><span class="material-icons">check</span><span>Cambio de política no afecta audios previos</span></div>
+      <div class="rule-row"><span class="material-icons">check</span><span>Eliminación verifica checksum + log</span></div>
+      <div class="rule-row"><span class="material-icons">check</span><span>Audio cifrado con passphrase de bóveda</span></div>
+      <div class="rule-row"><span class="material-icons">check</span><span>En modo <b style="color:var(--accent-3);">Local Estricto</b>, audio <b style="color:var(--error);">NUNCA</b> sale del dispositivo</span></div>
+
+      <div style="margin-top:auto; background:rgba(251,191,36,0.06); border-left:2px solid var(--accent-3); padding:8px 12px; display:flex; gap:8px; align-items:flex-start;">
+        <span class="material-icons" style="color:var(--accent-3); font-size:14px; margin-top:1px;">priority_high</span>
+        <span style="font-family:'Inter',sans-serif; font-size:12px; color:var(--accent-3); line-height:1.4;"><b>PRINCIPIO:</b> No descartar audio/archivo sin informar al usuario.</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>CAP. 07 · RETENCIÓN</span>
+    <span style="color:var(--accent);">VNBOT APP FLOW</span>
+    <span>35 / 57</span>
+  </footer>
+
+</div>
+
+<aside data-notes class="hidden">
+  <ul>
+    <li>3 opciones de retención: eliminar, conservar, conservar N días (7/30/90).</li>
+    <li>Política visible ANTES de grabar y confirmada después de procesar.</li>
+    <li>Cambio de política no aplica retroactivamente a audios previos.</li>
+    <li>Eliminación verifica checksum + log — no es silenciosa.</li>
+    <li>En Local Estricto el audio nunca sale del dispositivo.</li>
+  </ul>
+</aside>
+</body>
+</html>

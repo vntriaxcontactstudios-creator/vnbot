@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT UI/UX Design System — Cover</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .slide { background: #0B1220; }
+  .grid-bg-cover {
+    background-image:
+      linear-gradient(rgba(34,211,238,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(34,211,238,0.06) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .display-title {
+    font-family: var(--font-pixel);
+    font-size: 96px;
+    color: #22D3EE;
+    line-height: 1;
+    text-shadow: 0 0 24px rgba(34,211,238,0.35), 0 0 48px rgba(34,211,238,0.18);
+    letter-spacing: 0.02em;
+  }
+  .sub-display {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 32px;
+    letter-spacing: 0.2em;
+    color: #E5F1FF;
+  }
+  .tagline {
+    font-family: var(--font-body);
+    font-size: 18px;
+    color: #94A3B8;
+    line-height: 1.55;
+  }
+  .meta-block {
+    font-family: var(--font-num);
+    font-size: 11px;
+    color: #94A3B8;
+    line-height: 1.7;
+    letter-spacing: 0.08em;
+  }
+  /* Mini golem placeholder built in CSS */
+  .golem-frame {
+    width: 220px;
+    height: 150px;
+    background: #111827;
+    border: 2px solid #22D3EE;
+    clip-path: polygon(0 12px, 12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px));
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .golem-frame::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 10px;
+    width: 6px; height: 6px;
+    background: #22D3EE;
+  }
+  .golem-frame .label {
+    position: absolute;
+    top: 6px; right: 10px;
+    font-family: var(--font-pixel);
+    font-size: 7px;
+    color: #22D3EE;
+    letter-spacing: 0.1em;
+  }
+  .golem {
+    width: 64px;
+    height: 64px;
+    position: relative;
+    image-rendering: pixelated;
+  }
+  .golem .body {
+    position: absolute;
+    bottom: 0; left: 8px;
+    width: 48px; height: 40px;
+    background: #475569;
+    border: 2px solid #0B1220;
+    box-shadow: inset 0 -6px 0 rgba(0,0,0,0.3);
+  }
+  .golem .head {
+    position: absolute;
+    top: 0; left: 16px;
+    width: 32px; height: 28px;
+    background: #64748B;
+    border: 2px solid #0B1220;
+  }
+  .golem .visor {
+    position: absolute;
+    top: 10px; left: 22px;
+    width: 20px; height: 6px;
+    background: #22D3EE;
+    box-shadow: 0 0 8px #22D3EE, 0 0 14px rgba(34,211,238,0.6);
+  }
+  .golem-frame .bot {
+    position: absolute;
+    bottom: 4px; left: 10px;
+    font-family: var(--font-num);
+    font-size: 8px;
+    color: #475569;
+    letter-spacing: 0.1em;
+  }
+  .scanline {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent 0, transparent 3px, rgba(34,211,238,0.025) 3px, rgba(34,211,238,0.025) 4px);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="slide grid-bg-cover relative">
+  <!-- Corner brackets -->
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- Top pixel badge -->
+  <div class="absolute" style="top: 36px; left: 48px;">
+    <span class="pixel-badge">VNBOT // DESIGN SYSTEM v1.0.0-draft</span>
+  </div>
+
+  <!-- Top-right small HUD indicator -->
+  <div class="absolute flex items-center gap-2" style="top: 40px; right: 56px;">
+    <span style="width:8px;height:8px;background:#22D3EE;display:inline-block;box-shadow:0 0 8px #22D3EE;"></span>
+    <span style="width:8px;height:8px;background:#F472B6;display:inline-block;box-shadow:0 0 8px #F472B6;"></span>
+    <span style="width:8px;height:8px;background:#FBBF24;display:inline-block;box-shadow:0 0 8px #FBBF24;"></span>
+    <span style="font-family:var(--font-num);font-size:10px;color:#94A3B8;letter-spacing:0.1em;margin-left:6px;">SYS // ONLINE</span>
+  </div>
+
+  <!-- LEFT block — display title + subtitle + tagline -->
+  <div class="absolute" style="top: 200px; left: 64px; width: 720px;">
+    <h1 class="display-title">VNBOT</h1>
+    <div class="mt-6 flex items-center gap-4">
+      <span style="display:inline-block;width:48px;height:2px;background:#22D3EE;"></span>
+      <span class="sub-display">UI/UX DESIGN SYSTEM</span>
+    </div>
+    <p class="tagline mt-6" style="max-width: 620px;">
+      Sistema visual procedural para un asistente personal pixel-cyber — memoria, agentes y mascotas vivas.
+    </p>
+  </div>
+
+  <!-- RIGHT decoration — 4 stacked HUD panels with mini golems -->
+  <div class="absolute flex flex-col gap-3" style="top: 130px; right: 56px;">
+    <div class="golem-frame">
+      <span class="label">AGENT // 01</span>
+      <div class="golem">
+        <div class="body"></div>
+        <div class="head"></div>
+        <div class="visor"></div>
+      </div>
+      <span class="bot">GUARDIAN · CYAN</span>
+    </div>
+    <div class="golem-frame" style="border-color:#F472B6;">
+      <span class="label" style="color:#F472B6;">AGENT // 02</span>
+      <div class="golem">
+        <div class="body" style="background:#475569;"></div>
+        <div class="head" style="background:#64748B;"></div>
+        <div class="visor" style="background:#F472B6;box-shadow:0 0 8px #F472B6, 0 0 14px rgba(244,114,182,0.6);"></div>
+      </div>
+      <span class="bot">FORGE · MAGENTA</span>
+    </div>
+    <div class="golem-frame" style="border-color:#FBBF24;">
+      <span class="label" style="color:#FBBF24;">AGENT // 03</span>
+      <div class="golem">
+        <div class="body"></div>
+        <div class="head"></div>
+        <div class="visor" style="background:#FBBF24;box-shadow:0 0 8px #FBBF24, 0 0 14px rgba(251,191,36,0.6);"></div>
+      </div>
+      <span class="bot">BEACON · AMBER</span>
+    </div>
+    <div class="golem-frame" style="border-color:#10B981;">
+      <span class="label" style="color:#10B981;">AGENT // 04</span>
+      <div class="golem">
+        <div class="body"></div>
+        <div class="head"></div>
+        <div class="visor" style="background:#10B981;box-shadow:0 0 8px #10B981, 0 0 14px rgba(16,185,129,0.6);"></div>
+      </div>
+      <span class="bot">SENTINEL · GREEN</span>
+    </div>
+  </div>
+
+  <!-- Bottom-right technical block -->
+  <div class="absolute meta-block text-right" style="bottom: 36px; right: 56px;">
+    <div>DOC: 05-DISENO-UI-UX</div>
+    <div>BUNDLE: VNBOT_CONTEXT_BUNDLE_v3</div>
+    <div>DATE: 2026-07-17</div>
+  </div>
+
+  <!-- Bottom-left pixel badge -->
+  <div class="absolute" style="bottom: 36px; left: 48px;">
+    <span class="pixel-badge magenta">// COVER · 01 / 39</span>
+  </div>
+
+  <!-- Subtle scanlines -->
+  <div class="scanline" data-decor></div>
+</div>
+<aside data-notes class="hidden">
+- Apertura del deck VNBOT UI/UX Design System.
+- VNBOT combina memoria personal, agentes y mascota procedural.
+- Esta sesión cubre UI/UX; la próxima será App Flow.
+- Mostrar los 4 marcos HUD a la derecha como muestra del sistema de agentes.
+- Recordar que la mascota es viva: cada estado refleja una operación real.
+</aside>
+</body>
+</html>

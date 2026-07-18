@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow — Cover</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .cover-title { font-family: var(--font-pixel); font-size: 64px; color: var(--accent); text-shadow: 0 0 24px rgba(34,211,238,0.45); line-height: 1; }
+  .cover-sub { font-family: var(--font-heading); font-weight: 700; font-size: 32px; letter-spacing: 0.2em; color: var(--primary); }
+  .cover-tag { font-family: var(--font-body); font-size: 18px; color: var(--primary-dim); max-width: 560px; line-height: 1.5; }
+  .tech-meta { font-family: var(--font-num); font-size: 11px; color: var(--primary-dim); letter-spacing: 0.05em; line-height: 1.7; }
+  .vnode { width: 200px; height: 30px; background: var(--surface); border: 1px solid var(--accent); color: var(--accent); font-family: var(--font-num); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; letter-spacing: 0.05em; clip-path: polygon(0 6px,6px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px)); }
+  .vdown { color: var(--accent); font-family: var(--font-num); font-size: 16px; text-align: center; line-height: 1; margin: 4px 0; }
+  .scan { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(34,211,238,0.03) 0px, rgba(34,211,238,0.03) 1px, transparent 1px, transparent 3px); pointer-events: none; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="scan" data-decor></div>
+
+  <div class="corner-bracket tl" data-decor></div>
+  <div class="corner-bracket tr" data-decor></div>
+  <div class="corner-bracket bl" data-decor></div>
+  <div class="corner-bracket br" data-decor></div>
+
+  <!-- Top-left pixel badge -->
+  <div class="absolute" style="top: 40px; left: 56px;">
+    <span class="pixel-badge">VNBOT // APP FLOW v1.0.0-draft</span>
+  </div>
+
+  <!-- Decorative ghost numeral -->
+  <div class="absolute" data-decor style="top: 60px; right: -20px; font-family: var(--font-pixel); font-size: 360px; color: rgba(34,211,238,0.025); line-height: 1; letter-spacing: -0.05em; pointer-events: none;">FX</div>
+
+  <!-- Left content block -->
+  <div class="absolute" style="top: 180px; left: 56px; width: 760px;">
+    <h1 class="cover-title">VNBOT</h1>
+    <div class="cover-sub mt-3">APP FLOW</div>
+    <div class="mt-5" style="height: 2px; width: 240px; background: var(--accent);"></div>
+    <p class="cover-tag mt-5">Flujos de usuario · estados · transiciones · recorridos — de abrir VNBOT a Hoy, chat, memoria, agentes y offline.</p>
+  </div>
+
+  <!-- Right vertical pipeline -->
+  <div class="absolute" style="top: 130px; right: 80px;">
+    <div class="text-center" style="font-family: var(--font-num); font-size: 9px; color: var(--primary-dim); letter-spacing: 0.15em; margin-bottom: 10px;">// CICLO CENTRAL</div>
+    <div class="vnode">1 · CAPTURAR</div>
+    <div class="vdown">↓</div>
+    <div class="vnode">2 · INTERPRETAR</div>
+    <div class="vdown">↓</div>
+    <div class="vnode">3 · EXPLICAR</div>
+    <div class="vdown">↓</div>
+    <div class="vnode">4 · CONFIRMAR</div>
+    <div class="vdown">↓</div>
+    <div class="vnode">5 · EJECUTAR</div>
+    <div class="vdown">↓</div>
+    <div class="vnode">6 · AUDITAR</div>
+    <div class="vdown">↓</div>
+    <div class="vnode">7 · RECUPERAR</div>
+  </div>
+
+  <!-- Bottom-right tech meta -->
+  <div class="absolute tech-meta" style="bottom: 44px; right: 56px; text-align: right;">
+    <div>DOC: 06-APP-FLOW-VNBOT</div>
+    <div>BUNDLE: VNBOT_CONTEXT_BUNDLE_v3</div>
+    <div>DATE: 2026-07-17</div>
+  </div>
+
+  <!-- Bottom-left ID line -->
+  <div class="absolute" style="bottom: 44px; left: 56px; font-family: var(--font-num); font-size: 11px; color: var(--primary-dim); letter-spacing: 0.1em;">
+    <span style="color: var(--accent);">●</span> 57 SLIDES &nbsp;·&nbsp; 10 CAPÍTULOS &nbsp;·&nbsp; ES
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- Apertura del deck de App Flow — continúa la sesión anterior de UI/UX.
+- Cubre 37 secciones del documento de flujos.
+- 57 slides en 10 capítulos: principios, estados, arranque, auth, chat, memoria, audio, agentes, offline, errores.
+- Mismo design system que el deck UI/UX anterior — pixel-cyber HUD.
+- Mostrar el ciclo central de 7 etapas como hilo conductor del deck.
+</aside>
+</body>
+</html>

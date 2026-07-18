@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT · Capítulo 3 — Spritesheets</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .chapter-num {
+    font-family: var(--font-pixel);
+    font-size: 96px;
+    color: var(--accent-3);
+    text-shadow: 0 0 24px rgba(251,191,36,0.4), 0 0 48px rgba(251,191,36,0.18);
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+  .amber-rule {
+    width: 240px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-3) 30%, var(--accent-3) 70%, transparent);
+    margin: 26px auto;
+  }
+  .chapter-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 48px;
+    letter-spacing: 0.15em;
+    color: var(--primary);
+    text-align: center;
+  }
+  .chapter-tagline {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    color: #94A3B8;
+    text-align: center;
+    margin-top: 16px;
+    letter-spacing: 0.02em;
+  }
+  .mini-ind {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    color: var(--accent-3);
+    letter-spacing: 0.1em;
+    padding: 8px 14px;
+    border: 1px solid var(--accent-3);
+    background: rgba(251,191,36,0.06);
+    clip-path: polygon(0 4px, 4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+  }
+  .ghost-grid {
+    background-image:
+      linear-gradient(rgba(251,191,36,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(251,191,36,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .scanline {
+    position: absolute; left:0; right:0; height:1px;
+    background: rgba(251,191,36,0.18);
+  }
+  .frame-pixel {
+    width: 56px; height: 56px;
+    background: var(--surface);
+    border: 2px solid var(--accent-3);
+    clip-path: polygon(0 6px, 6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .frame-pixel .visor {
+    width: 22px; height: 6px;
+    background: var(--accent-3);
+  }
+</style>
+</head>
+<body>
+<div class="slide grid-bg" style="position:relative;">
+
+  <!-- Ghost grid overlay (amber) -->
+  <div class="absolute inset-0 ghost-grid" data-decor></div>
+  <!-- Decorative scanlines -->
+  <div class="scanline" style="top:140px;" data-decor></div>
+  <div class="scanline" style="top:580px;" data-decor></div>
+
+  <!-- Corner brackets -->
+  <span class="corner-bracket tl" style="border-color:var(--accent-3);" data-decor></span>
+  <span class="corner-bracket tr" style="border-color:var(--accent-3);" data-decor></span>
+  <span class="corner-bracket bl" style="border-color:var(--accent-3);" data-decor></span>
+  <span class="corner-bracket br" style="border-color:var(--accent-3);" data-decor></span>
+
+  <!-- Top-left chapter badge -->
+  <div class="absolute top-9 left-9 flex items-center gap-3">
+    <span class="pixel-badge amber">CAPÍTULO 03 / 08</span>
+    <span style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim); letter-spacing:0.1em;">// SECTION BREAK</span>
+  </div>
+
+  <!-- Top-right tiny status -->
+  <div class="absolute top-9 right-9 flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+    <span class="material-icons" style="font-size:14px; color:var(--accent-3);">grid_view</span>
+    <span>SPRITESHEET REFERENCE</span>
+  </div>
+
+  <!-- Vertical center stack -->
+  <div class="absolute inset-0 flex flex-col items-center justify-center" style="padding-top:30px;">
+    <!-- Giant chapter number -->
+    <div class="chapter-num">03</div>
+
+    <!-- Pixel frame trio decoration -->
+    <div class="flex items-center gap-3 mt-6">
+      <div class="frame-pixel"><div class="visor"></div></div>
+      <div class="frame-pixel" style="border-color:var(--accent);"><div class="visor" style="background:var(--accent);"></div></div>
+      <div class="frame-pixel" style="border-color:var(--accent-2);"><div class="visor" style="background:var(--accent-2);"></div></div>
+    </div>
+
+    <!-- Amber rule -->
+    <div class="amber-rule"></div>
+
+    <!-- Chapter title -->
+    <h1 class="chapter-title">SPRITESHEETS</h1>
+
+    <!-- Tagline -->
+    <p class="chapter-tagline">7 agentes · 10 estados · 12 emotes — referencias para recreación procedural.</p>
+  </div>
+
+  <!-- Bottom-right mini indicators -->
+  <div class="absolute" style="bottom:36px; right:36px; display:flex; gap:10px;">
+    <span class="mini-ind">AGENTS ×7</span>
+    <span class="mini-ind">STATES ×10</span>
+    <span class="mini-ind">EMOTES ×12</span>
+  </div>
+
+  <!-- Bottom-left footer brand -->
+  <div class="absolute" style="bottom:36px; left:36px; font-family:var(--font-num); font-size:11px; color:var(--primary-dim); letter-spacing:0.08em;">
+    VNBOT · UI/UX DESIGN SYSTEM
+  </div>
+
+</div>
+
+<aside data-notes class="hidden">
+- Tres spritesheets dedicados: agentes, estados y emotes.
+- Son concept art, no assets finales para producción.
+- Sirven como guía visual para el renderer procedural.
+- Cada spritesheet tendrá su propia slide con detalle.
+- El deck se reorganiza: 7 + 10 + 12 = 29 referencias visuales totales.
+</aside>
+</body>
+</html>

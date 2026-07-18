@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · 55 / 57 — App Flow E2E</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .e2e-node { padding: 7px 14px; border:1px solid; background: var(--surface); font-family: var(--font-body); font-size: 11px; font-weight: 500; color: var(--primary); display:inline-flex; align-items:center; gap:6px; clip-path: polygon(0 6px, 6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px)); }
+  .arrow-down { width:1px; height:18px; background: var(--border-bright); margin: 0 auto; }
+  .arrow-down::after { content:''; display:block; width:6px; height:6px; border-right:1px solid var(--border-bright); border-bottom:1px solid var(--border-bright); transform: rotate(45deg); margin: -2px 0 0 -2.5px; }
+  .level-tag { font-family: var(--font-pixel); font-size: 9px; color: var(--primary-dim); letter-spacing: 0.08em; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl"></div>
+  <div class="corner-bracket tr"></div>
+  <div class="corner-bracket bl"></div>
+  <div class="corner-bracket br"></div>
+
+  <div class="absolute" style="top:32px; left:48px; right:48px; display:flex; justify-content:space-between; align-items:center;">
+    <span class="pixel-badge">10.4 // E2E</span>
+    <span style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim); letter-spacing:0.08em;">CHAPTER 10 · END-TO-END</span>
+  </div>
+  <h1 style="position:absolute; top:62px; left:48px; font-family:var(--font-heading); font-weight:700; font-size:32px; color:var(--primary); letter-spacing:0.02em;">App Flow Extremo a Extremo</h1>
+  <p style="position:absolute; top:104px; left:48px; font-family:var(--font-body); font-size:14px; color:var(--primary-dim);">El flujo completo de abrir VNBOT a resultado auditable.</p>
+
+  <!-- Big E2E panel -->
+  <div class="hud-panel accent" style="position:absolute; top:138px; left:48px; width:1184px; height:520px; padding:14px 22px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+      <i class="material-icons" style="font-size:16px; color:var(--accent);">route</i>
+      <span style="font-family:var(--font-pixel); font-size:10px; color:var(--accent);">FLUJO E2E · ABRIR → RESULTADO AUDITABLE</span>
+      <div style="flex:1; height:1px; background:var(--border-bright);"></div>
+      <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">2 CAMINOS · INFORMATIVO / OPERATIVO</span>
+    </div>
+
+    <!-- Diagram canvas -->
+    <div style="position:relative; height:460px; margin-top:6px;">
+
+      <!-- L1: Abrir VNBOT (centered) -->
+      <div style="position:absolute; top:0; left:525px; text-align:center;">
+        <div class="e2e-node" style="border-color:var(--accent); color:var(--accent);"><i class="material-icons" style="font-size:13px;">power_settings_new</i> Abrir VNBOT</div>
+      </div>
+      <div style="position:absolute; top:32px; left:595px;"><div class="arrow-down"></div></div>
+
+      <!-- L2: Boot/health and First run (split) -->
+      <div style="position:absolute; top:60px; left:340px; text-align:center;">
+        <div class="e2e-node" style="border-color:var(--accent); color:var(--accent);"><i class="material-icons" style="font-size:13px;">health_and_safety</i> Boot / health</div>
+      </div>
+      <div style="position:absolute; top:60px; left:680px; text-align:center;">
+        <div class="e2e-node" style="border-color:var(--accent); color:var(--accent);"><i class="material-icons" style="font-size:13px;">auto_awesome</i> First run</div>
+      </div>
+
+      <!-- Arrows L2 split -->
+      <div style="position:absolute; top:94px; left:394px;"><div class="arrow-down"></div></div>
+      <div style="position:absolute; top:94px; left:734px;"><div class="arrow-down"></div></div>
+
+      <!-- L2 cont: Auth/Unlock and Onboarding -->
+      <div style="position:absolute; top:120px; left:330px; text-align:center;">
+        <div class="e2e-node" style="border-color:var(--accent); color:var(--accent);"><i class="material-icons" style="font-size:13px;">lock_open</i> Auth / Unlock</div>
+      </div>
+      <div style="position:absolute; top:120px; left:670px; text-align:center;">
+        <div class="e2e-node" style="border-color:var(--accent); color:var(--accent);"><i class="material-icons" style="font-size:13px;">checklist</i> Onboarding</div>
+      </div>
+
+      <!-- Merge arrow -->
+      <svg width="100" height="32" style="position:absolute; top:154px; left:430px;">
+        <path d="M 0 0 L 50 16 L 100 0" stroke="var(--border-bright)" stroke-width="1" fill="none"/>
+        <path d="M 50 16 L 50 28" stroke="var(--border-bright)" stroke-width="1"/>
+      </svg>
+      <div style="position:absolute; top:184px; left:595px;"><div class="arrow-down"></div></div>
+
+      <!-- L3: Hoy -->
+      <div style="position:absolute; top:212px; left:545px; text-align:center;">
+        <div class="e2e-node" style="border-color:var(--success); color:var(--success); border-width:2px;"><i class="material-icons" style="font-size:13px;">home</i> Hoy</div>
+      </div>
+      <div style="position:absolute; top:244px; left:595px;"><div class="arrow-down"></div></div>
+
+      <!-- L4: Chat -->
+      <div style="position:absolute; top:272px; left:560px; text-align:center;">
+        <div class="e2e-node" style="border-color:var(--accent); color:var(--accent);"><i class="material-icons" style="font-size:13px;">forum</i> Chat</div>
+      </div>
+      <div style="position:absolute; top:304px; left:595px;"><div class="arrow-down"></div></div>
+
+      <!-- L5: Intent / Context (amber) -->
+      <div style="position:absolute; top:332px; left:520px; text-align:center;">
+        <div class="e2e-node" style="border-color:var(--accent-3); color:var(--accent-3);"><i class="material-icons" style="font-size:13px;">psychology</i> Intent / Context</div>
+      </div>
+
+      <!-- Branching lines for L6 -->
+      <svg width="380" height="22" style="position:absolute; top:364px; left:418px;">
+        <path d="M 190 0 L 190 8 L 0 8 L 0 22" stroke="var(--accent)" stroke-width="1" fill="none"/>
+        <path d="M 190 0 L 190 8 L 380 8 L 380 22" stroke="var(--accent)" stroke-width="1" fill="none"/>
+      </svg>
+
+      <!-- L6 LEFT path: Informativo -->
+      <div style="position:absolute; top:386px; left:80px; text-align:center;">
+        <div class="e2e-node" style="border-color:var(--accent); color:var(--accent);">Informativo</div>
+      </div>
+      <div style="position:absolute; top:418px; left:96px;"><div class="arrow-down"></div></div>
+      <div style="position:absolute; top:436px; left:88px; text-align:center;">
+        <div class="e2e-node" style="border-color:var(--success); color:var(--success);">Fuentes <span style="color:var(--primary-dim);">· log</span></div>
+      </div>
+
+      <!-- L6 RIGHT path: Acción -->
+      <div style="position:absolute; top:386px; left:830px; text-align:center;">
+        <div class="e2e-node" style="border-color:var(--accent); color:var(--accent);">Acción</div>
+      </div>
+      <div style="position:absolute; top:418px; left:846px;"><div class="arrow-down"></div></div>
+      <div style="position:absolute; top:436px; left:824px; text-align:center;">
+        <div class="e2e-node" style="border-color:var(--accent-3); color:var(--accent-3);">Propuesta</div>
+      </div>
+      <div style="position:absolute; top:468px; left:846px;"><div class="arrow-down"></div></div>
+      <div style="position:absolute; top:486px; left:820px; text-align:center;">
+        <div class="e2e-node" style="border-color:var(--accent-3); color:var(--accent-3);">Confirmación</div>
+      </div>
+
+      <!-- Final: Resultado / log (right end) -->
+      <!-- Skip extending too far; show result endpoint near right -->
+    </div>
+
+    <!-- Bottom labels: 2 paths -->
+    <div style="position:absolute; bottom:14px; left:22px; right:22px; padding-top:8px; border-top:1px solid var(--border-bright); display:flex; justify-content:space-between;">
+      <div style="display:flex; align-items:center; gap:6px; font-family:var(--font-num); font-size:10px; color:var(--accent);">
+        <span style="display:inline-block; width:8px; height:8px; background:var(--accent);"></span> INFORMATIVO: consulta → fuentes → respuesta
+      </div>
+      <div style="display:flex; align-items:center; gap:6px; font-family:var(--font-num); font-size:10px; color:var(--accent-3);">
+        <span style="display:inline-block; width:8px; height:8px; background:var(--accent-3);"></span> OPERATIVO: propuesta → confirmación → dominio → resultado/log
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>VNBOT // APP FLOW · CAP. 10 · E2E</span>
+    <span>55 / 57</span>
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- E2E: Abrir VNBOT → Boot/First run → Auth/Onboarding → Hoy → Chat → Intent.
+- Intent se divide en dos caminos: informativo y operativo.
+- Informativo: fuentes y respuesta al usuario.
+- Operativo: propuesta, confirmación, dominio/job, resultado con log auditable.
+- Hoy es el hub central del que salen todas las acciones.
+</aside>
+</body>
+</html>

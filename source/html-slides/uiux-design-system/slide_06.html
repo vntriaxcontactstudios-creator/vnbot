@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT — Tipografía y Escala</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .fam-card {
+    width: 100%;
+    background: #111827;
+    border: 2px solid #22D3EE;
+    clip-path: polygon(0 10px, 10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px));
+    padding: 12px 14px;
+    position: relative;
+  }
+  .fam-card .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .fam-card .top .role {
+    font-family: var(--font-num);
+    font-size: 9px;
+    color: #22D3EE;
+    letter-spacing: 0.1em;
+  }
+  .fam-card .top .weight {
+    font-family: var(--font-num);
+    font-size: 9px;
+    color: #475569;
+    letter-spacing: 0.1em;
+  }
+  .fam-card .sample {
+    color: #E5F1FF;
+    margin-bottom: 6px;
+  }
+  .fam-card .note {
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: #94A3B8;
+    border-top: 1px dashed #334155;
+    padding-top: 6px;
+  }
+  .scale-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 16px;
+    align-items: center;
+    padding: 9px 14px;
+    border-bottom: 1px dashed #1F2937;
+  }
+  .scale-row:last-child { border-bottom: none; }
+  .scale-row .spec {
+    font-family: var(--font-num);
+    font-size: 11px;
+    color: #94A3B8;
+    letter-spacing: 0.06em;
+  }
+  .scale-row .spec .tag {
+    color: #22D3EE;
+    margin-right: 8px;
+  }
+  .scale-row .demo {
+    color: #E5F1FF;
+  }
+</style>
+</head>
+<body>
+<div class="slide grid-bg relative">
+  <!-- Corner brackets -->
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- Header -->
+  <div class="absolute" style="top: 30px; left: 56px;">
+    <span class="pixel-badge">01.3 // TIPOGRAFÍA</span>
+    <h1 class="mt-2" style="font-family:var(--font-heading);font-weight:700;font-size:32px;color:#E5F1FF;letter-spacing:0.02em;">
+      Tipografía y Escala
+    </h1>
+    <p class="mt-1" style="font-family:var(--font-body);font-size:13px;color:#94A3B8;">
+      4 familias tipográficas con rol específico · escala tipográfica de 7 niveles
+    </p>
+  </div>
+
+  <!-- Top-right marker -->
+  <div class="absolute" style="top: 38px; right: 56px;">
+    <span style="font-family:var(--font-num);font-size:10px;color:#94A3B8;letter-spacing:0.12em;">4 FAMILIES · 7 SCALE STEPS</span>
+  </div>
+
+  <!-- Two columns -->
+  <div class="absolute flex gap-6" style="top: 138px; left: 56px; right: 56px;">
+    <!-- LEFT — 4 font families -->
+    <div style="width: 460px;" class="flex flex-col gap-3">
+      <div class="fam-card">
+        <div class="top">
+          <span class="role">PRESS START 2P</span>
+          <span class="weight">PIXEL · 1 weight</span>
+        </div>
+        <div class="sample" style="font-family:var(--font-pixel);font-size:14px;color:#22D3EE;letter-spacing:0.06em;">VNBOT // DESIGN</div>
+        <div class="note">Pixel display para badges y labels cortos. Solo para &lt;5 palabras. Nunca body.</div>
+      </div>
+      <div class="fam-card">
+        <div class="top">
+          <span class="role">SPACE GROTESK</span>
+          <span class="weight">500 / 600 / 700</span>
+        </div>
+        <div class="sample" style="font-family:var(--font-heading);font-weight:700;font-size:32px;line-height:1.1;">Diseño UI/UX</div>
+        <div class="note">Headings 500/600/700. Títulos de slide y secciones.</div>
+      </div>
+      <div class="fam-card">
+        <div class="top">
+          <span class="role">INTER</span>
+          <span class="weight">400 / 500 / 600</span>
+        </div>
+        <div class="sample" style="font-family:var(--font-body);font-size:16px;line-height:1.5;">El cuerpo del texto del documento.</div>
+        <div class="note">Body 400/500/600. Texto principal, párrafos.</div>
+      </div>
+      <div class="fam-card">
+        <div class="top">
+          <span class="role">JETBRAINS MONO</span>
+          <span class="weight">400 / 500 / 700</span>
+        </div>
+        <div class="sample" style="font-family:var(--font-num);font-size:14px;color:#FBBF24;letter-spacing:0.04em;">64×64px · #22D3EE · v1.0.0</div>
+        <div class="note">Numeric/técnico 400/500/700. Datos, specs, tokens.</div>
+      </div>
+    </div>
+
+    <!-- RIGHT — Type scale -->
+    <div style="width: 660px;">
+      <div class="hud-panel" style="height: 498px;">
+        <div class="flex justify-between items-center mb-2">
+          <span class="pixel-badge">TIPOGRAPHIC SCALE</span>
+          <span style="font-family:var(--font-num);font-size:10px;color:#475569;letter-spacing:0.1em;">7 STEPS</span>
+        </div>
+        <div class="hud-divider"></div>
+        <div class="scale-row">
+          <div class="spec"><span class="tag">DISPLAY</span>56px · 1.1 · 700</div>
+          <div class="demo" style="font-family:var(--font-heading);font-weight:700;font-size:40px;line-height:1.05;">VNBOT</div>
+        </div>
+        <div class="scale-row">
+          <div class="spec"><span class="tag">H1</span>40px · 1.2 · 700</div>
+          <div class="demo" style="font-family:var(--font-heading);font-weight:700;font-size:32px;line-height:1.15;">Diseño UI/UX</div>
+        </div>
+        <div class="scale-row">
+          <div class="spec"><span class="tag">H2</span>28px · 1.3 · 600</div>
+          <div class="demo" style="font-family:var(--font-heading);font-weight:600;font-size:24px;line-height:1.2;">Capítulo Uno</div>
+        </div>
+        <div class="scale-row">
+          <div class="spec"><span class="tag">H3</span>20px · 1.4 · 600</div>
+          <div class="demo" style="font-family:var(--font-heading);font-weight:600;font-size:18px;line-height:1.3;">Sección de detalle</div>
+        </div>
+        <div class="scale-row">
+          <div class="spec"><span class="tag">BODY</span>16px · 1.6 · 400</div>
+          <div class="demo" style="font-family:var(--font-body);font-size:15px;line-height:1.5;">Texto del documento VNBOT.</div>
+        </div>
+        <div class="scale-row">
+          <div class="spec"><span class="tag">SMALL</span>13px · 1.5 · 400</div>
+          <div class="demo" style="font-family:var(--font-body);font-size:13px;line-height:1.45;">Notas y metadata.</div>
+        </div>
+        <div class="scale-row">
+          <div class="spec"><span class="tag">MICRO</span>11px · 1.4 · 500</div>
+          <div class="demo" style="font-family:var(--font-num);font-size:11px;color:#94A3B8;letter-spacing:0.1em;">JETBRAINS MONO · FOOTER</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <span>CAP. 01 · TIPOGRAFÍA</span>
+    <span>06 / 39</span>
+  </div>
+</div>
+<aside data-notes class="hidden">
+- 4 familias con rol claro y no intercambiable.
+- Press Start 2P solo para badges cortos.
+- Space Grotesk para jerarquía de headings.
+- Inter como body principal por legibilidad en pantalla.
+- JetBrains Mono para datos, specs y tokens.
+</aside>
+</body>
+</html>

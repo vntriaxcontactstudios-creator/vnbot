@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · Crear Recordatorio — Entrada Clara</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  /* Chat strip */
+  .chat-strip { display: flex; align-items: center; gap: 14px; padding: 12px 16px; }
+  .user-msg {
+    margin-left: auto;
+    background: rgba(34,211,238,0.08);
+    border: 1px solid var(--accent);
+    color: var(--primary);
+    padding: 8px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    max-width: 540px;
+    clip-path: polygon(0 5px, 5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
+  }
+  .beacon-bubble {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(251,191,36,0.06);
+    border: 1px solid var(--accent-3);
+    padding: 8px 12px;
+    clip-path: polygon(0 5px, 5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
+  }
+  .beacon-bubble .sprite {
+    width: 28px; height: 28px;
+    background: var(--surface-2);
+    border: 1.5px solid var(--accent-3);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .beacon-bubble .sprite::before {
+    content: '';
+    position: absolute;
+    top: 9px; left: 5px;
+    width: 18px; height: 4px;
+    background: var(--accent-3);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 0.6; } 50% { opacity: 1; } }
+  .beacon-bubble .name { font-family: var(--font-pixel); font-size: 9px; color: var(--accent-3); letter-spacing: 0.06em; }
+  .beacon-bubble .state { font-family: var(--font-num); font-size: 10px; color: var(--accent-3); }
+
+  /* Pipeline */
+  .pipe-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 18px;
+    align-items: start;
+  }
+  .pipe-node {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 6px 10px;
+    border-left: 2px solid var(--accent);
+    background: var(--surface);
+    font-family: 'Inter', sans-serif;
+    font-size: 11.5px;
+    color: var(--primary);
+    line-height: 1.3;
+  }
+  .pipe-node .num { font-family: var(--font-num); font-size: 11px; color: var(--accent); font-weight: 600; min-width: 22px; }
+  .pipe-node .lbl { font-weight: 600; color: var(--primary); }
+  .pipe-node .desc { display: block; font-family: var(--font-num); font-size: 10px; color: var(--primary-dim); margin-top: 1px; }
+  .pipe-node.am { border-left-color: var(--accent-3); }
+  .pipe-node.am .num { color: var(--accent-3); }
+  .pipe-node.am .lbl { color: var(--accent-3); }
+  .pipe-node.gr { border-left-color: var(--success); background: rgba(16,185,129,0.04); }
+  .pipe-node.gr .num { color: var(--success); }
+  .pipe-node.gr .lbl { color: var(--success); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- HEADER -->
+  <header class="absolute top-7 left-8 right-8">
+    <div class="flex items-end justify-between">
+      <div class="flex items-center gap-4">
+        <span class="pixel-badge amber">06.1 // RECORDATORIO CLARO</span>
+        <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; letter-spacing:0.02em; color:var(--primary);">Crear Recordatorio — <span style="color:var(--accent-3);">Entrada Clara</span></h1>
+      </div>
+      <div class="flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+        <span class="material-icons" style="font-size:14px; color:var(--accent-3);">alarm</span>
+        <span>12 PASOS · 0 AMBIGÜEDADES</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="absolute" style="top:108px; left:32px; right:32px; bottom:50px; display:flex; flex-direction:column; gap:14px;">
+
+    <!-- TOP: chat input -->
+    <section class="hud-panel amber" style="padding:0;">
+      <div class="chat-strip">
+        <div class="beacon-bubble">
+          <div class="sprite"></div>
+          <div>
+            <div class="name">BEACON</div>
+            <div class="state">● thinking</div>
+          </div>
+        </div>
+        <div class="user-msg">Recuérdame pagar la electricidad mañana a las 8.</div>
+      </div>
+    </section>
+
+    <!-- BOTTOM: pipeline 12 nodes -->
+    <section class="hud-panel" style="padding:14px 18px; flex:1;">
+      <div class="flex items-center justify-between mb-2">
+        <span style="font-family:var(--font-pixel); font-size:11px; color:var(--accent); letter-spacing:0.08em;">PIPELINE · 12 NODOS</span>
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">DETECT → RESOLVE → CONFIRM → SCHEDULE</span>
+      </div>
+
+      <div class="pipe-grid">
+        <div class="pipe-node"><span class="num">1</span><div><span class="lbl">Detectar intent</span><span class="desc">create_reminder</span></div></div>
+        <div class="pipe-node"><span class="num">2</span><div><span class="lbl">Extraer título</span><span class="desc">Pagar la electricidad</span></div></div>
+        <div class="pipe-node"><span class="num">3</span><div><span class="lbl">Resolver 'mañana'</span><span class="desc">17 Jul 2026</span></div></div>
+        <div class="pipe-node"><span class="num">4</span><div><span class="lbl">Resolver '08:00'</span><span class="desc">08:00</span></div></div>
+        <div class="pipe-node"><span class="num">5</span><div><span class="lbl">Aplicar timezone</span><span class="desc">America/Caracas GMT-4</span></div></div>
+        <div class="pipe-node am"><span class="num">6</span><div><span class="lbl">Crear propuesta</span><span class="desc">estructura completa visible</span></div></div>
+        <div class="pipe-node am"><span class="num">7</span><div><span class="lbl">Mostrar fecha completa</span><span class="desc">Jueves 17 julio 2026, 08:00 GMT-4</span></div></div>
+        <div class="pipe-node am"><span class="num">8</span><div><span class="lbl">Confirmar</span><span class="desc">botón CONFIRMAR / CANCELAR</span></div></div>
+        <div class="pipe-node"><span class="num">9</span><div><span class="lbl">Crear Reminder</span><span class="desc">INSERT en DB</span></div></div>
+        <div class="pipe-node"><span class="num">10</span><div><span class="lbl">Crear Occurrence</span><span class="desc">instancia programada</span></div></div>
+        <div class="pipe-node"><span class="num">11</span><div><span class="lbl">Programar delivery</span><span class="desc">scheduler job</span></div></div>
+        <div class="pipe-node gr"><span class="num">12</span><div><span class="lbl">Success</span><span class="desc">Recordatorio creado · te avisaré 08:00</span></div></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>CAP. 06 · RECORDATORIO CLARO</span>
+    <span style="color:var(--accent);">VNBOT APP FLOW</span>
+    <span>28 / 57</span>
+  </footer>
+
+</div>
+
+<aside data-notes class="hidden">
+  <ul>
+    <li>Caso ideal: el usuario da título, fecha y hora sin ambigüedad.</li>
+    <li>12 nodos: detectar intent → extraer → resolver fecha/hora → timezone → propuesta → confirmar → persistir.</li>
+    <li>Nodos 6-8 en ámbar marcan la fase de propuesta y confirmación.</li>
+    <li>Nodos 9-11 crean Reminder, Occurrence y scheduler job.</li>
+    <li>Estado final success: 'Recordatorio creado · te avisaré 08:00'.</li>
+  </ul>
+</aside>
+</body>
+</html>

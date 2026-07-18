@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT — Arquitectura por Capas</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .layer-stack {
+    position: relative;
+    width: 480px;
+    margin-top: 18px;
+  }
+  .layer {
+    height: 44px;
+    background: #1F2937;
+    border: 1px solid #334155;
+    clip-path: polygon(0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px));
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    position: relative;
+  }
+  .layer .name {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    color: #E5F1FF;
+    letter-spacing: 0.06em;
+  }
+  .layer .lvl {
+    font-family: var(--font-num);
+    font-size: 9px;
+    color: #475569;
+    letter-spacing: 0.1em;
+  }
+  /* Cascade offsets bottom-to-top */
+  .layer.l8 { background: #10B981; border-color: #10B981; margin-left: 84px; }
+  .layer.l8 .name { color: #0B1220; }
+  .layer.l8 .lvl { color: #0B1220; opacity: 0.5; }
+  .layer.l7 { background: rgba(244,114,182,0.6); border-color: #F472B6; margin-left: 72px; }
+  .layer.l6 { background: #FBBF24; border-color: #FBBF24; margin-left: 60px; }
+  .layer.l6 .name { color: #0B1220; }
+  .layer.l6 .lvl { color: #0B1220; opacity: 0.5; }
+  .layer.l5 { background: #22D3EE; border-color: #22D3EE; margin-left: 48px; box-shadow: 0 0 12px rgba(34,211,238,0.3); }
+  .layer.l5 .name { color: #0B1220; }
+  .layer.l5 .lvl { color: #0B1220; opacity: 0.5; }
+  .layer.l4 { background: #64748B; border-color: #64748B; margin-left: 36px; }
+  .layer.l3 { background: #475569; border-color: #475569; margin-left: 24px; }
+  .layer.l2 { background: #0B1220; border-color: #334155; margin-left: 12px; }
+  .layer.l1 { background: #1F2937; border-color: #334155; margin-left: 0; }
+
+  .layer.l8 { border-style: dashed; }
+
+  .desc-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #111827;
+    border: 1px solid #334155;
+    clip-path: polygon(0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px));
+    padding: 10px 14px;
+    margin-bottom: 6px;
+  }
+  .desc-row .name {
+    font-family: var(--font-num);
+    font-size: 12px;
+    color: #22D3EE;
+    width: 140px;
+    flex-shrink: 0;
+  }
+  .desc-row .desc {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: #E5F1FF;
+    line-height: 1.35;
+  }
+  .desc-row .swatch {
+    width: 14px; height: 14px;
+    flex-shrink: 0;
+    border: 1px solid #475569;
+  }
+</style>
+</head>
+<body>
+<div class="slide grid-bg relative">
+  <!-- Corner brackets -->
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- Header -->
+  <div class="absolute" style="top: 28px; left: 56px;">
+    <span class="pixel-badge magenta">02.1 // CAPAS</span>
+    <h1 class="mt-2" style="font-family:var(--font-heading);font-weight:700;font-size:30px;color:#E5F1FF;letter-spacing:0.02em;">
+      Arquitectura por Capas del Renderer
+    </h1>
+    <p class="mt-1" style="font-family:var(--font-body);font-size:13px;color:#94A3B8;">
+      8 capas independientes — cada una se renderiza por separado
+    </p>
+  </div>
+
+  <!-- Top-right marker -->
+  <div class="absolute" style="top: 38px; right: 56px;">
+    <span style="font-family:var(--font-num);font-size:10px;color:#94A3B8;letter-spacing:0.12em;">8 LAYERS · INDEPENDENT RENDER</span>
+  </div>
+
+  <!-- Two columns -->
+  <div class="absolute flex gap-6" style="top: 134px; left: 56px; right: 56px;">
+    <!-- LEFT — Layer stack diagram -->
+    <div style="width: 520px;">
+      <div class="hud-panel" style="height: 540px; padding: 16px 18px;">
+        <div class="flex justify-between items-center mb-1">
+          <span class="pixel-badge magenta">LAYER STACK</span>
+          <span style="font-family:var(--font-num);font-size:10px;color:#475569;letter-spacing:0.1em;">TOP → BOTTOM</span>
+        </div>
+        <div class="hud-divider"></div>
+        <div class="layer-stack">
+          <!-- Top first -->
+          <div class="layer l8">
+            <span class="name">8 · state_overlay</span>
+            <span class="lvl">L8</span>
+          </div>
+          <div class="layer l7">
+            <span class="name">7 · particles</span>
+            <span class="lvl">L7</span>
+          </div>
+          <div class="layer l6">
+            <span class="name">6 · accessories</span>
+            <span class="lvl">L6</span>
+          </div>
+          <div class="layer l5">
+            <span class="name">5 · visor</span>
+            <span class="lvl">L5</span>
+          </div>
+          <div class="layer l4">
+            <span class="name">4 · armor</span>
+            <span class="lvl">L4</span>
+          </div>
+          <div class="layer l3">
+            <span class="name">3 · body</span>
+            <span class="lvl">L3</span>
+          </div>
+          <div class="layer l2">
+            <span class="name">2 · shadow</span>
+            <span class="lvl">L2</span>
+          </div>
+          <div class="layer l1">
+            <span class="name">1 · background</span>
+            <span class="lvl">L1</span>
+          </div>
+        </div>
+        <div style="margin-top: 14px; font-family:var(--font-num);font-size:10px;color:#475569;letter-spacing:0.1em;">
+          FIG · 02 · RENDER PIPELINE — 8 STACKED LAYERS
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT — Layer descriptions -->
+    <div style="width: 600px;">
+      <div class="flex justify-between items-center mb-2">
+        <span class="pixel-badge">LAYER REFERENCE</span>
+        <span style="font-family:var(--font-num);font-size:10px;color:#475569;letter-spacing:0.1em;">8 ENTRIES</span>
+      </div>
+      <div class="desc-row">
+        <span class="swatch" style="background:#1F2937;"></span>
+        <span class="name">background</span>
+        <span class="desc">Fondo base, color del entorno.</span>
+      </div>
+      <div class="desc-row">
+        <span class="swatch" style="background:#0B1220;"></span>
+        <span class="name">shadow</span>
+        <span class="desc">Sombra proyectada, define profundidad.</span>
+      </div>
+      <div class="desc-row">
+        <span class="swatch" style="background:#475569;"></span>
+        <span class="name">body</span>
+        <span class="desc">Cuerpo del golem, silueta principal.</span>
+      </div>
+      <div class="desc-row">
+        <span class="swatch" style="background:#64748B;"></span>
+        <span class="name">armor</span>
+        <span class="desc">Armadura segmentada, lectura a baja resolución.</span>
+      </div>
+      <div class="desc-row">
+        <span class="swatch" style="background:#22D3EE;"></span>
+        <span class="name">visor</span>
+        <span class="desc">Foco emocional, cambia por estado.</span>
+      </div>
+      <div class="desc-row">
+        <span class="swatch" style="background:#FBBF24;"></span>
+        <span class="name">accessories</span>
+        <span class="desc">Antenas, escudos, drones — diferencian agentes.</span>
+      </div>
+      <div class="desc-row">
+        <span class="swatch" style="background:rgba(244,114,182,0.6);"></span>
+        <span class="name">particles</span>
+        <span class="desc">Efectos limitados, sin saturar.</span>
+      </div>
+      <div class="desc-row" style="border-style: dashed;">
+        <span class="swatch" style="background:#10B981;"></span>
+        <span class="name">state_overlay</span>
+        <span class="desc">Tinte de estado (error, success, warning).</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <span>CAP. 02 · CAPAS</span>
+    <span>10 / 39</span>
+  </div>
+</div>
+<aside data-notes class="hidden">
+- 8 capas independientes en el renderer procedural.
+- Cada capa se renderiza por separado.
+- Permite cambiar visor o accessory sin tocar el body.
+- state_overlay es un tinte semántico encima de todo.
+- particles es la única capa con opacidad reducida.
+</aside>
+</body>
+</html>

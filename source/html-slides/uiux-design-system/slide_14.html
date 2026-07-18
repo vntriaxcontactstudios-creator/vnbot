@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT · Reglas de Animación Procedural</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .frame-cell { width: 188px; height: 156px; }
+  .check-row { display:flex; align-items:flex-start; gap:8px; font-family:'Inter',sans-serif; font-size:13px; color:var(--primary); line-height:1.45; padding:6px 0; border-bottom:1px dashed rgba(51,65,85,0.5); }
+  .check-row:last-child { border-bottom:none; }
+  .check-row .material-icons { font-size:14px; color:var(--success); margin-top:2px; }
+  .col-head { font-family:'Press Start 2P', monospace; font-size:10px; letter-spacing:0.08em; color:var(--accent); padding-bottom:8px; border-bottom:1px solid var(--border); margin-bottom:6px; }
+  .col-head.amber { color:var(--accent-3); }
+  .code-line { font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--accent-3); background:#050912; border:1px solid var(--border); padding:8px 14px; letter-spacing:0.02em; }
+  .code-line .k { color:var(--accent-2); }
+  .code-line .p { color:var(--primary-dim); }
+  .code-line .v { color:var(--accent); }
+  .glow-num { text-shadow: 0 0 14px rgba(34,211,238,0.45); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+
+  <!-- Decorative corner brackets -->
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- HEADER -->
+  <header class="absolute top-7 left-8 right-8 flex items-end justify-between">
+    <div class="flex items-center gap-4">
+      <span class="pixel-badge">02.5 // ANIMACIÓN</span>
+      <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; letter-spacing:0.02em; color:var(--primary);">Reglas de Animación <span style="color:var(--accent)">Procedural</span></h1>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="pixel-badge amber">PIXEL-PERFECT</span>
+      <span class="pixel-badge magenta">REDUCED-MOTION</span>
+    </div>
+  </header>
+
+  <!-- SECTION 1: FRAME COUNTS GRID -->
+  <section class="absolute left-8 right-8" style="top:90px;">
+    <div class="flex items-center justify-between mb-2">
+      <div class="flex items-center gap-2">
+        <span style="font-family:var(--font-pixel); font-size:9px; color:var(--accent); letter-spacing:0.1em;">FRAME COUNTS</span>
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">· 6 estados · frames por ciclo</span>
+      </div>
+      <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">64×64px base · 12fps</span>
+    </div>
+
+    <div class="grid grid-cols-6 gap-3">
+      <!-- IDLE -->
+      <div class="hud-panel frame-cell flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="material-icons" style="color:var(--accent); font-size:20px;">favorite</span>
+          <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">#01</span>
+        </div>
+        <div class="text-center">
+          <div style="font-family:var(--font-pixel); font-size:22px; color:var(--accent);" class="glow-num">2-4</div>
+          <div style="font-family:var(--font-pixel); font-size:8px; color:var(--primary); margin-top:6px; letter-spacing:0.08em;">IDLE</div>
+        </div>
+        <div style="font-family:'Inter',sans-serif; font-size:10px; color:var(--primary-dim); text-align:center;">respiración ligera</div>
+      </div>
+
+      <!-- VISOR PULSE -->
+      <div class="hud-panel frame-cell flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="material-icons" style="color:var(--accent); font-size:20px;">visibility</span>
+          <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">#02</span>
+        </div>
+        <div class="text-center">
+          <div style="font-family:var(--font-pixel); font-size:22px; color:var(--accent);" class="glow-num">2</div>
+          <div style="font-family:var(--font-pixel); font-size:8px; color:var(--primary); margin-top:6px; letter-spacing:0.08em;">VISOR PULSE</div>
+        </div>
+        <div style="font-family:'Inter',sans-serif; font-size:10px; color:var(--primary-dim); text-align:center;">parpadeo visor</div>
+      </div>
+
+      <!-- PROCESSING -->
+      <div class="hud-panel amber frame-cell flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="material-icons" style="color:var(--accent-3); font-size:20px;">autorenew</span>
+          <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">#03</span>
+        </div>
+        <div class="text-center">
+          <div style="font-family:var(--font-pixel); font-size:22px; color:var(--accent-3);">3-6</div>
+          <div style="font-family:var(--font-pixel); font-size:8px; color:var(--primary); margin-top:6px; letter-spacing:0.08em;">PROCESSING</div>
+        </div>
+        <div style="font-family:'Inter',sans-serif; font-size:10px; color:var(--primary-dim); text-align:center;">anillo multicolor</div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="hud-panel frame-cell flex flex-col justify-between" style="border-color:var(--success);">
+        <div class="flex items-center justify-between">
+          <span class="material-icons" style="color:var(--success); font-size:20px;">check_circle</span>
+          <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">#04</span>
+        </div>
+        <div class="text-center">
+          <div style="font-family:var(--font-pixel); font-size:22px; color:var(--success);">2</div>
+          <div style="font-family:var(--font-pixel); font-size:8px; color:var(--primary); margin-top:6px; letter-spacing:0.08em;">SUCCESS</div>
+        </div>
+        <div style="font-family:'Inter',sans-serif; font-size:10px; color:var(--primary-dim); text-align:center;">pose abierta</div>
+      </div>
+
+      <!-- WARNING -->
+      <div class="hud-panel amber frame-cell flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="material-icons" style="color:var(--accent-3); font-size:20px;">warning_amber</span>
+          <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">#05</span>
+        </div>
+        <div class="text-center">
+          <div style="font-family:var(--font-pixel); font-size:22px; color:var(--accent-3);">2</div>
+          <div style="font-family:var(--font-pixel); font-size:8px; color:var(--primary); margin-top:6px; letter-spacing:0.08em;">WARNING</div>
+        </div>
+        <div style="font-family:'Inter',sans-serif; font-size:10px; color:var(--primary-dim); text-align:center;">partículas amber</div>
+      </div>
+
+      <!-- ERROR -->
+      <div class="hud-panel frame-cell flex flex-col justify-between" style="border-color:var(--error);">
+        <div class="flex items-center justify-between">
+          <span class="material-icons" style="color:var(--error); font-size:20px;">cancel</span>
+          <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">#06</span>
+        </div>
+        <div class="text-center">
+          <div style="font-family:var(--font-pixel); font-size:22px; color:var(--error);">2</div>
+          <div style="font-family:var(--font-pixel); font-size:8px; color:var(--primary); margin-top:6px; letter-spacing:0.08em;">ERROR</div>
+        </div>
+        <div style="font-family:'Inter',sans-serif; font-size:10px; color:var(--primary-dim); text-align:center;">postura alerta</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: RULES PANEL -->
+  <section class="absolute left-8 right-8" style="top:282px;">
+    <div class="hud-panel accent" style="padding:18px 22px;">
+      <div class="flex items-center justify-between mb-3">
+        <span style="font-family:var(--font-pixel); font-size:10px; color:var(--accent); letter-spacing:0.08em;">REGLAS OBLIGATORIAS · 8 / 8</span>
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">aplican a TODA animación del golem</span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-8">
+        <!-- COLUMNA IZQ: RENDERIZADO -->
+        <div>
+          <div class="col-head">I · RENDERIZADO</div>
+          <div class="check-row"><span class="material-icons">check</span><div><span style="color:var(--accent); font-weight:600;">Nearest-neighbor scaling</span> — sin suavizado de bordes pixel.</div></div>
+          <div class="check-row"><span class="material-icons">check</span><div><span style="color:var(--accent); font-weight:600;">Sin blur ni interpolación bilinear</span> — pixel-art puro.</div></div>
+          <div class="check-row"><span class="material-icons">check</span><div><span style="color:var(--accent); font-weight:600;">Movimiento en píxeles enteros</span> — sin sub-pixel jitter.</div></div>
+          <div class="check-row"><span class="material-icons">check</span><div><span style="color:var(--accent); font-weight:600;">Pausar cuando no es visible</span> — ahorro de CPU/GPU.</div></div>
+        </div>
+
+        <!-- COLUMNA DER: ACCESIBILIDAD -->
+        <div>
+          <div class="col-head amber">II · ACCESIBILIDAD</div>
+          <div class="check-row"><span class="material-icons" style="color:var(--accent-3);">check</span><div><span style="color:var(--accent-3); font-weight:600;">Respetar prefers-reduced-motion</span> — media query del SO.</div></div>
+          <div class="check-row"><span class="material-icons" style="color:var(--accent-3);">check</span><div><span style="color:var(--accent-3); font-weight:600;">Frame estático de fallback</span> — la mascota sigue visible.</div></div>
+          <div class="check-row"><span class="material-icons" style="color:var(--accent-3);">check</span><div><span style="color:var(--accent-3); font-weight:600;">Sin flashes rápidos en error/warning</span> — transición suave.</div></div>
+          <div class="check-row"><span class="material-icons" style="color:var(--accent-3);">check</span><div><span style="color:var(--accent-3); font-weight:600;">Máximo 3Hz en cualquier parpadeo</span> — límite WCAG 2.3.1.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CSS code line -->
+    <div class="code-line mt-3 flex items-center gap-3">
+      <span style="color:var(--primary-dim); font-family:var(--font-pixel); font-size:8px; letter-spacing:0.1em;">CSS · REDUCED-MOTION FALLBACK</span>
+      <span><span class="k">@media</span> <span class="p">(</span><span class="v">prefers-reduced-motion</span><span class="p">: reduce) {</span> <span class="v">.vnbot-agent</span> <span class="p">{</span> <span class="k">animation</span><span class="p">:</span> <span class="v">none</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span></span>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>CAP. 02 · ANIMACIÓN</span>
+    <span style="color:var(--accent);">VNBOT UI/UX · DESIGN SYSTEM</span>
+    <span>14 / 39</span>
+  </footer>
+
+</div>
+
+<aside data-notes class="hidden">
+- Frames mínimos por estado — entre 2 y 6 frames por ciclo.
+- 8 reglas obligatorias: 4 de renderizado + 4 de accesibilidad.
+- Reduced-motion NO quita la mascota — entrega un frame estático de fallback.
+- Máximo 3Hz en parpadeos — cumple WCAG 2.3.1.
+- Pausar la animación cuando el agente no está visible ahorra CPU.
+</aside>
+</body>
+</html>

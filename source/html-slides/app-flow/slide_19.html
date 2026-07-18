@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow — Flujo de Login + MFA</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .lnode { background: var(--surface); border: 1px solid currentColor; padding: 7px 11px; font-family: var(--font-num); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; display: inline-block; clip-path: polygon(0 5px,5px 0,calc(100% - 5px) 0,100% 5px,100% calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,0 calc(100% - 5px)); }
+  .l-cyan { color: var(--accent); }
+  .l-amber { color: var(--accent-3); }
+  .l-red { color: var(--error); }
+  .l-green { color: var(--success); }
+  .l-dim { color: var(--primary-dim); }
+  .deci { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; border: 2px solid var(--accent-3); color: var(--accent-3); background: rgba(251,191,36,0.06); font-family: var(--font-num); font-size: 11px; font-weight: 700; transform: rotate(45deg); width: 96px; height: 96px; }
+  .deci > span { transform: rotate(-45deg); text-align: center; line-height: 1.2; }
+  .arr { color: var(--border-bright); font-family: var(--font-num); font-size: 14px; font-weight: 700; }
+  .lbl { font-family: var(--font-num); font-size: 9px; color: var(--accent-3); font-weight: 700; letter-spacing: 0.05em; }
+  .col-branch { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl" data-decor></div>
+  <div class="corner-bracket tr" data-decor></div>
+  <div class="corner-bracket bl" data-decor></div>
+  <div class="corner-bracket br" data-decor></div>
+
+  <!-- Header -->
+  <div class="absolute" style="top: 28px; left: 56px; right: 56px; display: flex; justify-content: space-between; align-items: flex-end;">
+    <div>
+      <span class="pixel-badge success">04.2 // LOGIN</span>
+      <h1 class="mt-2" style="font-family: var(--font-heading); font-weight: 700; font-size: 28px; letter-spacing: 0.02em; color: var(--primary);">Flujo de Login + MFA</h1>
+    </div>
+    <div style="font-family: var(--font-num); font-size: 11px; color: var(--primary-dim); letter-spacing: 0.08em; text-align: right;">
+      <div>3 DECISIONES · 2 RAMAS</div>
+      <div style="color: var(--success);">// AUTH + MFA FLOW</div>
+    </div>
+  </div>
+
+  <!-- Main decision diagram -->
+  <div class="hud-panel absolute" style="top: 122px; left: 56px; width: 1168px; height: 440px; padding: 18px 24px; border-color: var(--success);">
+    <div style="font-family: var(--font-num); font-size: 9px; color: var(--success); letter-spacing: 0.15em; margin-bottom: 16px;">// DIAGRAMA · LOGIN → MFA → UNLOCK → HOY</div>
+
+    <!-- 4-column layout: LOGIN | MFA decision | UNLOCK decision | final -->
+    <div class="grid grid-cols-7 gap-2 items-start" style="margin-top: 12px;">
+
+      <!-- Col 1: LOGIN chain -->
+      <div class="col-branch" style="grid-column: span 1;">
+        <span class="lnode l-cyan">LOGIN</span>
+        <span class="arr">↓</span>
+        <span class="lnode l-cyan">Validar sesión</span>
+        <span class="arr">↓</span>
+        <div class="lbl" style="margin: 4px 0;">→ →</div>
+      </div>
+
+      <!-- Col 2: MFA decision -->
+      <div class="col-branch" style="grid-column: span 2;">
+        <div class="deci"><span>¿MFA?</span></div>
+        <div class="grid grid-cols-2 gap-4 w-full" style="margin-top: 8px;">
+          <!-- SÍ branch -->
+          <div class="col-branch">
+            <div class="lbl">SÍ ↓</div>
+            <span class="lnode l-amber">Código / WebAuthn</span>
+            <span class="arr">↓</span>
+            <div class="deci" style="width: 70px; height: 70px;"><span style="font-size: 9px;">¿Válido?</span></div>
+            <div class="grid grid-cols-2 gap-2 w-full" style="margin-top: 4px;">
+              <div class="col-branch">
+                <div class="lbl">NO</div>
+                <span class="lnode l-red">Error + reintentar</span>
+              </div>
+              <div class="col-branch">
+                <div class="lbl">SÍ ↓</div>
+                <div class="lbl" style="color: var(--success); margin-top: 4px;">✓ OK</div>
+              </div>
+            </div>
+          </div>
+          <!-- NO branch -->
+          <div class="col-branch">
+            <div class="lbl">NO ↓</div>
+            <div class="lbl" style="color: var(--success); margin-top: 4px;">✓ saltar</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Col 3: arrow connecting -->
+      <div class="col-branch" style="grid-column: span 1; padding-top: 70px;">
+        <div class="lbl">→ →</div>
+        <span class="arr">→</span>
+      </div>
+
+      <!-- Col 4: Bóveda decision -->
+      <div class="col-branch" style="grid-column: span 2;">
+        <div class="deci"><span>¿Bóveda bloqueada?</span></div>
+        <div class="grid grid-cols-2 gap-4 w-full" style="margin-top: 8px;">
+          <!-- SÍ -->
+          <div class="col-branch">
+            <div class="lbl">SÍ ↓</div>
+            <span class="lnode l-amber">UNLOCK</span>
+            <span class="arr">↓</span>
+            <span style="font-family: var(--font-body); font-size: 10px; color: var(--primary-dim); font-style: italic;">passphrase</span>
+            <span class="arr">↓</span>
+            <span class="lnode l-green">READY</span>
+          </div>
+          <!-- NO -->
+          <div class="col-branch">
+            <div class="lbl">NO ↓</div>
+            <span class="arr">↓</span>
+            <span class="lnode l-green">HOY</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Col 5: legend column -->
+      <div class="col-branch" style="grid-column: span 1; padding-top: 0;">
+        <div style="font-family: var(--font-num); font-size: 9px; color: var(--primary-dim); letter-spacing: 0.1em; text-align: left; line-height: 1.6;">
+          <div><span style="color: var(--accent);">●</span> INICIO</div>
+          <div><span style="color: var(--accent-3);">●</span> DECISIÓN</div>
+          <div><span style="color: var(--accent-3);">●</span> ACCIÓN MFA</div>
+          <div><span style="color: var(--error);">●</span> ERROR</div>
+          <div><span style="color: var(--success);">●</span> FINAL</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 mini-notes -->
+  <div class="absolute grid grid-cols-3 gap-3" style="bottom: 50px; left: 56px; right: 56px;">
+    <div style="padding: 8px 12px; border-left: 2px solid var(--accent); background: var(--surface); display: flex; align-items: center; gap: 8px;">
+      <i class="material-icons" style="color: var(--accent); font-size: 16px;">key</i>
+      <span style="font-family: var(--font-num); font-size: 11px; color: var(--primary); letter-spacing: 0.02em;">MFA opcional: TOTP, WebAuthn, o backup codes</span>
+    </div>
+    <div style="padding: 8px 12px; border-left: 2px solid var(--accent-3); background: var(--surface); display: flex; align-items: center; gap: 8px;">
+      <i class="material-icons" style="color: var(--accent-3); font-size: 16px;">vpn_key</i>
+      <span style="font-family: var(--font-num); font-size: 11px; color: var(--primary); letter-spacing: 0.02em;">Unlock usa passphrase de bóveda, no contraseña de cuenta</span>
+    </div>
+    <div style="padding: 8px 12px; border-left: 2px solid var(--success); background: var(--surface); display: flex; align-items: center; gap: 8px;">
+      <i class="material-icons" style="color: var(--success); font-size: 16px;">save</i>
+      <span style="font-family: var(--font-num); font-size: 11px; color: var(--primary); letter-spacing: 0.02em;">Sesión se preserva entre recargas si bóveda desbloqueada</span>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>CAP. 04 · LOGIN</span>
+    <span>19 / 57</span>
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- Diagrama con 3 decisiones: MFA / válido / bóveda bloqueada.
+- MFA opcional — 3 métodos: TOTP, WebAuthn, backup codes.
+- Unlock usa passphrase de bóveda (no contraseña de cuenta).
+- Sesión preservada entre recargas si bóveda desbloqueada.
+- Error MFA → reintentar (no bypass).
+</aside>
+</body>
+</html>

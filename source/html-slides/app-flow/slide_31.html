@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · Guardar Memoria — Explícita</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .chat-strip { display: flex; align-items: center; gap: 14px; padding: 12px 16px; }
+  .user-msg {
+    margin-left: auto;
+    background: rgba(34,211,238,0.08);
+    border: 1px solid var(--accent);
+    color: var(--primary);
+    padding: 8px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    max-width: 460px;
+    clip-path: polygon(0 5px, 5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
+  }
+  .arch-bubble {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(167,139,250,0.06);
+    border: 1px solid #A78BFA;
+    padding: 8px 12px;
+    clip-path: polygon(0 5px, 5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
+  }
+  .arch-bubble .sprite {
+    width: 28px; height: 28px;
+    background: var(--surface-2);
+    border: 1.5px solid #A78BFA;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .arch-bubble .sprite::before {
+    content: '';
+    position: absolute;
+    top: 9px; left: 5px;
+    width: 18px; height: 4px;
+    background: #A78BFA;
+  }
+  .arch-bubble .name { font-family: var(--font-pixel); font-size: 9px; color: #A78BFA; letter-spacing: 0.06em; }
+  .arch-bubble .state { font-family: var(--font-num); font-size: 10px; color: #A78BFA; }
+
+  .pipe-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 18px;
+    align-items: start;
+  }
+  .pipe-node {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 6px 10px;
+    border-left: 2px solid var(--accent);
+    background: var(--surface);
+    font-family: 'Inter', sans-serif;
+    font-size: 11.5px;
+    color: var(--primary);
+    line-height: 1.3;
+  }
+  .pipe-node .num { font-family: var(--font-num); font-size: 11px; color: var(--accent); font-weight: 600; min-width: 22px; }
+  .pipe-node .lbl { font-weight: 600; color: var(--primary); }
+  .pipe-node .desc { display: block; font-family: var(--font-num); font-size: 10px; color: var(--primary-dim); margin-top: 1px; }
+  .pipe-node.am { border-left-color: var(--accent-3); }
+  .pipe-node.am .num { color: var(--accent-3); }
+  .pipe-node.am .lbl { color: var(--accent-3); }
+  .pipe-node.gr { border-left-color: var(--success); background: rgba(16,185,129,0.04); }
+  .pipe-node.gr .num { color: var(--success); }
+  .pipe-node.gr .lbl { color: var(--success); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- HEADER -->
+  <header class="absolute top-7 left-8 right-8">
+    <div class="flex items-end justify-between">
+      <div class="flex items-center gap-4">
+        <span class="pixel-badge amber">06.4 // MEMORIA EXPLÍCITA</span>
+        <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; letter-spacing:0.02em; color:var(--primary);">Guardar Memoria — <span style="color:#A78BFA;">Explícita</span></h1>
+      </div>
+      <div class="flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+        <span class="material-icons" style="font-size:14px; color:#A78BFA;">save</span>
+        <span>10 PASOS · FUENTE CONSERVADA</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="absolute" style="top:108px; left:32px; right:32px; bottom:50px; display:flex; flex-direction:column; gap:14px;">
+
+    <!-- TOP: chat input -->
+    <section class="hud-panel" style="padding:0; border-color:#A78BFA;">
+      <div class="chat-strip">
+        <div class="arch-bubble">
+          <div class="sprite"></div>
+          <div>
+            <div class="name">ARCHIVIST</div>
+            <div class="state">● thinking</div>
+          </div>
+        </div>
+        <div class="user-msg">Guarda que Daniel prefiere reuniones después de las 4.</div>
+      </div>
+    </section>
+
+    <!-- BOTTOM: pipeline 10 nodes -->
+    <section class="hud-panel" style="padding:14px 18px; flex:1;">
+      <div class="flex items-center justify-between mb-2">
+        <span style="font-family:var(--font-pixel); font-size:11px; color:#A78BFA; letter-spacing:0.08em;">PIPELINE · 10 NODOS</span>
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">DETECT → RESOLVE → PROPONE → CONFIRM → INDEX</span>
+      </div>
+
+      <div class="pipe-grid">
+        <div class="pipe-node"><span class="num">1</span><div><span class="lbl">Detectar save_memory</span><span class="desc">intent classification</span></div></div>
+        <div class="pipe-node"><span class="num">2</span><div><span class="lbl">Resolver persona Daniel</span><span class="desc">buscar en memorias existentes</span></div></div>
+        <div class="pipe-node"><span class="num">3</span><div><span class="lbl">Extraer preferencia</span><span class="desc">reuniones después de las 16:00</span></div></div>
+        <div class="pipe-node am"><span class="num">4</span><div><span class="lbl">Buscar duplicados/contradicciones</span><span class="desc">query por persona + tema</span></div></div>
+        <div class="pipe-node am"><span class="num">5</span><div><span class="lbl">Mostrar propuesta</span><span class="desc">Crear memoria: Daniel PREFERS reuniones &gt;16:00</span></div></div>
+        <div class="pipe-node am"><span class="num">6</span><div><span class="lbl">Confirmar o guardar según política</span><span class="desc">si low risk, auto; si medio, confirmar</span></div></div>
+        <div class="pipe-node"><span class="num">7</span><div><span class="lbl">Crear/actualizar nodos</span><span class="desc">INSERT/UPDATE en graph</span></div></div>
+        <div class="pipe-node"><span class="num">8</span><div><span class="lbl">Crear relación PREFERS</span><span class="desc">edge Daniel→Preference</span></div></div>
+        <div class="pipe-node"><span class="num">9</span><div><span class="lbl">Indexar async</span><span class="desc">embeddings + texto</span></div></div>
+        <div class="pipe-node gr"><span class="num">10</span><div><span class="lbl">Mostrar fuente</span><span class="desc">Memoria M-248 creada · fuente: conversación 17 Jul 14:32</span></div></div>
+      </div>
+
+      <div style="margin-top:10px; font-family:'Inter',sans-serif; font-size:12px; color:#94A3B8; display:flex; gap:8px; align-items:flex-start;">
+        <span class="material-icons" style="font-size:14px; color:var(--primary-dim); margin-top:1px;">source</span>
+        <span>La fuente siempre se conserva. El usuario puede rastrear de dónde salió cada memoria.</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>CAP. 06 · MEMORIA EXPLÍCITA</span>
+    <span style="color:var(--accent);">VNBOT APP FLOW</span>
+    <span>31 / 57</span>
+  </footer>
+
+</div>
+
+<aside data-notes class="hidden">
+  <ul>
+    <li>10 nodos: detectar → resolver persona → extraer preferencia → buscar duplicados → propuesta → confirmar → persistir.</li>
+    <li>Política de riesgo decide auto-guardar vs confirmar.</li>
+    <li>Nodo 8 crea relación PREFERS en el grafo (Daniel→Preference).</li>
+    <li>Indexado async con embeddings + texto para búsqueda semántica.</li>
+    <li>La fuente siempre se conserva — trazabilidad total.</li>
+  </ul>
+</aside>
+</body>
+</html>

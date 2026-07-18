@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT · UI Emotes Sheet — 12 Emotes</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .ctx-cell {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    clip-path: polygon(0 6px, 6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%);
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .ctx-icon {
+    display: flex; align-items: center; gap: 6px;
+    font-family: var(--font-pixel);
+    font-size: 9px;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+  }
+  .ctx-icon .material-icons { font-size: 18px; color: var(--accent); }
+  .ctx-body { font-family: 'Inter', sans-serif; font-size: 11px; color: var(--primary-dim); line-height: 1.35; }
+
+  .emote-cell {
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    padding: 6px 4px;
+    background: rgba(34,211,238,0.04);
+    border: 1px solid var(--border);
+    clip-path: polygon(0 4px, 4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+  }
+  .emote-face {
+    width: 40px; height: 40px;
+    background: #050912;
+    border: 2px solid var(--accent);
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .emote-face .visor { width: 24px; height: 6px; background: var(--accent); box-shadow: 0 0 4px var(--accent); }
+  .emote-face .eye { position:absolute; width:4px; height:4px; background:var(--accent); }
+  .emote-face .mouth { position:absolute; width:14px; height:3px; background:var(--accent); bottom:8px; }
+  .emote-name { font-family: var(--font-pixel); font-size: 9px; color: var(--accent); letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- HEADER -->
+  <header class="absolute top-7 left-8 right-8 flex items-end justify-between">
+    <div class="flex items-center gap-4">
+      <span class="pixel-badge">03.3 // UI EMOTES</span>
+      <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; letter-spacing:0.02em; color:var(--primary);">12 Emotes <span style="color:var(--accent);">Compactos</span></h1>
+    </div>
+    <div class="flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+      <span class="material-icons" style="font-size:14px; color:var(--accent);">sentiment_satisfied</span>
+      <span>16×16 / 32×32 · ALT-TEXT ACCESSIBLE</span>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="absolute" style="top:90px; left:32px; right:32px; bottom:60px; display:grid; grid-template-columns: 560px 1fr; gap:24px;">
+
+    <!-- LEFT: image panel -->
+    <section class="hud-panel" style="padding:16px; display:flex; flex-direction:column;">
+      <div class="flex items-center justify-between mb-2">
+        <span style="font-family:var(--font-pixel); font-size:10px; color:var(--accent); letter-spacing:0.08em;">SPRITESHEET · RAW</span>
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">file: PNG · indexed</span>
+      </div>
+      <div style="flex:1; background:#050912; border:1px solid var(--border); padding:14px; display:flex; align-items:center; justify-content:center; min-height:0;">
+        <img src="vnbot-golem-ui-emotes.png"
+             class="pixelated"
+             style="max-width:100%; max-height:100%; image-rendering:pixelated;"
+             alt="UI emotes sheet con 12 emotes compactos">
+      </div>
+      <div class="mt-3 flex items-center justify-between">
+        <div style="font-family:var(--font-num); font-size:11px; color:var(--accent);">
+          vnbot-golem-ui-emotes.png · 12 emotes · 16×16 / 32×32px
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="pixel-badge">12 / 12</span>
+          <span class="pixel-badge success">READY</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: usos + emote grid -->
+    <section style="display:flex; flex-direction:column; gap:14px;">
+
+      <!-- USOS -->
+      <div class="hud-panel" style="padding:12px 14px;">
+        <div class="flex items-center justify-between mb-2">
+          <span style="font-family:var(--font-pixel); font-size:10px; color:var(--accent); letter-spacing:0.08em;">I · USOS</span>
+          <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">6 contextos</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <div class="ctx-cell">
+            <div class="ctx-icon"><span class="material-icons">chat_bubble</span>BURBUJAS CHAT</div>
+            <div class="ctx-body">emote junto al mensaje del agente</div>
+          </div>
+          <div class="ctx-cell">
+            <div class="ctx-icon"><span class="material-icons">notifications</span>TOASTS</div>
+            <div class="ctx-body">emote + notificación breve</div>
+          </div>
+          <div class="ctx-cell">
+            <div class="ctx-icon"><span class="material-icons">badge</span>BADGES</div>
+            <div class="ctx-body">icono de estado en AgentCard</div>
+          </div>
+          <div class="ctx-cell">
+            <div class="ctx-icon"><span class="material-icons">push_pin</span>PUSH</div>
+            <div class="ctx-body">centro de notificación push</div>
+          </div>
+          <div class="ctx-cell">
+            <div class="ctx-icon"><span class="material-icons">view_list</span>LISTA AGENTES</div>
+            <div class="ctx-body">emote pequeño de estado</div>
+          </div>
+          <div class="ctx-cell">
+            <div class="ctx-icon"><span class="material-icons">sms</span>MENSAJES SISTEMA</div>
+            <div class="ctx-body">emote + texto error/éxito</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMOTE LIST -->
+      <div class="hud-panel" style="padding:12px 14px; flex:1;">
+        <div class="flex items-center justify-between mb-2">
+          <span style="font-family:var(--font-pixel); font-size:10px; color:var(--accent); letter-spacing:0.08em;">II · 12 EMOTES</span>
+          <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">grid 4×3 · placeholder CSS</span>
+        </div>
+        <div class="grid grid-cols-4 gap-2">
+          <!-- neutral -->
+          <div class="emote-cell"><div class="emote-face"><div class="visor"></div></div><div class="emote-name">neutral</div></div>
+          <!-- happy -->
+          <div class="emote-cell"><div class="emote-face"><div class="visor" style="width:30px;"></div><div class="mouth" style="background:var(--accent-3); border-color:var(--accent-3); width:18px; height:6px; clip-path:polygon(0 0,100% 0,80% 100%,20% 100%);"></div></div><div class="emote-name">happy</div></div>
+          <!-- curious -->
+          <div class="emote-cell"><div class="emote-face"><div class="eye" style="top:14px; left:8px;"></div><div class="eye" style="top:12px; right:8px;"></div><div class="visor" style="width:18px; opacity:0.5;"></div></div><div class="emote-name">curious</div></div>
+          <!-- focused -->
+          <div class="emote-cell"><div class="emote-face"><div class="visor" style="background:var(--accent-3);"></div><div class="mouth" style="background:var(--accent-3); width:8px; height:2px;"></div></div><div class="emote-name" style="color:var(--accent-3);">focused</div></div>
+          <!-- listening -->
+          <div class="emote-cell"><div class="emote-face"><div class="visor" style="background:var(--accent-2); width:28px;"></div><div style="position:absolute; top:-3px; left:50%; transform:translateX(-50%); width:4px; height:6px; background:var(--accent-2);"></div></div><div class="emote-name" style="color:var(--accent-2);">listening</div></div>
+          <!-- thinking -->
+          <div class="emote-cell"><div class="emote-face"><div class="visor" style="width:8px; margin-right:auto; margin-left:6px;"></div><div style="position:absolute; top:10px; right:6px; font-family:var(--font-pixel); font-size:10px; color:var(--accent-3);">?</div></div><div class="emote-name">thinking</div></div>
+          <!-- loading -->
+          <div class="emote-cell"><div class="emote-face" style="border-color:var(--accent-2);"><div style="width:30px; height:30px; border:3px solid var(--accent-2); border-top-color:transparent; border-radius:50%;"></div></div><div class="emote-name" style="color:var(--accent-2);">loading</div></div>
+          <!-- confirmed -->
+          <div class="emote-cell"><div class="emote-face" style="border-color:var(--success);"><div class="visor" style="background:var(--success);"></div><div style="position:absolute; bottom:6px; left:50%; transform:translateX(-50%); color:var(--success); font-family:var(--font-pixel); font-size:12px;">✓</div></div><div class="emote-name" style="color:var(--success);">confirmed</div></div>
+          <!-- warning -->
+          <div class="emote-cell"><div class="emote-face" style="border-color:var(--accent-3);"><div class="visor" style="background:var(--accent-3);"></div><div style="position:absolute; top:8px; left:50%; transform:translateX(-50%); color:var(--accent-3); font-family:var(--font-pixel); font-size:10px;">!</div></div><div class="emote-name" style="color:var(--accent-3);">warning</div></div>
+          <!-- error -->
+          <div class="emote-cell"><div class="emote-face" style="border-color:var(--error);"><div class="visor" style="background:var(--error);"></div><div style="position:absolute; bottom:6px; left:50%; transform:translateX(-50%); color:var(--error); font-family:var(--font-pixel); font-size:10px;">✕</div></div><div class="emote-name" style="color:var(--error);">error</div></div>
+          <!-- offline -->
+          <div class="emote-cell"><div class="emote-face" style="border-color:#6B7280;"><div class="visor" style="background:#6B7280; opacity:0.5;"></div></div><div class="emote-name" style="color:#6B7280;">offline</div></div>
+          <!-- sleepy -->
+          <div class="emote-cell"><div class="emote-face" style="border-color:#94A3B8;"><div class="visor" style="background:#94A3B8; width:14px;"></div><div style="position:absolute; top:8px; right:4px; font-family:var(--font-pixel); font-size:8px; color:#94A3B8;">z</div></div><div class="emote-name" style="color:#94A3B8;">sleepy</div></div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>CAP. 03 · EMOTES</span>
+    <span style="color:var(--accent);">VNBOT UI/UX · DESIGN SYSTEM</span>
+    <span>18 / 39</span>
+  </footer>
+
+</div>
+
+<aside data-notes class="hidden">
+- 12 emotes estáticos compactos — sin animación.
+- Resoluciones 16 y 32px para escalado pixel-perfect.
+- Implementados como <img> con alt o CSS background con aria-label.
+- 6 contextos de uso cubren toda la superficie de la app.
+- Emotes accesorios del agente — no reemplazan la mascota principal.
+</aside>
+</body>
+</html>

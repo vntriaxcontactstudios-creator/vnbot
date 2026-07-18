@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · 54 / 57 — Diferencias por Plataforma</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .plat-card { background: var(--surface); border: 1px solid; padding: 14px 18px; height: 100%; clip-path: polygon(0 10px, 10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px)); position:relative; }
+  .plat-title { font-family: var(--font-pixel); font-size: 12px; letter-spacing: 0.06em; }
+  .spec-row { font-family: var(--font-body); font-size: 12px; line-height: 1.7; color: var(--primary); padding-left: 12px; position:relative; }
+  .spec-row::before { content: '·'; position:absolute; left:2px; color: var(--accent); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl"></div>
+  <div class="corner-bracket tr"></div>
+  <div class="corner-bracket bl"></div>
+  <div class="corner-bracket br"></div>
+
+  <div class="absolute" style="top:32px; left:48px; right:48px; display:flex; justify-content:space-between; align-items:center;">
+    <span class="pixel-badge">10.3 // PLATAFORMAS</span>
+    <span style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim); letter-spacing:0.08em;">CHAPTER 10 · PLATFORMS</span>
+  </div>
+  <h1 style="position:absolute; top:62px; left:48px; font-family:var(--font-heading); font-weight:700; font-size:32px; color:var(--primary); letter-spacing:0.02em;">Diferencias por Plataforma</h1>
+  <p style="position:absolute; top:104px; left:48px; font-family:var(--font-body); font-size:14px; color:var(--primary-dim);">Mismos estados de dominio, distintas restricciones por runtime.</p>
+
+  <!-- Grid 2x2 -->
+  <div style="position:absolute; top:138px; left:48px; right:48px; display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap:16px; height:520px;">
+
+    <!-- 1. WEB / PWA -->
+    <div class="plat-card" style="border-color:var(--accent);">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <i class="material-icons" style="font-size:28px; color:var(--accent);">public</i>
+        <span class="plat-title" style="color:var(--accent);">WEB / PWA</span>
+        <span style="font-family:var(--font-num); font-size:9px; color:var(--primary-dim); margin-left:auto;">RUNTIME: BROWSER</span>
+      </div>
+      <div class="spec-row">Notificaciones web</div>
+      <div class="spec-row">IndexedDB</div>
+      <div class="spec-row">Service Worker</div>
+      <div class="spec-row">Permisos de navegador</div>
+      <div class="spec-row">Pérdida posible de contexto si se borra el sitio</div>
+    </div>
+
+    <!-- 2. ANDROID -->
+    <div class="plat-card" style="border-color:var(--accent-3);">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <i class="material-icons" style="font-size:28px; color:var(--accent-3);">phone_android</i>
+        <span class="plat-title" style="color:var(--accent-3);">ANDROID</span>
+        <span style="font-family:var(--font-num); font-size:9px; color:var(--primary-dim); margin-left:auto;">RUNTIME: APK</span>
+      </div>
+      <div class="spec-row">Notificaciones locales</div>
+      <div class="spec-row">Permiso de micrófono</div>
+      <div class="spec-row">Estado de red</div>
+      <div class="spec-row">Restricciones de background</div>
+      <div class="spec-row">Filesystem móvil</div>
+    </div>
+
+    <!-- 3. DESKTOP -->
+    <div class="plat-card" style="border-color:var(--accent-2);">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <i class="material-icons" style="font-size:28px; color:var(--accent-2);">desktop_windows</i>
+        <span class="plat-title" style="color:var(--accent-2);">DESKTOP</span>
+        <span style="font-family:var(--font-num); font-size:9px; color:var(--primary-dim); margin-left:auto;">RUNTIME: NATIVE</span>
+      </div>
+      <div class="spec-row">Notificaciones nativas</div>
+      <div class="spec-row">SQLite local</div>
+      <div class="spec-row">Integración con archivos</div>
+      <div class="spec-row">Atajos de teclado</div>
+      <div class="spec-row">Menú de bandeja posterior</div>
+    </div>
+
+    <!-- 4. CLI -->
+    <div class="plat-card" style="border-color:var(--success);">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <i class="material-icons" style="font-size:28px; color:var(--success);">terminal</i>
+        <span class="plat-title" style="color:var(--success);">CLI</span>
+        <span style="font-family:var(--font-num); font-size:9px; color:var(--primary-dim); margin-left:auto;">RUNTIME: SHELL</span>
+      </div>
+      <div class="spec-row">Texto y JSON</div>
+      <div class="spec-row">No depende del layout visual</div>
+      <div class="spec-row">Debe exponer estados y errores</div>
+      <div class="spec-row">Puede funcionar en servidores sin GUI</div>
+      <div class="spec-row">Mascota como ASCII art opcional</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>VNBOT // APP FLOW · CAP. 10 · PLATAFORMAS</span>
+    <span>54 / 57</span>
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- Cuatro plataformas con restricciones distintas pero mismos estados de dominio.
+- WEB/PWA: IndexedDB + Service Worker, riesgo de pérdida al borrar sitio.
+- ANDROID: scheduler local + filesystem móvil + permisos de micrófono.
+- DESKTOP: SQLite + atajos + bandeja, ideal para power users.
+- CLI: expone estados y errores en texto/JSON, mascota ASCII opcional.
+</aside>
+</body>
+</html>

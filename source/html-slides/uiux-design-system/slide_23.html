@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT · Chat Anatomy</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  /* chat mockup */
+  .chat-frame {
+    height: 100%;
+    background: #050912;
+    border: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    padding: 8px;
+    gap: 6px;
+  }
+  .chat-head {
+    height: 44px; padding: 0 12px;
+    background: var(--surface); border:1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+    clip-path: polygon(0 4px, 4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+  }
+  .chat-avatar { width:28px; height:28px; background:#050912; border:2px solid #E5F1FF; display:flex; align-items:center; justify-content:center; clip-path:polygon(0 4px,4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%); }
+  .chat-avatar .visor { width:14px; height:4px; background:#E5F1FF; }
+  .chat-name { font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: var(--primary); }
+  .chat-status { font-family: var(--font-num); font-size: 11px; color: var(--accent); display:flex; align-items:center; gap:4px; }
+  .chat-status .dot { width:8px; height:8px; background:var(--accent); border-radius:50%; box-shadow:0 0 6px var(--accent); animation: pulse 1.5s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+  .chat-head .material-icons.urgent { color: var(--accent-3); font-size:16px; margin-left:auto; }
+
+  .chat-body {
+    flex: 1; padding: 8px 6px; display: flex; flex-direction: column; gap: 8px;
+    overflow: hidden;
+  }
+  .msg-row { display:flex; gap:6px; align-items:flex-end; }
+  .msg-row.right { justify-content: flex-end; }
+  .msg-row.center { justify-content: center; }
+
+  .bubble {
+    max-width: 70%; padding: 8px 12px;
+    font-family: 'Inter', sans-serif; font-size: 12px; color: var(--primary);
+    line-height: 1.4;
+    clip-path: polygon(0 6px, 6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%);
+  }
+  .bubble.user { background: rgba(34,211,238,0.12); border:1px solid var(--accent); color: var(--primary); align-self:flex-end; }
+  .bubble.agent { background: var(--surface); border:1px solid var(--accent-2); }
+  .bubble.agent .emote { display:inline-block; margin-right:4px; vertical-align:middle; }
+  .emote-mini { width:22px; height:22px; background:#050912; border:1.5px solid var(--accent-2); display:inline-flex; align-items:center; justify-content:center; clip-path:polygon(0 3px,3px 0,100% 0,100% calc(100% - 3px),calc(100% - 3px) 100%,0 100%); }
+  .emote-mini .visor { width:12px; height:3px; background:var(--accent-2); }
+  .emote-mini.ok { border-color: var(--success); }
+  .emote-mini.ok .visor { background: var(--success); }
+  .emote-mini.ok::after { content:'✓'; color: var(--success); font-family:var(--font-pixel); font-size:8px; }
+
+  .proposal {
+    max-width: 90%; padding: 10px 12px;
+    border: 2px solid var(--accent-3);
+    background: rgba(251,191,36,0.08);
+    clip-path: polygon(0 6px, 6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%);
+  }
+  .proposal .head { font-family:var(--font-pixel); font-size:8px; color:var(--accent-3); letter-spacing:0.08em; margin-bottom:6px; }
+  .proposal .body { font-family:'Inter',sans-serif; font-size:12px; color:var(--primary); margin-bottom:8px; }
+  .proposal .btns { display:flex; gap:6px; }
+  .proposal .btn { padding: 5px 12px; font-family:var(--font-pixel); font-size:8px; letter-spacing:0.08em; border:1px solid; clip-path: polygon(0 3px, 3px 0, 100% 0, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0 100%); }
+  .proposal .btn.cancel { border-color: #6B7280; color:#94A3B8; background: rgba(107,114,128,0.08); }
+  .proposal .btn.confirm { border-color: var(--accent-3); color: var(--accent-3); background: rgba(251,191,36,0.12); }
+
+  .ctx-badge { align-self: flex-start; padding: 4px 8px; font-family: var(--font-num); font-size: 10px; color: var(--accent); border:1px solid var(--accent); background: rgba(34,211,238,0.06); display:flex; align-items:center; gap:5px; clip-path: polygon(0 3px, 3px 0, 100% 0, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0 100%); }
+
+  .chat-input {
+    height: 50px; padding: 0 10px;
+    background: var(--surface); border:1px solid var(--border);
+    display: grid; grid-template-columns: 36px 1fr auto auto; gap:8px; align-items:center;
+    clip-path: polygon(0 4px, 4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+  }
+  .chat-input .material-icons { color: var(--accent-2); font-size:20px; }
+  .chat-input .placeholder { font-family:'Inter',sans-serif; font-size:12px; color:#94A3B8; }
+  .chat-input .tz { font-family:var(--font-num); font-size:10px; color:var(--accent-3); border:1px solid var(--accent-3); padding:2px 6px; background: rgba(251,191,36,0.08); }
+  .chat-input .send { padding:6px 12px; font-family:var(--font-pixel); font-size:8px; color:var(--accent); border:1px solid var(--accent); background: rgba(34,211,238,0.12); letter-spacing:0.08em; clip-path: polygon(0 3px, 3px 0, 100% 0, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0 100%); }
+
+  /* annotations */
+  .annot-card {
+    display: grid; grid-template-columns: 32px 1fr; gap: 10px;
+    padding: 8px 12px;
+    align-items: center;
+    height: 60px;
+  }
+  .annot-num { font-family: var(--font-pixel); font-size: 16px; color: var(--accent); text-align:center; }
+  .annot-title { font-family: var(--font-pixel); font-size: 9px; color: var(--accent); letter-spacing: 0.08em; margin-bottom: 3px; }
+  .annot-body { font-family: 'Inter',sans-serif; font-size: 11px; color: var(--primary); line-height: 1.3; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- HEADER -->
+  <header class="absolute top-7 left-8 right-8 flex items-end justify-between">
+    <div class="flex items-center gap-4">
+      <span class="pixel-badge">04.3 // CHAT</span>
+      <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; letter-spacing:0.02em; color:var(--primary);">Chat <span style="color:var(--accent);">Anatomy</span></h1>
+    </div>
+    <div class="flex items-center gap-2" style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim);">
+      <span class="material-icons" style="font-size:14px; color:var(--accent);">question_answer</span>
+      <span>WIREFRAME REAL · 5 MENSAJES + INPUT</span>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="absolute" style="top:90px; left:32px; right:32px; bottom:50px; display:grid; grid-template-columns: 640px 1fr; gap:24px;">
+
+    <!-- LEFT: chat mockup -->
+    <section class="hud-panel" style="padding:10px;">
+      <div class="flex items-center justify-between mb-2 px-1">
+        <span style="font-family:var(--font-pixel); font-size:9px; color:var(--accent); letter-spacing:0.08em;">CHAT SESSION · 17 JUL · 14:02</span>
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">UTC-4 · GLM-4.6</span>
+      </div>
+
+      <div class="chat-frame">
+        <!-- HEADER -->
+        <div class="chat-head">
+          <div class="chat-avatar"><div class="visor"></div></div>
+          <div class="flex flex-col">
+            <span class="chat-name">Chat Assistant</span>
+            <span class="chat-status"><span class="dot"></span>thinking</span>
+          </div>
+          <span class="material-icons urgent">settings</span>
+        </div>
+
+        <!-- BODY -->
+        <div class="chat-body">
+          <!-- user message -->
+          <div class="msg-row right">
+            <div class="bubble user">Recuérdame llamar al dentista el jueves a las 3pm</div>
+          </div>
+
+          <!-- agent with emote -->
+          <div class="msg-row">
+            <span class="emote-mini"><div class="visor"></div></span>
+            <div class="bubble agent">Propuesta: recordatorio el jueves 17 jul 15:00 GMT-4. ¿Confirmar?</div>
+          </div>
+
+          <!-- proposal card centered -->
+          <div class="msg-row center">
+            <div class="proposal">
+              <div class="head">⚡ PROPOSAL · ESPERANDO CONFIRMACIÓN</div>
+              <div class="body">Recordatorio · Jueves 17 Jul · 15:00 · Llamar al dentista</div>
+              <div class="btns">
+                <span class="btn cancel">CANCELAR</span>
+                <span class="btn confirm">CONFIRMAR</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- agent success -->
+          <div class="msg-row">
+            <span class="emote-mini ok"><div class="visor"></div></span>
+            <div class="bubble agent" style="border-color: var(--success);">Recordatorio guardado en memoria. Tag: salud.</div>
+          </div>
+
+          <!-- context badge -->
+          <div class="ctx-badge"><span class="material-icons" style="font-size:11px;">link</span>CTX: 2 memorias relacionadas</div>
+        </div>
+
+        <!-- INPUT -->
+        <div class="chat-input">
+          <span class="material-icons">mic</span>
+          <span class="placeholder">Escribe o captura...</span>
+          <span class="tz">GMT-4</span>
+          <span class="send">ENVIAR ▸</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: annotations -->
+    <section style="display:flex; flex-direction:column; gap:8px;">
+      <div class="flex items-center justify-between">
+        <span style="font-family:var(--font-pixel); font-size:10px; color:var(--accent); letter-spacing:0.08em;">ANATOMÍA · 6 ANOTACIONES</span>
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">patrones del chat</span>
+      </div>
+
+      <div class="hud-panel annot-card">
+        <div class="annot-num">01</div>
+        <div>
+          <div class="annot-title">BURBUJAS USUARIO</div>
+          <div class="annot-body">Cyan, derecha, max 70% width</div>
+        </div>
+      </div>
+
+      <div class="hud-panel magenta annot-card" style="color:var(--accent-2);">
+        <div class="annot-num" style="color:var(--accent-2);">02</div>
+        <div>
+          <div class="annot-title" style="color:var(--accent-2);">BURBUJAS AGENTE</div>
+          <div class="annot-body">Surface, izquierda, con emote 24px</div>
+        </div>
+      </div>
+
+      <div class="hud-panel amber annot-card" style="color:var(--accent-3);">
+        <div class="annot-num" style="color:var(--accent-3);">03</div>
+        <div>
+          <div class="annot-title" style="color:var(--accent-3);">PROPOSALS</div>
+          <div class="annot-body">Centro, amber, botones confirmar/cancelar</div>
+        </div>
+      </div>
+
+      <div class="hud-panel annot-card">
+        <div class="annot-num">04</div>
+        <div>
+          <div class="annot-title">CONTEXTO VISIBLE</div>
+          <div class="annot-body">Badge con memorias relacionadas</div>
+        </div>
+      </div>
+
+      <div class="hud-panel annot-card">
+        <div class="annot-num">05</div>
+        <div>
+          <div class="annot-title">ZONA HORARIA</div>
+          <div class="annot-body">Visible en input, explícita</div>
+        </div>
+      </div>
+
+      <div class="hud-panel magenta annot-card" style="color:var(--accent-2);">
+        <div class="annot-num" style="color:var(--accent-2);">06</div>
+        <div>
+          <div class="annot-title" style="color:var(--accent-2);">EMOTES INLINE</div>
+          <div class="annot-body">Reaccionan a estado del agente en tiempo real</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <span>CAP. 04 · CHAT</span>
+    <span style="color:var(--accent);">VNBOT UI/UX · DESIGN SYSTEM</span>
+    <span>23 / 39</span>
+  </footer>
+
+</div>
+
+<aside data-notes class="hidden">
+- Chat es el centro de VNBOT — conversación + propuestas.
+- Toda acción del agente que modifica estado requiere proposal + confirmación.
+- Contexto siempre visible con badge de memorias relacionadas.
+- Emotes reflejan el estado real del agente en tiempo real.
+- Zona horaria explícita en el input — sin ambigüedad.
+</aside>
+</body>
+</html>

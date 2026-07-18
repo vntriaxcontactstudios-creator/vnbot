@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · 43 / 57 — MCP Fallos</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .err-card { padding: 14px 18px; background: var(--surface); border: 2px solid; height: 100%; clip-path: polygon(0 10px, 10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px)); position:relative; }
+  .err-title { font-family: var(--font-pixel); font-size: 11px; letter-spacing: 0.06em; }
+  .err-body { font-family: var(--font-body); font-size: 12px; line-height: 1.4; color: var(--primary); }
+  .err-rule { font-family: var(--font-body); font-size: 11px; font-weight: 600; padding: 4px 8px; display: inline-block; margin-top: 4px; }
+  .err-action { font-family: var(--font-num); font-size: 10px; line-height: 1.5; color: var(--primary-dim); margin-top: 4px; }
+  .err-mock { font-family: var(--font-num); font-size: 10px; padding: 4px 8px; background: var(--bg-deep); border: 1px dashed var(--border-bright); margin-top: 6px; color: var(--error); }
+  .err-bullet { font-family: var(--font-body); font-size: 11px; line-height: 1.6; color: var(--primary); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl"></div>
+  <div class="corner-bracket tr"></div>
+  <div class="corner-bracket bl"></div>
+  <div class="corner-bracket br"></div>
+
+  <div class="absolute" style="top:32px; left:48px; right:48px; display:flex; justify-content:space-between; align-items:center;">
+    <span class="pixel-badge">08.5 // MCP FALLOS</span>
+    <span style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim); letter-spacing:0.08em;">CHAPTER 08 · MCP RECOVERY</span>
+  </div>
+  <h1 style="position:absolute; top:62px; left:48px; font-family:var(--font-heading); font-weight:700; font-size:32px; color:var(--primary); letter-spacing:0.02em;">MCP — Fallos y Recuperación</h1>
+  <p style="position:absolute; top:104px; left:48px; font-family:var(--font-body); font-size:14px; color:var(--primary-dim);">Cada fallo tiene manejo explícito. Aislamiento por integración.</p>
+
+  <!-- Grid 2x2 -->
+  <!-- 1. HANDSHAKE FALLIDO -->
+  <div style="position:absolute; top:140px; left:48px; width:580px; height:248px;">
+    <div class="err-card" style="border-color:var(--error);">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <i class="material-icons" style="font-size:24px; color:var(--error);">link_off</i>
+        <span class="err-title" style="color:var(--error);">HANDSHAKE FALLIDO</span>
+      </div>
+      <p class="err-body">Mostrar endpoint, transporte y código de error.</p>
+      <div class="err-rule" style="color:var(--error); background:rgba(239,68,68,0.12); border:1px solid var(--error);"><i class="material-icons" style="font-size:11px; vertical-align:middle;">priority_high</i> REGLA CRÍTICA: NO revelar token en el mensaje de error.</div>
+      <div class="err-action"><span style="color:var(--accent);">→</span> Acción: Revisar URL/transporte, reintentar con nueva config</div>
+      <div class="err-mock">ERR: ECONNREFUSED · transport=stdio · endpoint=/usr/local/bin/mcp-server</div>
+    </div>
+  </div>
+
+  <!-- 2. TOOL NO DISPONIBLE -->
+  <div style="position:absolute; top:140px; left:652px; width:580px; height:248px;">
+    <div class="err-card" style="border-color:var(--accent-3);">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <i class="material-icons" style="font-size:24px; color:var(--accent-3);">build_circle</i>
+        <span class="err-title" style="color:var(--accent-3);">TOOL NO DISPONIBLE</span>
+      </div>
+      <p class="err-body">Marcar integración degradada. Resto de VNBOT funcional.</p>
+      <div style="margin-top:6px; font-family:var(--font-body); font-size:11px; color:var(--primary);"><span style="color:var(--accent-3); font-weight:600;">Aislamiento:</span> Una tool caída no afecta otras tools del mismo MCP ni otros MCPs</div>
+      <div class="err-action"><span style="color:var(--accent);">→</span> Acción: Reintentar con backoff, si persiste pausar tool y notificar</div>
+
+      <!-- Mini isolation diagram -->
+      <div style="margin-top:10px; display:flex; align-items:center; gap:6px; font-family:var(--font-num); font-size:10px;">
+        <span style="padding:3px 6px; border:1px solid var(--success); color:var(--success);">tool.A OK</span>
+        <span style="padding:3px 6px; border:1px solid var(--error); color:var(--error); background:rgba(239,68,68,0.1);">tool.B ✕</span>
+        <span style="padding:3px 6px; border:1px solid var(--success); color:var(--success);">tool.C OK</span>
+        <span style="color:var(--primary-dim); margin-left:4px;">— MCP intacto</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. REAUTENTICACIÓN -->
+  <div style="position:absolute; top:400px; left:48px; width:580px; height:248px;">
+    <div class="err-card" style="border-color:var(--accent-2);">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <i class="material-icons" style="font-size:24px; color:var(--accent-2);">vpn_key</i>
+        <span class="err-title" style="color:var(--accent-2);">REAUTENTICACIÓN</span>
+      </div>
+      <p class="err-body">Token expirado o revocado por el servidor MCP.</p>
+      <div style="margin-top:6px;">
+        <div class="err-bullet" style="color:var(--success);"><i class="material-icons" style="font-size:12px; vertical-align:middle;">check</i> Conservar configuración</div>
+        <div class="err-bullet" style="color:var(--success);"><i class="material-icons" style="font-size:12px; vertical-align:middle;">check</i> Pausar llamadas pendientes</div>
+        <div class="err-bullet" style="color:var(--success);"><i class="material-icons" style="font-size:12px; vertical-align:middle;">check</i> Pedir reconectar al usuario</div>
+      </div>
+      <div class="err-action" style="margin-top:8px;"><i class="material-icons" style="font-size:11px; vertical-align:middle; color:var(--accent-2);">info</i> Nota: No se pierde configuración, solo se re-pide auth.</div>
+    </div>
+  </div>
+
+  <!-- 4. RESPUESTA MAL FORMADA -->
+  <div style="position:absolute; top:400px; left:652px; width:580px; height:248px;">
+    <div class="err-card" style="border-color:var(--error);">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <i class="material-icons" style="font-size:24px; color:var(--error);">error</i>
+        <span class="err-title" style="color:var(--error);">RESPUESTA MAL FORMADA</span>
+      </div>
+      <p class="err-body">El servidor MCP devolvió JSON inválido o fuera de schema.</p>
+      <div class="err-rule" style="color:var(--error); background:rgba(239,68,68,0.12); border:1px solid var(--error);"><i class="material-icons" style="font-size:11px; vertical-align:middle;">priority_high</i> REGLA CRÍTICA: NO ejecutar acciones derivadas de una respuesta inválida.</div>
+      <div class="err-action"><span style="color:var(--accent);">→</span> Acción: Registrar error de protocolo, notificar al usuario, pausar integración</div>
+      <div class="err-mock">PARSE_ERR · expected: tool_result · got: { "ok": tru }</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>VNBOT // APP FLOW · CAP. 08 · MCP FALLOS</span>
+    <span>43 / 57</span>
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- Cuatro modos de fallo de MCP con manejo explícito.
+- Token nunca aparece en mensajes de error — regla crítica.
+- Aislamiento por tool: una caída no arrastra al resto del MCP.
+- Reauth conserva configuración; solo re-pide auth.
+- JSON inválido: no se ejecutan acciones derivadas; integración en pausa.
+</aside>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · 44 / 57 — Cap. 9 Offline + Sync</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .ghost-num { position:absolute; font-family: var(--font-pixel); font-size: 380px; color: rgba(251,191,36,0.04); top: 110px; left: 50%; transform: translateX(-50%); pointer-events:none; line-height:1; user-select:none; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl" style="border-color:var(--accent-3);"></div>
+  <div class="corner-bracket tr" style="border-color:var(--accent-3);"></div>
+  <div class="corner-bracket bl" style="border-color:var(--accent-3);"></div>
+  <div class="corner-bracket br" style="border-color:var(--accent-3);"></div>
+
+  <!-- Decorative ghost number -->
+  <div class="ghost-num" data-decor aria-hidden="true">09</div>
+
+  <!-- Top-left chapter badge -->
+  <span class="pixel-badge amber" style="position:absolute; top:42px; left:48px;">CAPÍTULO 09 / 10</span>
+
+  <!-- Top-right brand mark -->
+  <div style="position:absolute; top:42px; right:48px; display:flex; align-items:center; gap:10px; font-family:var(--font-num); font-size:11px; color:var(--primary-dim); letter-spacing:0.08em;">
+    <span>VNBOT // APP FLOW</span>
+    <span style="color:var(--accent-3);">●</span>
+    <span>OFFLINE-FIRST</span>
+  </div>
+
+  <!-- Center block -->
+  <div style="position:absolute; top:138px; left:0; right:0; display:flex; flex-direction:column; align-items:center;">
+    <!-- Giant chapter number -->
+    <div class="chapter-num" style="color:var(--accent-3); text-shadow: 0 0 24px rgba(251,191,36,0.4), 0 0 60px rgba(251,191,36,0.2);">09</div>
+
+    <!-- Amber separator -->
+    <div style="width:240px; height:2px; background:var(--accent-3); margin:24px 0 22px; box-shadow: 0 0 12px rgba(251,191,36,0.5);"></div>
+
+    <!-- Title -->
+    <h1 style="font-family:var(--font-heading); font-weight:700; font-size:48px; letter-spacing:0.15em; color:var(--primary); text-align:center;">OFFLINE + SYNC + CONFLICTOS</h1>
+
+    <!-- Tagline -->
+    <p style="font-family:var(--font-body); font-size:18px; color:var(--primary-dim); margin-top:18px; text-align:center; letter-spacing:0.01em;">Offline-first, no es error, es estado normal.</p>
+  </div>
+
+  <!-- Bottom-right mini state-badges -->
+  <div style="position:absolute; bottom:42px; right:48px; display:flex; gap:6px; align-items:center;">
+    <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim); letter-spacing:0.08em; margin-right:6px;">STATES</span>
+    <span class="state-badge ready">ONLINE</span>
+    <span class="state-badge maint">DEGRADED</span>
+    <span class="state-badge offline">OFFLINE</span>
+    <span class="state-badge sync">SYNCING</span>
+    <span class="state-badge fatal">CONFLICT</span>
+  </div>
+
+  <!-- Bottom-left slide meta -->
+  <div style="position:absolute; bottom:42px; left:48px; font-family:var(--font-num); font-size:11px; color:var(--primary-dim); letter-spacing:0.08em;">
+    SLIDES 44–50 · 7 SLIDES
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- Apertura Capítulo 9: offline + sync + conflictos.
+- Offline-first: el offline es un estado normal, no un error.
+- 5 estados de conexión: ONLINE, DEGRADED, OFFLINE, SYNCING, CONFLICT.
+- A continuación: matriz de comportamiento, flujo offline, conflictos y fallback.
+- Fallback heurístico cierra el capítulo: el sistema no finge capacidad.
+</aside>
+</body>
+</html>

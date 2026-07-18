@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · 57 / 57 — Cierre</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .cta-btn { font-family: var(--font-pixel); font-size: 10px; letter-spacing: 0.08em; padding: 12px 18px; background: var(--surface); border: 1px solid; clip-path: polygon(0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px)); display:inline-flex; align-items:center; gap:8px; }
+  .cta-ghost { color: var(--primary); border-color: var(--border-bright); }
+  .cta-primary { color: var(--accent); border-color: var(--accent); background: rgba(34,211,238,0.08); }
+  .cta-secondary { color: var(--accent-3); border-color: var(--accent-3); background: rgba(251,191,36,0.08); }
+  .sum-item { font-family: var(--font-body); font-size: 12.5px; line-height: 1.7; color: var(--primary); }
+  .sum-check { color: var(--success); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl"></div>
+  <div class="corner-bracket tr"></div>
+  <div class="corner-bracket bl"></div>
+  <div class="corner-bracket br"></div>
+
+  <!-- Top-left badge -->
+  <span class="pixel-badge" style="position:absolute; top:32px; left:48px;">END / 57</span>
+
+  <!-- Top-right brand -->
+  <div style="position:absolute; top:32px; right:48px; font-family:var(--font-num); font-size:11px; color:var(--primary-dim); letter-spacing:0.08em;">
+    VNBOT // APP FLOW v1.0.0-draft
+  </div>
+
+  <!-- Title -->
+  <h1 style="position:absolute; top:62px; left:0; right:0; text-align:center; font-family:var(--font-heading); font-weight:700; font-size:40px; color:var(--primary); letter-spacing:0.05em;">APP FLOW DEFINIDO</h1>
+
+  <!-- Cyan separator -->
+  <div style="position:absolute; top:118px; left:50%; transform:translateX(-50%); width:240px; height:2px; background:var(--accent); box-shadow: 0 0 12px rgba(34,211,238,0.5);"></div>
+
+  <!-- Resumen panel -->
+  <div class="hud-panel accent" style="position:absolute; top:144px; left:290px; width:700px; padding:16px 22px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+      <i class="material-icons" style="font-size:16px; color:var(--accent);">summarize</i>
+      <span style="font-family:var(--font-pixel); font-size:11px; color:var(--accent);">LO CUBIERTO EN ESTA SESIÓN</span>
+      <div style="flex:1; height:1px; background:var(--border-bright);"></div>
+      <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">10 CAPÍTULOS · 57 SLIDES</span>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px 24px;">
+      <div>
+        <div class="sum-item"><span class="sum-check"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check</i></span> 5 principios de flujo + ciclo central</div>
+        <div class="sum-item"><span class="sum-check"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check</i></span> 12 estados globales con mapeo mascota</div>
+        <div class="sum-item"><span class="sum-check"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check</i></span> Arranque + onboarding 9 pasos</div>
+        <div class="sum-item"><span class="sum-check"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check</i></span> Auth, bóveda, MFA, unlock</div>
+        <div class="sum-item"><span class="sum-check"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check</i></span> Chat con pipeline + intenciones</div>
+      </div>
+      <div>
+        <div class="sum-item"><span class="sum-check"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check</i></span> Recordatorios claros/ambiguos/recurrentes</div>
+        <div class="sum-item"><span class="sum-check"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check</i></span> Memoria explícita/inferida/contradicción</div>
+        <div class="sum-item"><span class="sum-check"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check</i></span> Audio, búsqueda, grafo</div>
+        <div class="sum-item"><span class="sum-check"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check</i></span> Agentes, skills, MCP con fallos</div>
+        <div class="sum-item"><span class="sum-check"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check</i></span> Offline, sync, conflictos, fallback</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Criterios de aceptación -->
+  <div class="hud-panel amber" style="position:absolute; top:362px; left:290px; width:700px; padding:12px 22px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+      <i class="material-icons" style="font-size:18px; color:var(--accent-3);">check_circle</i>
+      <span style="font-family:var(--font-heading); font-weight:600; font-size:15px; color:var(--accent-3);">15 criterios del documento App Flow</span>
+    </div>
+    <p style="font-family:var(--font-body); font-size:11.5px; color:var(--primary-dim); line-height:1.45;">Cada pantalla con entrada/salida · cada operación con estado intermedio · ambigüedades se preguntan · errores con recuperación · online/offline visibles · acciones externas con confirmación · jobs no se presentan como completados antes · memoria y recordatorios separados pero conectables · grafo con alternativa textual · mascota refleja estado · funciona en 4 plataformas · exportar y eliminar · integraciones revocables · demo no finge ejecuciones · rutas críticas con E2E.</p>
+  </div>
+
+  <!-- CTAs -->
+  <div style="position:absolute; top:494px; left:0; right:0; display:flex; justify-content:center; gap:14px;">
+    <span class="cta-btn cta-ghost">
+      <i class="material-icons" style="font-size:14px;">description</i> REVISAR DOC
+      <span style="font-family:var(--font-num); font-size:9px; color:var(--primary-dim); margin-left:4px;">→ 06-APP-FLOW-VNBOT.md</span>
+    </span>
+    <span class="cta-btn cta-primary">
+      <i class="material-icons" style="font-size:14px;">slideshow</i> UI/UX DECK
+      <span style="font-family:var(--font-num); font-size:9px; color:var(--primary-dim); margin-left:4px;">→ /download/VNBOT_UIUX_DESIGN_SYSTEM.pptx</span>
+    </span>
+    <span class="cta-btn cta-secondary">
+      <i class="material-icons" style="font-size:14px;">rocket_launch</i> IMPLEMENTAR MVP
+      <span style="font-family:var(--font-num); font-size:9px; color:var(--primary-dim); margin-left:4px;">→ roadmap 0.1</span>
+    </span>
+  </div>
+
+  <!-- Decorative mini sprites row -->
+  <div style="position:absolute; bottom:60px; left:0; right:0; display:flex; justify-content:center; gap:14px; align-items:center;">
+    <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim); letter-spacing:0.1em;">FLOWS ·</span>
+    <div class="mini-sprite" style="color:var(--accent);"></div>
+    <div class="mini-sprite" style="color:var(--accent-3);"></div>
+    <div class="mini-sprite" style="color:var(--accent-2);"></div>
+    <div class="mini-sprite" style="color:var(--success);"></div>
+    <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim); letter-spacing:0.1em;">· DEFINED</span>
+  </div>
+
+  <!-- Footer bar -->
+  <div class="page-footer" style="bottom:18px;">
+    <span>VNBOT // APP FLOW v1.0.0-draft</span>
+    <span style="color:var(--primary-dim);">© 2026 MIT License</span>
+    <span>57 / 57</span>
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- Cierre del deck: 10 capítulos, 57 slides.
+- Resumen en 2 columnas cubre los 10 capítulos del app flow.
+- 15 criterios de aceptación del documento App Flow listados.
+- 3 CTAs: revisar doc, abrir deck UI/UX anterior, implementar MVP.
+- Próxima fase: implementación 0.1 con E2E obligatorios en CI.
+</aside>
+</body>
+</html>

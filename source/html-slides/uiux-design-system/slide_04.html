@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT — Tres Pilares Visuales</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .pillar {
+    width: 360px;
+    height: 472px;
+    padding: 20px;
+    background: #111827;
+    border: 2px solid #334155;
+    clip-path: polygon(0 12px, 12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px));
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .pillar.cyan   { border-color: #22D3EE; }
+  .pillar.magenta { border-color: #F472B6; }
+  .pillar.amber  { border-color: #FBBF24; }
+  .pillar .top-tag {
+    position: absolute;
+    top: 10px; right: 12px;
+    font-family: var(--font-num);
+    font-size: 9px;
+    color: #475569;
+    letter-spacing: 0.1em;
+  }
+  .icon-frame {
+    width: 88px;
+    height: 88px;
+    background: #0B1220;
+    border: 2px solid #334155;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  /* Pillar 1 icon — mini golem */
+  .icon-golem {
+    width: 56px; height: 56px; position: relative;
+  }
+  .icon-golem .body { position: absolute; bottom: 0; left: 6px; width: 44px; height: 36px; background: #475569; border: 2px solid #0B1220; }
+  .icon-golem .head { position: absolute; top: 0; left: 14px; width: 28px; height: 24px; background: #64748B; border: 2px solid #0B1220; }
+  .icon-golem .visor { position: absolute; top: 9px; left: 19px; width: 18px; height: 5px; background: #22D3EE; box-shadow: 0 0 8px #22D3EE; }
+  /* Pillar 2 icon — angular frame */
+  .icon-frame2 {
+    width: 56px; height: 56px;
+    background: #111827;
+    border: 2px solid #F472B6;
+    clip-path: polygon(0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px));
+    position: relative;
+  }
+  .icon-frame2::before {
+    content: ''; position: absolute;
+    top: 12px; left: 12px; right: 12px; height: 6px;
+    background: #F472B6;
+  }
+  .icon-frame2::after {
+    content: ''; position: absolute;
+    bottom: 12px; left: 12px; width: 16px; height: 16px;
+    background: #F472B6; opacity: 0.4;
+  }
+  /* Pillar 3 icon — 8x8 pixel grid */
+  .pixel-grid {
+    width: 56px; height: 56px;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 1px;
+    background: #0B1220;
+    padding: 2px;
+  }
+  .pixel-grid span { background: transparent; }
+  .pixel-grid span.on { background: #FBBF24; }
+  .pixel-grid span.dim { background: #475569; }
+
+  .pillar .p-title {
+    font-family: var(--font-pixel);
+    font-size: 14px;
+    color: #E5F1FF;
+    letter-spacing: 0.06em;
+    margin-bottom: 14px;
+  }
+  .pillar .p-title.cyan { color: #22D3EE; }
+  .pillar .p-title.magenta { color: #F472B6; }
+  .pillar .p-title.amber { color: #FBBF24; }
+
+  .pillar .p-body {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: #E5F1FF;
+    line-height: 1.55;
+    margin-bottom: 16px;
+  }
+  .pillar ul {
+    border-top: 1px dashed #334155;
+    padding-top: 14px;
+    margin-top: auto;
+  }
+  .pillar ul li {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: #94A3B8;
+    line-height: 1.55;
+    padding-left: 18px;
+    position: relative;
+    margin-bottom: 6px;
+  }
+  .pillar ul li::before {
+    content: '▸';
+    position: absolute;
+    left: 0; top: 0;
+    font-size: 12px;
+  }
+  .pillar.cyan ul li::before    { color: #22D3EE; }
+  .pillar.magenta ul li::before { color: #F472B6; }
+  .pillar.amber ul li::before   { color: #FBBF24; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg relative">
+  <!-- Corner brackets -->
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- Header -->
+  <div class="absolute" style="top: 36px; left: 56px;">
+    <span class="pixel-badge">01.1 // FILOSOFÍA</span>
+    <h1 class="mt-3" style="font-family:var(--font-heading);font-weight:700;font-size:32px;color:#E5F1FF;letter-spacing:0.02em;">
+      Tres Pilares Visuales
+    </h1>
+    <p class="mt-1" style="font-family:var(--font-body);font-size:13px;color:#94A3B8;">
+      Cada decisión visual se origina en uno de los tres pilares. Sin excepciones.
+    </p>
+  </div>
+
+  <!-- Top-right system marker -->
+  <div class="absolute" style="top: 40px; right: 56px;">
+    <span style="font-family:var(--font-num);font-size:10px;color:#94A3B8;letter-spacing:0.12em;">3 PILLARS // NON-NEGOTIABLE</span>
+  </div>
+
+  <!-- 3 pillars grid -->
+  <div class="absolute flex gap-5" style="top: 158px; left: 56px; right: 56px; justify-content: space-between;">
+    <!-- Pillar 1 -->
+    <div class="pillar cyan">
+      <span class="top-tag">P · 01</span>
+      <div class="icon-frame">
+        <div class="icon-golem">
+          <div class="body"></div>
+          <div class="head"></div>
+          <div class="visor"></div>
+        </div>
+      </div>
+      <div class="p-title cyan">MASCOTA VIVA</div>
+      <p class="p-body">
+        No es decorativa. Cada estado visual corresponde a un estado real del backend. Idle, thinking, processing, error — todos sincronizados con operaciones genuinas.
+      </p>
+      <ul>
+        <li>Estados ligados a operaciones</li>
+        <li>Accesorios por agente</li>
+        <li>Animación por data, no por sprite rígido</li>
+      </ul>
+    </div>
+    <!-- Pillar 2 -->
+    <div class="pillar magenta">
+      <span class="top-tag">P · 02</span>
+      <div class="icon-frame">
+        <div class="icon-frame2"></div>
+      </div>
+      <div class="p-title magenta">HUD MODULAR</div>
+      <p class="p-body">
+        Paneles con bordes angulares y esquinas recortadas 45°. Densidad informativa alta solo en vistas técnicas. Vistas de uso diario priorizan legibilidad.
+      </p>
+      <ul>
+        <li>PixelPanel como contenedor base</li>
+        <li>Esquinas recortadas 12px</li>
+        <li>Sin glassmorphism ni blur</li>
+      </ul>
+    </div>
+    <!-- Pillar 3 -->
+    <div class="pillar amber">
+      <span class="top-tag">P · 03</span>
+      <div class="icon-frame">
+        <div class="pixel-grid">
+          <!-- Row 1 -->
+          <span></span><span class="dim"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="dim"></span><span></span>
+          <!-- Row 2 -->
+          <span class="dim"></span><span class="on"></span><span class="on"></span><span></span><span></span><span class="on"></span><span class="on"></span><span class="dim"></span>
+          <!-- Row 3 -->
+          <span class="on"></span><span class="on"></span><span></span><span class="on"></span><span class="on"></span><span></span><span class="on"></span><span class="on"></span>
+          <!-- Row 4 -->
+          <span class="on"></span><span></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span class="on"></span>
+          <!-- Row 5 -->
+          <span class="on"></span><span></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span class="on"></span>
+          <!-- Row 6 -->
+          <span class="on"></span><span class="on"></span><span></span><span class="on"></span><span class="on"></span><span></span><span class="on"></span><span class="on"></span>
+          <!-- Row 7 -->
+          <span class="dim"></span><span class="on"></span><span class="on"></span><span></span><span></span><span class="on"></span><span class="on"></span><span class="dim"></span>
+          <!-- Row 8 -->
+          <span></span><span class="dim"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="dim"></span><span></span>
+        </div>
+      </div>
+      <div class="p-title amber">PIXEL ART LIMPIO</div>
+      <p class="p-body">
+        Escalado nearest-neighbor. Movimiento en píxeles enteros. Sin interpolación bilinear. Volumen por clusters de píxeles, no por blur. Escalas 16/32/64/128.
+      </p>
+      <ul>
+        <li>Nearest-neighbor</li>
+        <li>Píxeles enteros</li>
+        <li>prefers-reduced-motion respetado</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <span>CAP. 01 · FILOSOFÍA</span>
+    <span>04 / 39</span>
+  </div>
+</div>
+<aside data-notes class="hidden">
+- Tres pilares no negociables del lenguaje visual.
+- Mascota refleja estado real del backend — no decorativa.
+- HUD es angular y modular, nunca difuso ni translúcido.
+- Pixel art es técnico: nearest-neighbor, píxeles enteros, sin blur.
+- Cada decisión visual debe poder rastrearse a uno de los tres pilares.
+</aside>
+</body>
+</html>

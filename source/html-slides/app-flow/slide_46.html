@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · 46 / 57 — Matriz Online/Degraded/Offline</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .matrix-table { width: 100%; border-collapse: collapse; }
+  .matrix-table th, .matrix-table td { padding: 11px 14px; text-align: left; vertical-align: middle; }
+  .matrix-table th { font-family: var(--font-pixel); font-size: 10px; letter-spacing: 0.06em; padding: 12px 14px; border-bottom: 2px solid var(--border-bright); }
+  .matrix-table tr.odd td { background: var(--surface); }
+  .matrix-table tr.even td { background: var(--surface-2); }
+  .op-cell { font-family: var(--font-pixel); font-size: 10px; color: var(--accent); letter-spacing: 0.04em; }
+  .online-cell { font-family: var(--font-body); font-size: 12px; color: var(--success); }
+  .degraded-cell { font-family: var(--font-body); font-size: 12px; color: var(--accent-3); }
+  .offline-cell { font-family: var(--font-body); font-size: 12px; color: var(--primary-dim); }
+  .annot-line { font-family: var(--font-num); font-size: 11px; color: var(--primary-dim); padding: 4px 0; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl"></div>
+  <div class="corner-bracket tr"></div>
+  <div class="corner-bracket bl"></div>
+  <div class="corner-bracket br"></div>
+
+  <div class="absolute" style="top:32px; left:48px; right:48px; display:flex; justify-content:space-between; align-items:center;">
+    <span class="pixel-badge">09.2 // MATRIZ</span>
+    <span style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim); letter-spacing:0.08em;">CHAPTER 09 · BEHAVIOR</span>
+  </div>
+  <h1 style="position:absolute; top:62px; left:48px; font-family:var(--font-heading); font-weight:700; font-size:32px; color:var(--primary); letter-spacing:0.02em;">Comportamiento por Estado de Conexión</h1>
+  <p style="position:absolute; top:104px; left:48px; font-family:var(--font-body); font-size:14px; color:var(--primary-dim);">Qué puede hacer el usuario en cada estado.</p>
+
+  <!-- Matrix table -->
+  <div class="hud-panel" style="position:absolute; top:138px; left:48px; width:1184px; padding:14px 18px;">
+    <table class="matrix-table">
+      <thead>
+        <tr>
+          <th style="color:var(--primary); width:30%;">OPERACIÓN</th>
+          <th style="color:var(--success);"><i class="material-icons" style="font-size:13px; vertical-align:middle;">wifi</i> ONLINE</th>
+          <th style="color:var(--accent-3);"><i class="material-icons" style="font-size:13px; vertical-align:middle;">wifi_tethering</i> DEGRADED</th>
+          <th style="color:var(--primary-dim);"><i class="material-icons" style="font-size:13px; vertical-align:middle;">wifi_off</i> OFFLINE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="odd">
+          <td class="op-cell">CREAR MEMORIA</td>
+          <td class="online-cell">Inmediato + sync</td>
+          <td class="degraded-cell">Inmediato, encolado para sync</td>
+          <td class="offline-cell">Inmediato, encolado</td>
+        </tr>
+        <tr class="even">
+          <td class="op-cell">CREAR RECORDATORIO</td>
+          <td class="online-cell">Inmediato + sync</td>
+          <td class="degraded-cell">Inmediato (scheduler local)</td>
+          <td class="offline-cell">Inmediato (scheduler local)</td>
+        </tr>
+        <tr class="odd">
+          <td class="op-cell">BUSCAR MEMORIAS</td>
+          <td class="online-cell">Textual + semántica</td>
+          <td class="degraded-cell">Solo textual</td>
+          <td class="offline-cell">Solo textual</td>
+        </tr>
+        <tr class="even">
+          <td class="op-cell">CHAT CON LLM</td>
+          <td class="online-cell">Completo</td>
+          <td class="degraded-cell">Fallback heurístico</td>
+          <td class="offline-cell">Fallback heurístico</td>
+        </tr>
+        <tr class="odd">
+          <td class="op-cell">USAR MCP TOOL</td>
+          <td class="online-cell">Disponible</td>
+          <td class="degraded-cell" style="color:var(--error);">No disponible</td>
+          <td class="offline-cell" style="color:var(--error);">No disponible</td>
+        </tr>
+        <tr class="even">
+          <td class="op-cell">EXPORTAR DATOS</td>
+          <td class="online-cell">Inmediato</td>
+          <td class="degraded-cell">Inmediato</td>
+          <td class="offline-cell">Inmediato</td>
+        </tr>
+        <tr class="odd">
+          <td class="op-cell">VER GRAFO</td>
+          <td class="online-cell">Completo</td>
+          <td class="degraded-cell">Local</td>
+          <td class="offline-cell">Local</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Annotations -->
+  <div style="position:absolute; top:580px; left:48px; right:48px; display:grid; grid-template-columns: 1fr 1fr 1fr; gap:14px;">
+    <div style="border-left:2px solid var(--success); padding:6px 12px;">
+      <div class="annot-line"><span style="color:var(--success);">●</span> Online: sin indicador visible (estado normal)</div>
+    </div>
+    <div style="border-left:2px solid var(--accent-3); padding:6px 12px;">
+      <div class="annot-line"><span style="color:var(--accent-3);">●</span> Degraded: icono sutil + tooltip "Servidor no alcanzable. Operaciones locales activas."</div>
+    </div>
+    <div style="border-left:2px solid var(--primary-dim); padding:6px 12px;">
+      <div class="annot-line"><span style="color:var(--primary-dim);">●</span> Offline: banner discreto "Sin conexión. Los datos se guardan localmente."</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>VNBOT // APP FLOW · CAP. 09 · MATRIZ</span>
+    <span>46 / 57</span>
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- Matriz de 7 operaciones × 3 estados de conexión.
+- Operaciones locales (recordatorios, exportar) siempre disponibles.
+- MCP solo funciona ONLINE; degradeado y offline lo bloquean.
+- Búsqueda pierde semántica fuera de ONLINE, conserva textual.
+- Indicadores escalan: nada → tooltip → banner.
+</aside>
+</body>
+</html>

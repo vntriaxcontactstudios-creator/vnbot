@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT UI/UX — Loading / Empty / Error Patterns</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .sprite { position: relative; background: var(--surface-2); display:flex; }
+  .sprite .visor { position: absolute; top: 30%; left: 22%; right: 22%; height: 18%; }
+  .sprite .mouth { position: absolute; bottom: 20%; left: 30%; right: 30%; height: 5px; }
+  .sprite .antenna { position: absolute; top: -8px; left: 50%; transform: translateX(-50%); width: 4px; height: 8px; }
+  .sprite .antenna::after { content:''; position:absolute; top:-4px; left:-3px; width:10px; height:4px; }
+  .s-96 { width: 96px; height: 96px; border:2px solid; }
+  .sprite.loading { border-color: var(--accent); }
+  .sprite.loading .visor { background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+  .sprite.loading .mouth { background: var(--accent-2); }
+  .sprite.loading .antenna { background: var(--accent-3); }
+  .sprite.loading .antenna::after { background: var(--accent-3); box-shadow: 0 0 8px var(--accent-3); }
+  .sprite.idle { border-color: var(--accent-2); }
+  .sprite.idle .visor { background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+  .sprite.idle .mouth { background: var(--accent-2); }
+  .sprite.error { border-color: var(--error); }
+  .sprite.error .visor { background: var(--error); box-shadow: 0 0 12px var(--error); }
+  .sprite.error .mouth { background: var(--error); }
+  .ring { position:absolute; border-radius:50%; border:2px dashed; }
+  .pixel-btn { font-family: var(--font-pixel); font-size: 9px; padding: 8px 12px; letter-spacing: 0.08em; text-transform: uppercase; border: 2px solid var(--border-bright); background: var(--surface-2); color: var(--primary-dim); display:inline-flex; align-items:center; gap:6px; }
+  .pixel-btn.primary { border-color: var(--accent); background: var(--accent); color: var(--bg-deep); }
+  .pixel-btn.ghost { background: transparent; color: var(--primary-dim); border-color: var(--border); }
+  .pixel-btn.error { border-color: var(--error); background: var(--error); color: var(--bg-deep); }
+  .empty-card { background: transparent; border:1px dashed var(--border-bright); height:36px; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <!-- Header -->
+  <div style="position:absolute; top:30px; left:50px; right:50px;">
+    <div class="pixel-badge">06.1 // PATRONES</div>
+    <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; margin-top:8px; color:var(--primary);">Loading, Empty, Error</h1>
+    <p style="font-family:var(--font-body); font-size:14px; color:#94A3B8; margin-top:2px;">Cada estado con mascota, mensaje y acción.</p>
+  </div>
+
+  <!-- 3 columns -->
+  <div style="position:absolute; top:140px; left:50px; right:50px; display:flex; gap:20px;">
+
+    <!-- COL 1: LOADING -->
+    <div class="hud-panel accent" style="width:380px; height:478px; padding:18px; position:relative; display:flex; flex-direction:column; align-items:center;">
+      <span class="corner-bracket tl"></span>
+      <span class="corner-bracket tr"></span>
+      <span class="corner-bracket bl"></span>
+      <span class="corner-bracket br"></span>
+
+      <span class="pixel-badge" style="align-self:flex-start;">LOADING</span>
+
+      <!-- Mascot with multicolor ring -->
+      <div style="position:relative; margin-top:20px; width:160px; height:160px; display:flex; align-items:center; justify-content:center;">
+        <div class="ring" style="inset:0; border-color:var(--accent); opacity:0.5;"></div>
+        <div class="ring" style="inset:10px; border-color:var(--accent-3); opacity:0.5;"></div>
+        <div class="ring" style="inset:20px; border-color:var(--accent-2); opacity:0.5;"></div>
+        <div class="sprite s-96 loading">
+          <div class="antenna"></div>
+          <div class="visor"></div>
+          <div class="mouth"></div>
+        </div>
+      </div>
+
+      <h2 style="font-family:var(--font-heading); font-weight:600; font-size:18px; color:var(--primary); margin-top:14px; text-align:center;">Procesando tu memoria…</h2>
+      <p style="font-family:var(--font-body); font-size:13px; color:#94A3B8; margin-top:6px; text-align:center; line-height:1.4;">El agente Archivist está clasificando 3 nodos relacionados.</p>
+
+      <!-- HUD bar -->
+      <div style="width:100%; margin-top:14px;">
+        <div style="display:flex; justify-content:space-between; font-family:var(--font-num); font-size:11px; color:var(--primary-dim); margin-bottom:4px;">
+          <span>3 de 5 nodos</span>
+          <span style="color:var(--accent-3);">ETA: 8s</span>
+        </div>
+        <div class="hud-bar"><i style="width:65%;"></i></div>
+      </div>
+
+      <button class="pixel-btn ghost" style="margin-top:auto;">CANCELAR</button>
+    </div>
+
+    <!-- COL 2: EMPTY -->
+    <div class="hud-panel magenta" style="width:380px; height:478px; padding:18px; position:relative; display:flex; flex-direction:column; align-items:center;">
+      <span class="corner-bracket tl" style="border-color:var(--accent-2);"></span>
+      <span class="corner-bracket tr" style="border-color:var(--accent-2);"></span>
+      <span class="corner-bracket bl" style="border-color:var(--accent-2);"></span>
+      <span class="corner-bracket br" style="border-color:var(--accent-2);"></span>
+
+      <span class="pixel-badge magenta" style="align-self:flex-start;">EMPTY</span>
+
+      <div class="sprite s-96 idle" style="margin-top:20px; border-color:var(--accent-2);">
+        <div class="visor"></div>
+        <div class="mouth"></div>
+      </div>
+
+      <!-- 3 empty dashed cards -->
+      <div style="display:flex; flex-direction:column; gap:6px; width:100%; margin-top:14px;">
+        <div class="empty-card"></div>
+        <div class="empty-card"></div>
+        <div class="empty-card"></div>
+      </div>
+
+      <h2 style="font-family:var(--font-heading); font-weight:600; font-size:18px; color:var(--primary); margin-top:12px; text-align:center;">Aún no hay memorias</h2>
+      <p style="font-family:var(--font-body); font-size:13px; color:#94A3B8; margin-top:4px; text-align:center; line-height:1.4;">Captura tu primera memoria usando el botón de abajo o el atajo Ctrl+N.</p>
+
+      <button class="pixel-btn primary" style="margin-top:10px;">+ CAPTURAR MEMORIA</button>
+      <p style="font-family:var(--font-num); font-size:10px; color:var(--accent-3); margin-top:8px;">Tip: también puedes usar voz</p>
+    </div>
+
+    <!-- COL 3: ERROR -->
+    <div class="hud-panel" style="width:380px; height:478px; padding:18px; position:relative; display:flex; flex-direction:column; align-items:center; border-color:var(--error);">
+      <span class="corner-bracket tl" style="border-color:var(--error);"></span>
+      <span class="corner-bracket tr" style="border-color:var(--error);"></span>
+      <span class="corner-bracket bl" style="border-color:var(--error);"></span>
+      <span class="corner-bracket br" style="border-color:var(--error);"></span>
+
+      <span class="pixel-badge error" style="align-self:flex-start;">ERROR</span>
+
+      <div class="sprite s-96 error" style="margin-top:20px;">
+        <div class="visor"></div>
+        <div class="mouth" style="height:3px; bottom:14%;"></div>
+        <div style="position:absolute; top:14%; left:14%; right:14%; height:6px; background:var(--error);"></div>
+        <div style="position:absolute; top:14%; left:14%; width:6px; height:6px; background:var(--error);"></div>
+      </div>
+
+      <h2 style="font-family:var(--font-heading); font-weight:600; font-size:18px; color:var(--primary); margin-top:14px; text-align:center;">No se pudo conectar con el LLM</h2>
+      <p style="font-family:var(--font-body); font-size:13px; color:#94A3B8; margin-top:6px; text-align:center; line-height:1.4;">El proveedor OpenAI respondió 429 (rate limit). Tu memoria local está segura.</p>
+
+      <div style="background:var(--bg-deep); border:1px solid var(--border); padding:7px 10px; font-family:var(--font-num); font-size:11px; color:#94A3B8; margin-top:10px; width:100%; text-align:center;">
+        ERR: 429 · openai.chat · 17 Jul 14:32
+      </div>
+
+      <div style="display:flex; gap:6px; margin-top:auto;">
+        <button class="pixel-btn primary">REINTENTAR</button>
+        <button class="pixel-btn ghost">CAMBIAR LLM</button>
+      </div>
+      <p style="font-family:var(--font-num); font-size:11px; color:var(--accent-3); margin-top:8px;">Ver auditoría completa →</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <span>CAP. 06 · PATRONES</span>
+    <span>33 / 39</span>
+  </div>
+
+  <aside data-notes class="hidden">
+    <ul>
+      <li>3 patrones críticos: loading, empty, error.</li>
+      <li>Mascota siempre presente y sincronizada con el estado.</li>
+      <li>Cada estado tiene CTA de recovery.</li>
+      <li>Sin flashes en error — respeta fotosensibilidad.</li>
+      <li>Loading muestra progreso y ETA en JetBrains Mono.</li>
+    </ul>
+  </aside>
+</div>
+</body>
+</html>

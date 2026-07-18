@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT UI/UX — Memoria + Grafo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .toggle { display:flex; border:1px solid var(--border); font-family:var(--font-pixel); font-size:8px; letter-spacing:0.06em; }
+  .toggle > div { padding:5px 10px; color:var(--primary-dim); }
+  .toggle > div.active { background:var(--accent); color:var(--bg-deep); }
+  .chip { font-family:var(--font-num); font-size:9px; padding:3px 7px; border:1px solid var(--border); color:var(--primary-dim); letter-spacing:0.04em; }
+  .chip.active { border-color:var(--accent); color:var(--accent); background:rgba(34,211,238,0.08); }
+  .mem-card { display:flex; align-items:center; gap:8px; padding:7px 8px; background:var(--bg-deep); border:1px solid var(--border); }
+  .mem-card .badge { font-family:var(--font-pixel); font-size:7px; padding:2px 4px; }
+  .badge.task { color:var(--accent-3); border:1px solid var(--accent-3); }
+  .badge.mem { color:var(--accent); border:1px solid var(--accent); }
+  .badge.per { color:var(--accent-2); border:1px solid var(--accent-2); }
+  .badge.evt { color:#8B5CF6; border:1px solid #8B5CF6; }
+  .node { position:absolute; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-pixel); font-size:7px; text-align:center; }
+  .node.cyan { background:rgba(34,211,238,0.18); border:1.5px solid var(--accent); color:var(--accent); }
+  .node.amber { background:rgba(251,191,36,0.18); border:1.5px solid var(--accent-3); color:var(--accent-3); }
+  .node.magenta { background:rgba(244,114,182,0.18); border:1.5px solid var(--accent-2); color:var(--accent-2); }
+  .node.violet { background:rgba(139,92,246,0.18); border:1.5px solid #8B5CF6; color:#8B5CF6; }
+  .node.selected { box-shadow:0 0 14px var(--accent); border:3px solid var(--accent); }
+  .pixel-btn { font-family:var(--font-pixel); font-size:9px; padding:6px 10px; letter-spacing:0.08em; text-transform:uppercase; border:2px solid var(--border-bright); background:var(--surface-2); color:var(--primary-dim); display:inline-flex; align-items:center; gap:6px; }
+  .pixel-btn.primary { border-color:var(--accent); background:var(--accent); color:var(--bg-deep); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <!-- Header -->
+  <div style="position:absolute; top:30px; left:80px; right:80px;">
+    <div class="pixel-badge">05.4 // MEMORIA+GRAFO</div>
+    <h1 style="font-family:var(--font-heading); font-weight:700; font-size:32px; margin-top:8px; color:var(--primary);">Memoria y Grafo Visual</h1>
+    <p style="font-family:var(--font-body); font-size:14px; color:#94A3B8; margin-top:2px;">Archivist agent · toggle lista/grafo · búsqueda semántica.</p>
+  </div>
+
+  <!-- Two columns -->
+  <div style="position:absolute; top:142px; left:84px; right:84px; display:flex; gap:32px;">
+
+    <!-- LEFT: LISTA -->
+    <div class="hud-panel" style="width:540px; height:478px; padding:16px; position:relative;">
+      <span class="corner-bracket tl"></span>
+      <span class="corner-bracket tr"></span>
+      <span class="corner-bracket bl"></span>
+      <span class="corner-bracket br"></span>
+
+      <!-- Header -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <div style="font-family:var(--font-heading); font-weight:600; font-size:14px; color:var(--primary);">Memoria · <span style="color:var(--accent); font-family:var(--font-num);">247 items</span></div>
+        <div class="toggle">
+          <div class="active">LISTA</div>
+          <div>GRAFO</div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div style="display:flex; align-items:center; gap:5px; padding:6px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); flex-wrap:wrap;">
+        <span class="chip active">TODO</span>
+        <span class="chip">MEMORIA</span>
+        <span class="chip">TAREA</span>
+        <span class="chip">RECORDATORIO</span>
+        <span class="chip">PERSONA</span>
+        <div style="flex:1; min-width:90px; background:var(--bg-deep); border:1px solid var(--border); padding:3px 7px; font-family:var(--font-num); font-size:9px; color:var(--primary-dim);">⌕ Buscar semántico…</div>
+      </div>
+
+      <!-- List -->
+      <div style="margin-top:8px; display:flex; flex-direction:column; gap:5px; max-height:328px; overflow:hidden;">
+        <div class="mem-card">
+          <span class="badge task">TASK</span>
+          <div style="flex:1;">
+            <div style="font-size:11px; color:var(--primary);">Llamar al dentista jueves 3pm</div>
+            <div style="font-size:9px; color:var(--primary-dim);">17 Jul 14:00 · tags: salud, cita</div>
+          </div>
+        </div>
+        <div class="mem-card">
+          <span class="badge mem">MEM</span>
+          <div style="flex:1;">
+            <div style="font-size:11px; color:var(--primary);">Reunión equipo proyecto VNBOT</div>
+            <div style="font-size:9px; color:var(--primary-dim);">16 Jul · tags: proyecto, equipo</div>
+          </div>
+        </div>
+        <div class="mem-card">
+          <span class="badge per">PER</span>
+          <div style="flex:1;">
+            <div style="font-size:11px; color:var(--primary);">María González · dentista</div>
+            <div style="font-size:9px; color:var(--primary-dim);">12 Jul · tags: contacto, salud</div>
+          </div>
+        </div>
+        <div class="mem-card">
+          <span class="badge mem">MEM</span>
+          <div style="flex:1;">
+            <div style="font-size:11px; color:var(--primary);">Recordar configurar Ollama local</div>
+            <div style="font-size:9px; color:var(--primary-dim);">10 Jul · tags: setup, llm</div>
+          </div>
+        </div>
+        <div class="mem-card">
+          <span class="badge evt">EVT</span>
+          <div style="flex:1;">
+            <div style="font-size:11px; color:var(--primary);">Vacaciones agosto</div>
+            <div style="font-size:9px; color:var(--primary-dim);">01 Aug · tags: personal</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="position:absolute; bottom:12px; left:16px; right:16px; font-family:var(--font-num); font-size:9px; color:var(--primary-dim); display:flex; justify-content:space-between;">
+        <span>↻ Cargando más…</span>
+        <span>242 restantes</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: GRAFO -->
+    <div class="hud-panel magenta" style="width:540px; height:478px; padding:16px; position:relative;">
+      <span class="corner-bracket tl" style="border-color:var(--accent-2);"></span>
+      <span class="corner-bracket tr" style="border-color:var(--accent-2);"></span>
+      <span class="corner-bracket bl" style="border-color:var(--accent-2);"></span>
+      <span class="corner-bracket br" style="border-color:var(--accent-2);"></span>
+
+      <!-- Header -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <div style="font-family:var(--font-heading); font-weight:600; font-size:14px; color:var(--primary);">Grafo · <span style="color:var(--accent-2); font-family:var(--font-num);">12 nodos visibles</span></div>
+        <div class="toggle">
+          <div>LISTA</div>
+          <div class="active" style="background:var(--accent-2);">GRAFO</div>
+        </div>
+      </div>
+
+      <!-- Body: graph + side panel -->
+      <div style="display:flex; gap:8px; height:380px;">
+
+        <!-- Graph -->
+        <div style="flex:1; position:relative; background:var(--bg-deep); border:1px solid var(--border); overflow:hidden;">
+          <!-- SVG connections -->
+          <svg style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;" viewBox="0 0 340 380">
+            <line x1="170" y1="190" x2="80" y2="80" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+            <line x1="170" y1="190" x2="260" y2="80" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+            <line x1="170" y1="190" x2="60" y2="200" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+            <line x1="170" y1="190" x2="280" y2="200" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+            <line x1="170" y1="190" x2="100" y2="320" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+            <line x1="170" y1="190" x2="240" y2="320" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+            <line x1="80" y1="80" x2="20" y2="40" stroke="rgba(251,191,36,0.3)" stroke-width="1"/>
+            <line x1="260" y1="80" x2="320" y2="40" stroke="rgba(251,191,36,0.3)" stroke-width="1"/>
+            <line x1="60" y1="200" x2="20" y2="280" stroke="rgba(244,114,182,0.3)" stroke-width="1"/>
+            <line x1="280" y1="200" x2="320" y2="280" stroke="rgba(244,114,182,0.3)" stroke-width="1"/>
+            <line x1="100" y1="320" x2="170" y2="350" stroke="rgba(139,92,246,0.3)" stroke-width="1"/>
+            <line x1="240" y1="320" x2="170" y2="350" stroke="rgba(139,92,246,0.3)" stroke-width="1"/>
+          </svg>
+          <!-- Central node SALUD -->
+          <div class="node cyan selected" style="width:62px; height:62px; left:139px; top:159px; font-size:9px;">SALUD</div>
+          <!-- 4 cyan memorias -->
+          <div class="node cyan" style="width:36px; height:36px; left:62px; top:62px;">M1</div>
+          <div class="node cyan" style="width:36px; height:36px; left:242px; top:62px;">M2</div>
+          <div class="node cyan" style="width:36px; height:36px; left:42px; top:182px;">M3</div>
+          <div class="node cyan" style="width:36px; height:36px; left:262px; top:182px;">M4</div>
+          <!-- 3 amber tareas -->
+          <div class="node amber" style="width:32px; height:32px; left:4px; top:24px;">T1</div>
+          <div class="node amber" style="width:32px; height:32px; left:304px; top:24px;">T2</div>
+          <div class="node amber" style="width:32px; height:32px; left:84px; top:304px;">T3</div>
+          <!-- 2 magenta personas -->
+          <div class="node magenta" style="width:30px; height:30px; left:5px; top:265px;">P1</div>
+          <div class="node magenta" style="width:30px; height:30px; left:305px; top:265px;">P2</div>
+          <!-- 2 violet eventos -->
+          <div class="node violet" style="width:30px; height:30px; left:155px; top:335px;">E1</div>
+          <div class="node violet" style="width:30px; height:30px; left:155px; top:335px; visibility:hidden;">E2</div>
+          <div class="node violet" style="width:30px; height:30px; left:155px; top:8px;">E2</div>
+        </div>
+
+        <!-- Side panel detail -->
+        <div style="width:152px; background:var(--bg-deep); border:1px solid var(--accent); padding:8px;">
+          <div style="font-family:var(--font-pixel); font-size:7px; color:var(--accent); margin-bottom:4px;">NODO SELECCIONADO</div>
+          <div style="font-family:var(--font-heading); font-weight:700; font-size:13px; color:var(--primary); margin-bottom:4px;">SALUD</div>
+          <div style="font-size:9px; color:var(--primary-dim); margin-bottom:2px;">Tipo: <span style="color:var(--accent);">TAG/CATEGORY</span></div>
+          <div style="font-size:9px; color:var(--primary-dim); margin-bottom:6px;">Fecha: 12 Jul 2025</div>
+          <div style="font-family:var(--font-pixel); font-size:7px; color:var(--primary-dim); margin-bottom:3px;">TAGS</div>
+          <div style="display:flex; flex-wrap:wrap; gap:3px; margin-bottom:6px;">
+            <span style="font-size:8px; color:var(--accent); border:1px solid var(--accent); padding:1px 4px;">salud</span>
+            <span style="font-size:8px; color:var(--accent); border:1px solid var(--accent); padding:1px 4px;">cita</span>
+            <span style="font-size:8px; color:var(--accent); border:1px solid var(--accent); padding:1px 4px;">dentista</span>
+          </div>
+          <div style="font-family:var(--font-pixel); font-size:7px; color:var(--primary-dim); margin-bottom:3px;">RELACIONADAS</div>
+          <div style="font-size:9px; color:var(--primary-dim); padding:1px 0;">→ María González</div>
+          <div style="font-size:9px; color:var(--primary-dim); padding:1px 0;">→ Llamar dentista</div>
+          <button class="pixel-btn primary" style="margin-top:8px; font-size:8px; padding:5px 8px;">EDITAR</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <span>CAP. 05 · MEMORIA+GRAFO</span>
+    <span>30 / 39</span>
+  </div>
+
+  <aside data-notes class="hidden">
+    <ul>
+      <li>Toggle lista/grafo en la misma vista.</li>
+      <li>Lista con 5 MemoryCards visibles, badges por tipo y tags.</li>
+      <li>Grafo con 12 nodos: SALUD central + 4 cyan + 3 amber + 2 magenta + 2 violet.</li>
+      <li>Panel lateral muestra detalle del nodo seleccionado.</li>
+      <li>Archivist agent presente en la gestión.</li>
+    </ul>
+  </aside>
+</div>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow — Mapeo Estado → Mascota</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .map-table { width: 100%; border-collapse: collapse; }
+  .map-table th { font-family: var(--font-num); font-size: 9px; color: var(--accent-2); letter-spacing: 0.1em; text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--accent-2); text-transform: uppercase; background: rgba(244,114,182,0.04); }
+  .map-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .map-table tr:nth-child(even) td { background: var(--surface-2); }
+  .map-table tr:nth-child(odd) td { background: var(--surface); }
+  .col-state { font-family: var(--font-pixel); font-size: 9px; width: 22%; letter-spacing: 0.02em; }
+  .col-mascot { font-family: var(--font-num); font-size: 11px; color: var(--primary); width: 18%; }
+  .col-visor { font-family: var(--font-body); font-size: 11px; color: var(--primary); width: 22%; }
+  .col-emote { font-family: var(--font-pixel); font-size: 9px; color: var(--accent-3); width: 13%; letter-spacing: 0.02em; }
+  .col-text { font-family: var(--font-body); font-style: italic; font-size: 12px; color: var(--primary-dim); width: 25%; }
+  .st-cyan    { color: var(--accent); }
+  .st-dim     { color: var(--primary-dim); }
+  .st-green   { color: var(--success); }
+  .st-amber   { color: var(--accent-3); }
+  .st-red     { color: var(--error); }
+  .mascot-sprite { width: 22px; height: 22px; background: var(--surface-2); border: 1px solid currentColor; display: inline-block; margin-right: 6px; position: relative; vertical-align: middle; }
+  .mascot-sprite::after { content: ''; position: absolute; top: 7px; left: 3px; width: 14px; height: 4px; background: currentColor; }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl" data-decor></div>
+  <div class="corner-bracket tr" data-decor></div>
+  <div class="corner-bracket bl" data-decor></div>
+  <div class="corner-bracket br" data-decor></div>
+
+  <!-- Header -->
+  <div class="absolute" style="top: 28px; left: 56px; right: 56px; display: flex; justify-content: space-between; align-items: flex-end;">
+    <div>
+      <span class="pixel-badge magenta">02.2 // MAPEO</span>
+      <h1 class="mt-2" style="font-family: var(--font-heading); font-weight: 700; font-size: 28px; letter-spacing: 0.02em; color: var(--primary);">Estado → Mascota → Visual</h1>
+      <p class="mt-1" style="font-family: var(--font-body); font-size: 13px; color: var(--primary-dim);">Un estado global = un estado de mascota. Sin ambigüedad visual.</p>
+    </div>
+    <div style="font-family: var(--font-num); font-size: 11px; color: var(--primary-dim); letter-spacing: 0.08em; text-align: right;">
+      <div>9 ESTADOS MAPEADOS</div>
+      <div style="color: var(--accent-2);">// 1:1 SIN AMBIGÜEDAD</div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="hud-panel absolute" style="top: 140px; left: 56px; width: 1168px; height: 460px; padding: 18px 22px; border-color: var(--accent-2);">
+    <table class="map-table">
+      <thead>
+        <tr>
+          <th>Estado Global</th>
+          <th>Mascota</th>
+          <th>Visor</th>
+          <th>Emote UI</th>
+          <th>Texto Accesible</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-state st-cyan">BOOTING</td>
+          <td class="col-mascot"><span class="mascot-sprite" style="color: var(--accent);"></span>processing</td>
+          <td class="col-visor">Anillo multicolor</td>
+          <td class="col-emote">loading</td>
+          <td class="col-text">'Iniciando VNBOT'</td>
+        </tr>
+        <tr>
+          <td class="col-state st-cyan">FIRST_RUN</td>
+          <td class="col-mascot"><span class="mascot-sprite" style="color: var(--accent);"></span>idle</td>
+          <td class="col-visor">Cyan estable</td>
+          <td class="col-emote">neutral</td>
+          <td class="col-text">'Bienvenido a VNBOT'</td>
+        </tr>
+        <tr>
+          <td class="col-state st-dim">AUTH_REQUIRED</td>
+          <td class="col-mascot"><span class="mascot-sprite" style="color: var(--primary-dim);"></span>sleeping</td>
+          <td class="col-visor">Apagado</td>
+          <td class="col-emote">offline</td>
+          <td class="col-text">'Inicia sesión para continuar'</td>
+        </tr>
+        <tr>
+          <td class="col-state st-dim">LOCKED</td>
+          <td class="col-mascot"><span class="mascot-sprite" style="color: var(--primary-dim);"></span>sleeping</td>
+          <td class="col-visor">Apagado</td>
+          <td class="col-emote">sleepy</td>
+          <td class="col-text">'Bóveda bloqueada'</td>
+        </tr>
+        <tr>
+          <td class="col-state st-green">READY</td>
+          <td class="col-mascot"><span class="mascot-sprite" style="color: var(--success);"></span>idle</td>
+          <td class="col-visor">Cyan estable</td>
+          <td class="col-emote">neutral</td>
+          <td class="col-text">'Listo'</td>
+        </tr>
+        <tr>
+          <td class="col-state st-dim">OFFLINE</td>
+          <td class="col-mascot"><span class="mascot-sprite" style="color: var(--primary-dim);"></span>offline</td>
+          <td class="col-visor">Apagado, sin brillo</td>
+          <td class="col-emote">offline</td>
+          <td class="col-text">'Sin conexión'</td>
+        </tr>
+        <tr>
+          <td class="col-state st-cyan">SYNC_PENDING</td>
+          <td class="col-mascot"><span class="mascot-sprite" style="color: var(--accent);"></span>processing</td>
+          <td class="col-visor">Anillo multicolor</td>
+          <td class="col-emote">loading</td>
+          <td class="col-text">'Sincronizando cambios'</td>
+        </tr>
+        <tr>
+          <td class="col-state st-amber">DEGRADED_LLM</td>
+          <td class="col-mascot"><span class="mascot-sprite" style="color: var(--accent-3);"></span>warning</td>
+          <td class="col-visor">Amber intermitente</td>
+          <td class="col-emote">warning</td>
+          <td class="col-text">'Modelo IA no disponible. Usando modo local.'</td>
+        </tr>
+        <tr>
+          <td class="col-state st-red">DEGRADED_WORKER</td>
+          <td class="col-mascot"><span class="mascot-sprite" style="color: var(--error);"></span>error</td>
+          <td class="col-visor">Rojo breve, luego quieto</td>
+          <td class="col-emote">error</td>
+          <td class="col-text">'Servidor de tareas no disponible'</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="page-footer">
+    <span>CAP. 02 · MAPEO</span>
+    <span>09 / 57</span>
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- Tabla 1:1 — cada estado global mapea a exactamente una mascota.
+- 9 estados mapeados con visor + emote + texto accesible.
+- El texto accesible es obligatorio (aria-live="polite").
+- Los emotes se usan en contextos compactos (toasts, badges).
+- Sin ambigüedad visual — el usuario siempre sabe en qué estado está.
+</aside>
+</body>
+</html>

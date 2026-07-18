@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT — Paleta Maestra</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .swatch {
+    width: 100%;
+    height: 168px;
+    background: #111827;
+    border: 2px solid #334155;
+    clip-path: polygon(0 10px, 10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px));
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .swatch .chip {
+    width: 100%;
+    height: 84px;
+    border-bottom: 2px solid #334155;
+    position: relative;
+  }
+  .swatch .info {
+    padding: 10px 12px 8px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .swatch .name {
+    font-family: var(--font-pixel);
+    font-size: 9px;
+    color: #E5F1FF;
+    letter-spacing: 0.08em;
+  }
+  .swatch .hex {
+    font-family: var(--font-num);
+    font-size: 14px;
+    color: #E5F1FF;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  .swatch .use {
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: #94A3B8;
+    line-height: 1.3;
+  }
+  .swatch .corner {
+    position: absolute;
+    top: 6px; right: 8px;
+    font-family: var(--font-num);
+    font-size: 8px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.1em;
+    mix-blend-mode: difference;
+  }
+  .info-strip {
+    background: #111827;
+    border: 1px dashed #334155;
+    padding: 12px 18px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: #94A3B8;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .info-strip .icon {
+    color: #22D3EE;
+    font-size: 22px;
+  }
+</style>
+</head>
+<body>
+<div class="slide grid-bg relative">
+  <!-- Corner brackets -->
+  <span class="corner-bracket tl" data-decor></span>
+  <span class="corner-bracket tr" data-decor></span>
+  <span class="corner-bracket bl" data-decor></span>
+  <span class="corner-bracket br" data-decor></span>
+
+  <!-- Header -->
+  <div class="absolute" style="top: 30px; left: 56px;">
+    <span class="pixel-badge">01.2 // PALETA</span>
+    <h1 class="mt-2" style="font-family:var(--font-heading);font-weight:700;font-size:32px;color:#E5F1FF;letter-spacing:0.02em;">
+      Paleta Maestra
+    </h1>
+    <p class="mt-1" style="font-family:var(--font-body);font-size:14px;color:#94A3B8;">
+      Dark navy base · cyan/magenta/amber como acentos operacionales
+    </p>
+  </div>
+
+  <!-- Top-right marker -->
+  <div class="absolute" style="top: 38px; right: 56px;">
+    <span style="font-family:var(--font-num);font-size:10px;color:#94A3B8;letter-spacing:0.12em;">10 TOKENS // SEMANTIC ROLES</span>
+  </div>
+
+  <!-- Grid 5x2 of swatches -->
+  <div class="absolute grid grid-cols-5 gap-3" style="top: 138px; left: 56px; right: 56px;">
+    <!-- Row 1 -->
+    <div class="swatch">
+      <div class="chip" style="background:#0B1220;">
+        <span class="corner">#01</span>
+      </div>
+      <div class="info">
+        <div>
+          <div class="name">BACKGROUND</div>
+          <div class="hex">#0B1220</div>
+        </div>
+        <div class="use">Fondo principal del app</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#111827;">
+        <span class="corner">#02</span>
+      </div>
+      <div class="info">
+        <div>
+          <div class="name">SURFACE</div>
+          <div class="hex">#111827</div>
+        </div>
+        <div class="use">Paneles y cards</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#1F2937;">
+        <span class="corner">#03</span>
+      </div>
+      <div class="info">
+        <div>
+          <div class="name">SURFACE-2</div>
+          <div class="hex">#1F2937</div>
+        </div>
+        <div class="use">Inputs, hover</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#334155;">
+        <span class="corner" style="color:rgba(255,255,255,0.7);">#04</span>
+      </div>
+      <div class="info">
+        <div>
+          <div class="name">BORDER</div>
+          <div class="hex">#334155</div>
+        </div>
+        <div class="use">Marcos HUD angulares</div>
+      </div>
+    </div>
+    <div class="swatch" style="border-color:#E5F1FF;">
+      <div class="chip" style="background:#E5F1FF;">
+        <span class="corner" style="color:#0B1220;mix-blend-mode:normal;">#05</span>
+      </div>
+      <div class="info">
+        <div>
+          <div class="name">PRIMARY</div>
+          <div class="hex">#E5F1FF</div>
+        </div>
+        <div class="use">Texto principal, alto contraste</div>
+      </div>
+    </div>
+    <!-- Row 2 -->
+    <div class="swatch" style="border-color:#22D3EE;">
+      <div class="chip" style="background:#22D3EE;">
+        <span class="corner" style="color:#0B1220;mix-blend-mode:normal;">#06</span>
+      </div>
+      <div class="info">
+        <div>
+          <div class="name" style="color:#22D3EE;">ACCENT CYAN</div>
+          <div class="hex">#22D3EE</div>
+        </div>
+        <div class="use">HUD, links, foco</div>
+      </div>
+    </div>
+    <div class="swatch" style="border-color:#F472B6;">
+      <div class="chip" style="background:#F472B6;">
+        <span class="corner" style="color:#0B1220;mix-blend-mode:normal;">#07</span>
+      </div>
+      <div class="info">
+        <div>
+          <div class="name" style="color:#F472B6;">ACCENT MAGENTA</div>
+          <div class="hex">#F472B6</div>
+        </div>
+        <div class="use">Forge agent, creatividad</div>
+      </div>
+    </div>
+    <div class="swatch" style="border-color:#FBBF24;">
+      <div class="chip" style="background:#FBBF24;">
+        <span class="corner" style="color:#0B1220;mix-blend-mode:normal;">#08</span>
+      </div>
+      <div class="info">
+        <div>
+          <div class="name" style="color:#FBBF24;">ACCENT AMBER</div>
+          <div class="hex">#FBBF24</div>
+        </div>
+        <div class="use">Propuestas, warnings</div>
+      </div>
+    </div>
+    <div class="swatch" style="border-color:#10B981;">
+      <div class="chip" style="background:#10B981;">
+        <span class="corner" style="color:#0B1220;mix-blend-mode:normal;">#09</span>
+      </div>
+      <div class="info">
+        <div>
+          <div class="name" style="color:#10B981;">SUCCESS</div>
+          <div class="hex">#10B981</div>
+        </div>
+        <div class="use">Operaciones completadas</div>
+      </div>
+    </div>
+    <div class="swatch" style="border-color:#EF4444;">
+      <div class="chip" style="background:#EF4444;">
+        <span class="corner" style="color:#0B1220;mix-blend-mode:normal;">#10</span>
+      </div>
+      <div class="info">
+        <div>
+          <div class="name" style="color:#EF4444;">ERROR</div>
+          <div class="hex">#EF4444</div>
+        </div>
+        <div class="use">Jobs fallidos, alertas</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info strip -->
+  <div class="absolute" style="bottom: 56px; left: 56px; right: 56px;">
+    <div class="info-strip">
+      <i class="material-icons icon">contrast</i>
+      <span>Contraste mínimo 4.5:1 (WCAG 2.2 AA) en todo texto sobre fondo. Acentos reservados para estado, no para decoración.</span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <span>CAP. 01 · PALETA</span>
+    <span>05 / 39</span>
+  </div>
+</div>
+<aside data-notes class="hidden">
+- 10 colores con rol semántico fijo.
+- Sin degradados suaves: los bordes definen la jerarquía.
+- Acentos significan estado, no estética.
+- Contraste mínimo 4.5:1 sobre fondo navy.
+- Acentos cyan/magenta/amber reservados para operaciones, agentes y warnings.
+</aside>
+</body>
+</html>

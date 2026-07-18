@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow — Onboarding Wizard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .wiz-row { display: flex; align-items: center; gap: 12px; padding: 6px 10px; }
+  .wiz-num { font-family: var(--font-pixel); font-size: 16px; line-height: 1; min-width: 28px; text-align: center; }
+  .wiz-node { background: var(--surface); border: 1px solid currentColor; padding: 8px 12px; font-family: var(--font-body); font-size: 12px; font-weight: 600; flex: 1; display: flex; align-items: center; gap: 8px; clip-path: polygon(0 5px,5px 0,calc(100% - 5px) 0,100% 5px,100% calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,0 calc(100% - 5px)); }
+  .wiz-desc { font-family: var(--font-body); font-size: 11px; color: var(--primary-dim); font-weight: 400; }
+  .wiz-arr { color: var(--border-bright); font-family: var(--font-num); font-size: 12px; padding-left: 38px; }
+  .w-cyan .wiz-num, .w-cyan .wiz-node { color: var(--accent); }
+  .w-amber .wiz-num, .w-amber .wiz-node { color: var(--accent-3); }
+  .w-green .wiz-num, .w-green .wiz-node { color: var(--success); }
+
+  .seg { width: 116px; height: 14px; border: 1px solid var(--border); display: inline-block; }
+  .seg.done { background: var(--success); border-color: var(--success); }
+  .seg.active { background: var(--accent-3); border-color: var(--accent-3); position: relative; }
+  .seg.active::after { content: ''; position: absolute; inset: 2px; border: 1px dashed rgba(11,18,32,0.6); }
+  .seg.pending { background: var(--surface-2); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl" data-decor></div>
+  <div class="corner-bracket tr" data-decor></div>
+  <div class="corner-bracket bl" data-decor></div>
+  <div class="corner-bracket br" data-decor></div>
+
+  <!-- Header -->
+  <div class="absolute" style="top: 28px; left: 56px; right: 56px; display: flex; justify-content: space-between; align-items: flex-end;">
+    <div>
+      <span class="pixel-badge amber">03.3 // ONBOARDING</span>
+      <h1 class="mt-2" style="font-family: var(--font-heading); font-weight: 700; font-size: 30px; letter-spacing: 0.02em; color: var(--primary);">Onboarding — 9 Pasos</h1>
+      <p class="mt-1" style="font-family: var(--font-body); font-size: 13px; color: var(--primary-dim);">Objetivo: primer resultado útil sin formulario complejo.</p>
+    </div>
+    <div style="font-family: var(--font-num); font-size: 11px; color: var(--primary-dim); letter-spacing: 0.08em; text-align: right;">
+      <div>9 PASOS · WIZARD</div>
+      <div style="color: var(--accent-3);">// FIRST-RUN FLOW</div>
+    </div>
+  </div>
+
+  <!-- Wizard container -->
+  <div class="hud-panel absolute" style="top: 142px; left: 56px; width: 1168px; height: 440px; padding: 18px 22px; border-color: var(--accent-3);">
+    <div style="font-family: var(--font-num); font-size: 9px; color: var(--accent-3); letter-spacing: 0.15em; margin-bottom: 10px;">// WIZARD · 9 PASOS EN CASCADA</div>
+
+    <div class="flex flex-col gap-1">
+      <div class="wiz-row w-cyan">
+        <span class="wiz-num">1</span>
+        <span class="wiz-node"><i class="material-icons" style="font-size: 16px;">waving_hand</i> BIENVENIDA <span class="wiz-desc">· Guardian sprite + tagline</span></span>
+      </div>
+      <div class="wiz-arr">↓</div>
+
+      <div class="wiz-row w-amber">
+        <span class="wiz-num">2</span>
+        <span class="wiz-node"><i class="material-icons" style="font-size: 16px;">help_outline</i> ¿QUÉ DESEAS CONFIGURAR? <span class="wiz-desc">· Uso local | Conectar a servidor</span></span>
+      </div>
+      <div class="wiz-arr">↓</div>
+
+      <div class="wiz-row w-cyan">
+        <span class="wiz-num">3</span>
+        <span class="wiz-node"><i class="material-icons" style="font-size: 16px;">schedule</i> ZONA HORARIA <span class="wiz-desc">· selector explícito (no inferir)</span></span>
+      </div>
+      <div class="wiz-arr">↓</div>
+
+      <div class="wiz-row w-cyan">
+        <span class="wiz-num">4</span>
+        <span class="wiz-node"><i class="material-icons" style="font-size: 16px;">translate</i> IDIOMA <span class="wiz-desc">· selector</span></span>
+      </div>
+      <div class="wiz-arr">↓</div>
+
+      <div class="wiz-row w-cyan">
+        <span class="wiz-num">5</span>
+        <span class="wiz-node"><i class="material-icons" style="font-size: 16px;">lock</i> BÓVEDA <span class="wiz-desc">· passphrase + explicación cifrado</span></span>
+      </div>
+      <div class="wiz-arr">↓</div>
+
+      <div class="wiz-row w-cyan">
+        <span class="wiz-num">6</span>
+        <span class="wiz-node"><i class="material-icons" style="font-size: 16px;">smart_toy</i> MODELO <span class="wiz-desc">· Ollama local | OpenAI | Anthropic</span></span>
+      </div>
+      <div class="wiz-arr">↓</div>
+
+      <div class="wiz-row w-cyan">
+        <span class="wiz-num">7</span>
+        <span class="wiz-node"><i class="material-icons" style="font-size: 16px;">pets</i> MASCOTA <span class="wiz-desc">· elegir agente inicial</span></span>
+      </div>
+      <div class="wiz-arr">↓</div>
+
+      <!-- Step 8 - highlighted amber panel -->
+      <div class="w-amber" style="background: rgba(251,191,36,0.06); border-left: 3px solid var(--accent-3); padding: 6px 8px; margin: 2px 0;">
+        <div class="wiz-row" style="padding: 4px 4px;">
+          <span class="wiz-num">8</span>
+          <span class="wiz-node" style="background: transparent; border-color: var(--accent-3);"><i class="material-icons" style="font-size: 16px;">notifications_active</i> PRIMER RECORDATORIO <span class="wiz-desc">· propuesta editable: 'Recuérdame mañana a las 9 revisar VNBOT'</span></span>
+        </div>
+        <div style="font-family: var(--font-body); font-size: 11px; color: var(--accent-3); font-style: italic; padding-left: 40px; margin-top: 2px;">El usuario puede cambiar la instrucción. La app muestra interpretación y pide confirmación.</div>
+      </div>
+      <div class="wiz-arr">↓</div>
+
+      <div class="wiz-row w-green">
+        <span class="wiz-num">9</span>
+        <span class="wiz-node"><i class="material-icons" style="font-size: 16px;">check_circle</i> HOY <span class="wiz-desc">· dashboard operativo</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="absolute" style="bottom: 50px; left: 56px; right: 56px; height: 60px; padding: 12px 18px; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; gap: 16px; clip-path: polygon(0 8px,8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px));">
+    <div style="font-family: var(--font-num); font-size: 11px; color: var(--primary-dim); letter-spacing: 0.1em; white-space: nowrap;">PROGRESO</div>
+    <div class="flex gap-1 flex-1">
+      <span class="seg done"></span>
+      <span class="seg active"></span>
+      <span class="seg pending"></span>
+      <span class="seg pending"></span>
+      <span class="seg pending"></span>
+      <span class="seg pending"></span>
+      <span class="seg pending"></span>
+      <span class="seg pending"></span>
+      <span class="seg pending"></span>
+    </div>
+    <div style="font-family: var(--font-num); font-size: 12px; color: var(--accent-3); font-weight: 700; letter-spacing: 0.05em;">Paso 2 de 9</div>
+  </div>
+
+  <div class="page-footer">
+    <span>CAP. 03 · ONBOARDING</span>
+    <span>14 / 57</span>
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- Wizard de 9 pasos en cascada vertical.
+- Paso 2 es decisión: Local vs Servidor.
+- Paso 8 destacado: primer recordatorio editable con confirmación.
+- Sin formularios complejos — primer resultado útil rápido.
+- Paso 9: HOY = dashboard operativo, fin del onboarding.
+</aside>
+</body>
+</html>

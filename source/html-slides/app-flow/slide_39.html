@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>VNBOT App Flow · 39 / 57 — Crear Agente</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="global.css">
+<style>
+  .step-num { font-family: var(--font-pixel); font-size: 9px; color: var(--primary-dim); margin-right: 8px; min-width: 18px; }
+  .phase-label { font-family: var(--font-pixel); font-size: 9px; letter-spacing: 0.1em; padding: 4px 8px; display: inline-block; }
+  .phase-rule { height: 1px; background: var(--border-bright); flex: 1; }
+  .check-card { border: 1px solid; padding: 10px 12px; background: var(--surface); clip-path: polygon(0 6px, 6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px)); }
+</style>
+</head>
+<body>
+<div class="slide grid-bg">
+  <div class="corner-bracket tl"></div>
+  <div class="corner-bracket tr"></div>
+  <div class="corner-bracket bl"></div>
+  <div class="corner-bracket br"></div>
+
+  <!-- Header -->
+  <div class="absolute" style="top:32px; left:48px; right:48px; display:flex; justify-content:space-between; align-items:center;">
+    <span class="pixel-badge">08.1 // CREAR AGENTE</span>
+    <span style="font-family:var(--font-num); font-size:11px; color:var(--primary-dim); letter-spacing:0.08em;">CHAPTER 08 · AGENTS</span>
+  </div>
+  <h1 style="position:absolute; top:62px; left:48px; font-family:var(--font-heading); font-weight:700; font-size:32px; color:var(--primary); letter-spacing:0.02em;">Crear Agente — 13 Pasos</h1>
+
+  <!-- LEFT: 13-step wizard in 3 phases -->
+  <div class="hud-panel" style="position:absolute; top:118px; left:48px; width:660px; height:548px; padding:18px 22px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+      <span style="font-family:var(--font-pixel); font-size:11px; color:var(--accent);">WIZARD · 13 PASOS</span>
+      <div style="flex:1; height:1px; background:var(--border-bright);"></div>
+    </div>
+
+    <!-- FASE 1 -->
+    <div style="display:flex; align-items:center; gap:10px; margin:6px 0 6px;">
+      <span class="phase-label" style="color:var(--accent); background:rgba(34,211,238,0.1); border:1px solid var(--accent);">FASE 1 · DEFINIR</span>
+      <div class="phase-rule"></div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px 10px;">
+      <div class="flow-node cyan"><span class="step-num">01</span> Agentes <span style="color:var(--primary-dim); font-size:10px;">(entry point)</span></div>
+      <div class="flow-node cyan"><span class="step-num">02</span> Crear agente</div>
+      <div class="flow-node cyan"><span class="step-num">03</span> Nombre y descripción</div>
+      <div class="flow-node cyan"><span class="step-num">04</span> Elegir mascota</div>
+    </div>
+
+    <!-- FASE 2 -->
+    <div style="display:flex; align-items:center; gap:10px; margin:10px 0 6px;">
+      <span class="phase-label" style="color:var(--accent-3); background:rgba(251,191,36,0.1); border:1px solid var(--accent-3);">FASE 2 · CONFIGURAR</span>
+      <div class="phase-rule"></div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px 10px;">
+      <div class="flow-node amber"><span class="step-num">05</span> Elegir modelo</div>
+      <div class="flow-node amber"><span class="step-num">06</span> Definir instrucciones</div>
+      <div class="flow-node amber"><span class="step-num">07</span> Asignar skills</div>
+      <div class="flow-node amber"><span class="step-num">08</span> Asignar memoria</div>
+      <div class="flow-node amber" style="grid-column:1 / span 2;"><span class="step-num">09</span> Asignar herramientas</div>
+    </div>
+
+    <!-- FASE 3 -->
+    <div style="display:flex; align-items:center; gap:10px; margin:10px 0 6px;">
+      <span class="phase-label" style="color:var(--accent-2); background:rgba(244,114,182,0.1); border:1px solid var(--accent-2);">FASE 3 · VALIDAR</span>
+      <div class="phase-rule"></div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px 10px;">
+      <div class="flow-node magenta"><span class="step-num">10</span> Definir autonomía</div>
+      <div class="flow-node magenta"><span class="step-num">11</span> Definir presupuesto <span style="color:var(--primary-dim); font-size:10px;">(tokens/costos)</span></div>
+      <div class="flow-node magenta"><span class="step-num">12</span> Revisar permisos</div>
+      <div class="flow-node green"><span class="step-num">13</span> Simular → Activar</div>
+    </div>
+
+    <!-- mini mascot decoration -->
+    <div style="position:absolute; bottom:14px; right:18px; display:flex; align-items:center; gap:8px;">
+      <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">AGENT.CREATE()</span>
+      <div class="mini-sprite" style="color:var(--accent);"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Critical checkpoints -->
+  <div class="hud-panel" style="position:absolute; top:118px; left:728px; width:504px; height:548px; padding:18px 22px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+      <i class="material-icons" style="font-size:18px; color:var(--accent);">flag</i>
+      <span style="font-family:var(--font-pixel); font-size:11px; color:var(--accent);">CHECKPOINTS CRÍTICOS</span>
+    </div>
+
+    <!-- 1 -->
+    <div class="check-card" style="border-color:var(--accent-2); margin-bottom:10px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <span style="font-family:var(--font-pixel); font-size:10px; color:var(--accent-2);">1 · REVISAR PERMISOS</span>
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">paso 12</span>
+      </div>
+      <p style="font-family:var(--font-body); font-size:12px; line-height:1.4; color:var(--primary);">Antes de activar, el usuario debe ver explícitamente qué podrá y qué no podrá hacer el agente.</p>
+    </div>
+
+    <!-- 2 -->
+    <div class="check-card" style="border-color:var(--accent-3); margin-bottom:10px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <span style="font-family:var(--font-pixel); font-size:10px; color:var(--accent-3);">2 · SIMULAR</span>
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">paso 13</span>
+      </div>
+      <p style="font-family:var(--font-body); font-size:12px; line-height:1.4; color:var(--primary);">El usuario escribe una instrucción y el agente muestra qué haría <strong style="color:var(--accent-3);">SIN ejecutar efectos externos</strong>.</p>
+    </div>
+
+    <!-- 3 -->
+    <div class="check-card" style="border-color:var(--success); margin-bottom:10px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <span style="font-family:var(--font-pixel); font-size:10px; color:var(--success);">3 · ACTIVAR</span>
+        <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">paso 13</span>
+      </div>
+      <p style="font-family:var(--font-body); font-size:12px; line-height:1.4; color:var(--primary);">Solo después de simular. Se puede desactivar en cualquier momento.</p>
+    </div>
+
+    <!-- summary footer -->
+    <div style="position:absolute; bottom:14px; left:22px; right:22px; padding-top:10px; border-top:1px solid var(--border-bright); display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-family:var(--font-num); font-size:10px; color:var(--primary-dim);">DEFINIR · CONFIGURAR · VALIDAR</span>
+      <span class="pixel-badge success" style="font-size:8px;">DRY-RUN FIRST</span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <span>VNBOT // APP FLOW · CAP. 08 · CREAR AGENTE</span>
+    <span>39 / 57</span>
+  </div>
+</div>
+
+<aside data-notes class="hidden">
+- Wizard de 13 pasos agrupado en 3 fases: Definir, Configurar, Validar.
+- Permiso y simulación son los dos checkpoints críticos antes de activar.
+- Activación solo después de simular; reversible en cualquier momento.
+- Cada agente tiene presupuesto (tokens/costos) y autonomía configurables.
+- Animar a la audiencia a pensar el agente como un sandbox auditado.
+</aside>
+</body>
+</html>

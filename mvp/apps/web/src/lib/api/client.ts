@@ -117,9 +117,16 @@ export interface MemorySearchResponse {
 
 class ApiClient {
   private config: ApiConfig;
+  private demoMode: boolean;
 
   constructor(config: Partial<ApiConfig> = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
+    // Demo mode: when VITE_DEMO_MODE=true OR when running on GitHub Pages (no backend)
+    this.demoMode = import.meta.env.VITE_DEMO_MODE === 'true';
+  }
+
+  isDemoMode(): boolean {
+    return this.demoMode;
   }
 
   async request<T>(path: string, options: RequestInit = {}): Promise<T> {
@@ -141,6 +148,13 @@ class ApiClient {
   }
 
   async chat(text: string, timezone = 'America/Caracas'): Promise<ChatResponse> {
+    if (this.demoMode) {
+      // Dynamic import to avoid loading mock data in production builds
+      const { mockChat } = await import('./mock');
+      // Simulate network delay
+      await new Promise((r) => setTimeout(r, 400));
+      return mockChat(text);
+    }
     return this.request<ChatResponse>('/chat', {
       method: 'POST',
       body: JSON.stringify({ text, timezone }),
@@ -151,6 +165,11 @@ class ApiClient {
     operationId: string,
     edits?: Record<string, unknown>,
   ): Promise<ConfirmResponse> {
+    if (this.demoMode) {
+      const { mockConfirm } = await import('./mock');
+      await new Promise((r) => setTimeout(r, 500));
+      return mockConfirm();
+    }
     return this.request<ConfirmResponse>(`/chat/operations/${operationId}/confirm`, {
       method: 'POST',
       body: JSON.stringify({ edits }),
@@ -187,6 +206,11 @@ class ApiClient {
     offset?: number;
     type?: string;
   }): Promise<MemoryListResponse> {
+    if (this.demoMode) {
+      const { mockListMemories } = await import('./mock');
+      await new Promise((r) => setTimeout(r, 300));
+      return mockListMemories();
+    }
     const searchParams = new URLSearchParams();
     if (params?.limit) searchParams.set('limit', String(params.limit));
     if (params?.offset) searchParams.set('offset', String(params.offset));
@@ -222,10 +246,19 @@ class ApiClient {
   }
 
   async deleteMemory(id: string): Promise<void> {
+    if (this.demoMode) {
+      await new Promise((r) => setTimeout(r, 200));
+      return;
+    }
     await this.request<void>(`/memories/${id}`, { method: 'DELETE' });
   }
 
   async searchMemories(query: string, limit = 20): Promise<MemorySearchResponse> {
+    if (this.demoMode) {
+      const { mockSearchMemories } = await import('./mock');
+      await new Promise((r) => setTimeout(r, 300));
+      return mockSearchMemories(query);
+    }
     return this.request<MemorySearchResponse>('/memories/search', {
       method: 'POST',
       body: JSON.stringify({ query, limit }),

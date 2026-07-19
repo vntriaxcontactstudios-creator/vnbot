@@ -5,6 +5,10 @@ import { fileURLToPath, URL } from 'node:url';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // For GitHub Pages deployment, base must match the repo subpath.
+  // When building for GH Pages (VITE_DEMO_MODE=true), use '/vnbot/' as base.
+  // For local dev or self-hosted, use '/' (default).
+  base: process.env.VITE_DEMO_MODE === 'true' ? '/vnbot/' : '/',
   plugins: [react()],
   resolve: {
     alias: {

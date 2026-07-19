@@ -25,10 +25,13 @@ const queryClient = new QueryClient({
   },
 });
 
+// For GitHub Pages, BrowserRouter needs a basename matching the repo subpath.
+// When VITE_DEMO_MODE=true, base is '/vnbot/' so basename is '/vnbot'.
+const ROUTER_BASENAME = import.meta.env.VITE_DEMO_MODE === 'true' ? '/vnbot' : '/';
+
 function App() {
   const { setOnline } = useUIStore();
 
-  // Online status tracking
   useEffect(() => {
     const update = () => setOnline(navigator.onLine);
     update();
@@ -42,7 +45,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <BrowserRouter basename={ROUTER_BASENAME}>
         <div className="flex min-h-screen bg-vnbot-bg-0">
           <Sidebar />
           <main className="flex-1 min-w-0 flex flex-col">

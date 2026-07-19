@@ -5,6 +5,7 @@
  */
 
 import { useUIStore } from '@/lib/store/ui';
+import { apiClient } from '@/lib/api/client';
 
 interface TopBarProps {
   title: string;
@@ -12,6 +13,7 @@ interface TopBarProps {
 
 export function TopBar({ title }: TopBarProps) {
   const { toggleSidebar, mascotState } = useUIStore();
+  const isDemo = apiClient.isDemoMode();
 
   return (
     <header className="sticky top-0 z-20 bg-vnbot-bg-0/95 backdrop-blur-sm border-b border-vnbot-line-soft">
@@ -35,6 +37,18 @@ export function TopBar({ title }: TopBarProps) {
 
         {/* Right side — mascot state + actions */}
         <div className="flex items-center gap-3 ml-auto">
+          {/* Demo mode badge */}
+          {isDemo && (
+            <div
+              className="hidden sm:flex items-center gap-1.5 px-2 py-1 border border-vnbot-amber/50 bg-vnbot-amber/10 text-vnbot-amber"
+              title="Demo mode — using mock data, no backend connection"
+            >
+              <span className="font-mono text-[10px] uppercase tracking-wider">
+                DEMO
+              </span>
+            </div>
+          )}
+
           {/* Mascot state badge */}
           <div
             className="hidden md:flex items-center gap-2 px-3 py-1.5 border border-vnbot-line-soft bg-vnbot-panel-0"
@@ -49,19 +63,21 @@ export function TopBar({ title }: TopBarProps) {
             </span>
           </div>
 
-          {/* Trigger scheduler button (dev) */}
-          <button
-            type="button"
-            onClick={() => {
-              fetch(`${import.meta.env.VITE_API_BASE_URL?.replace('/api/v1', '') ?? 'http://localhost:8000'}/scheduler/trigger`, {
-                method: 'POST',
-              }).catch(() => {});
-            }}
-            className="hidden md:flex items-center px-3 py-1.5 border border-vnbot-amber/40 text-vnbot-amber font-mono text-[10px] uppercase hover:bg-vnbot-amber/10"
-            aria-label="Trigger scheduler (dev)"
-          >
-            ⚡ TRIGGER
-          </button>
+          {/* Trigger scheduler button (dev only — not in demo) */}
+          {!isDemo && (
+            <button
+              type="button"
+              onClick={() => {
+                fetch(`${import.meta.env.VITE_API_BASE_URL?.replace('/api/v1', '') ?? 'http://localhost:8000'}/scheduler/trigger`, {
+                  method: 'POST',
+                }).catch(() => {});
+              }}
+              className="hidden md:flex items-center px-3 py-1.5 border border-vnbot-amber/40 text-vnbot-amber font-mono text-[10px] uppercase hover:bg-vnbot-amber/10"
+              aria-label="Trigger scheduler (dev)"
+            >
+              ⚡ TRIGGER
+            </button>
+          )}
         </div>
       </div>
     </header>

@@ -292,8 +292,32 @@ async def confirm_operation(
             next_due_at = reminder.next_due_at
 
         elif op.type == "create_memory" and proposal.get("memory"):
-            # Memory creation deferred to memories.py endpoint in 0.1 — placeholder
-            entity_id = None
+            # Create the memory node
+            mem_data = proposal["memory"]
+            # Apply optional edits
+            if req.edits:
+                mem_data = {**mem_data, **req.edits}
+
+            from ...infrastructure.db.models import MemoryNode as MemoryNodeModel
+            from vnbot_domain.entities.common import Authority, Provenance
+
+            memory_node = MemoryNodeModel(
+                id=str(uuid4()),
+                workspace_id=op.workspace_id,
+                type=mem_data.get("memory_type", "note"),
+                label=mem_data["content"][:80] if mem_data.get("content") else "Memory",
+                content_ciphertext=mem_data.get("content", ""),
+                content_format="text",
+                source_type="explicit_user_input",
+                provenance=Provenance.EXPLICIT_USER_INPUT.value,
+                authority=Authority.USER_CONFIRMED.value,
+                confidence=float(mem_data.get("confidence", 0.9)),
+                sensitivity="personal",
+                status="active",
+            )
+            db.add(memory_node)
+            await db.flush()
+            entity_id = memory_node.id
             entity_type = "memory"
 
         # Mark operation as succeeded

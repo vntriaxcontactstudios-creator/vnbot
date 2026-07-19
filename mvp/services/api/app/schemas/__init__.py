@@ -10,8 +10,18 @@ from .chat import (
     ProposalMemory,
     ProposalReminder,
 )
+from .memories import (
+    MemoryListResponse,
+    MemoryNodeCreate,
+    MemoryNodeResponse,
+    MemoryNodeUpdate,
+    MemorySearchRequest,
+    MemorySearchResponse,
+    MemorySearchResult,
+)
 
 __all__ = [
+    # Chat
     "ChatRequest",
     "ChatResponse",
     "ConfirmRequest",
@@ -20,4 +30,12 @@ __all__ = [
     "HealthResponse",
     "ProposalMemory",
     "ProposalReminder",
+    # Memories
+    "MemoryListResponse",
+    "MemoryNodeCreate",
+    "MemoryNodeResponse",
+    "MemoryNodeUpdate",
+    "MemorySearchRequest",
+    "MemorySearchResponse",
+    "MemorySearchResult",
 ]

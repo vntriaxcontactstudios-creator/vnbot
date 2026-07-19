@@ -1,0 +1,1 @@
+"""VNBOT API — FastAPI application."""

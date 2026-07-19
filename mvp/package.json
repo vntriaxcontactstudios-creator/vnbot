@@ -1,0 +1,28 @@
+{
+  "name": "vnbot",
+  "version": "0.1.0",
+  "private": true,
+  "description": "VNBOT — Memoria personal open source, recordatorios confiables y mini-agentes bajo el control del usuario.",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@9.7.0",
+  "engines": {
+    "node": ">=20.10.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel run dev",
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "lint": "pnpm -r run lint",
+    "typecheck": "pnpm -r run typecheck",
+    "e2e": "playwright test --config=tests/e2e/playwright.config.ts",
+    "clean": "rm -rf **/node_modules **/dist **/.turbo **/coverage"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.47.0",
+    "@axe-core/playwright": "^4.10.0",
+    "prettier": "^3.3.0",
+    "typescript": "^5.5.0"
+  }
+}

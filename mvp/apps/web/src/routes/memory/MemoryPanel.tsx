@@ -19,6 +19,7 @@ export function MemoryPanel() {
   const [selectedMemory, setSelectedMemory] = useState<MemoryNode | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   const loadMemories = useCallback(async () => {
     setIsLoading(true);
@@ -66,6 +67,16 @@ export function MemoryPanel() {
     }
   }, []);
 
+  const handleCreate = useCallback(async (data: { label: string; content: string; type: string; sensitivity: string }) => {
+    try {
+      const newMem = await apiClient.createMemory(data);
+      setMemories((prev) => [newMem, ...prev]);
+      setShowCreateForm(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Create failed');
+    }
+  }, []);
+
   const displayList = searchResults ?? [];
 
   return (
@@ -106,8 +117,22 @@ export function MemoryPanel() {
                   ✕ Clear
                 </button>
               )}
+              <button
+                type="button"
+                onClick={() => setShowCreateForm(true)}
+                className="px-4 py-2 bg-vnbot-cyan text-vnbot-bg-0 font-mono text-xs uppercase hover:bg-vnbot-cyan/80"
+              >
+                + Nueva
+              </button>
             </div>
           </div>
+
+          {showCreateForm && (
+            <CreateMemoryForm
+              onSubmit={handleCreate}
+              onCancel={() => setShowCreateForm(false)}
+            />
+          )}
 
           <div className="flex-1 overflow-y-auto p-4">
             <div className="max-w-4xl mx-auto">
@@ -380,5 +405,120 @@ function MemoryInspector({
         </button>
       </div>
     </aside>
+  );
+}
+
+function CreateMemoryForm({
+  onSubmit,
+  onCancel,
+}: {
+  onSubmit: (data: { label: string; content: string; type: string; sensitivity: string }) => void;
+  onCancel: () => void;
+}) {
+  const [label, setLabel] = useState('');
+  const [content, setContent] = useState('');
+  const [type, setType] = useState('note');
+  const [sensitivity, setSensitivity] = useState('personal');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!label.trim()) return;
+    setIsSubmitting(true);
+    await onSubmit({ label: label.trim(), content: content.trim(), type, sensitivity });
+    setIsSubmitting(false);
+  };
+
+  return (
+    <div className="p-4 border-b border-vnbot-line-soft bg-vnbot-panel-0">
+      <form onSubmit={handleSubmit} className="max-w-4xl mx-auto space-y-3">
+        <div className="font-display text-sm text-vnbot-cyan uppercase tracking-wider mb-2">
+          ◆ Nueva memoria
+        </div>
+
+        <div>
+          <label htmlFor="mem-label" className="font-mono text-[10px] text-vnbot-text-muted uppercase tracking-wider">
+            Título
+          </label>
+          <input
+            id="mem-label"
+            type="text"
+            value={label}
+            onChange={(e) => setLabel(e.target.value)}
+            placeholder="Ej: Wifi de la oficina"
+            autoFocus
+            className="w-full mt-1 bg-vnbot-bg-1 border border-vnbot-line-soft px-3 py-2 text-vnbot-text font-body text-sm placeholder:text-vnbot-text-muted focus:border-vnbot-cyan focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="mem-content" className="font-mono text-[10px] text-vnbot-text-muted uppercase tracking-wider">
+            Contenido
+          </label>
+          <textarea
+            id="mem-content"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="Ej: La contraseña es vnbot123, cambia cada mes"
+            rows={3}
+            className="w-full mt-1 bg-vnbot-bg-1 border border-vnbot-line-soft px-3 py-2 text-vnbot-text font-body text-sm placeholder:text-vnbot-text-muted focus:border-vnbot-cyan focus:outline-none resize-none"
+          />
+        </div>
+
+        <div className="flex gap-4">
+          <div className="flex-1">
+            <label htmlFor="mem-type" className="font-mono text-[10px] text-vnbot-text-muted uppercase tracking-wider">
+              Tipo
+            </label>
+            <select
+              id="mem-type"
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              className="w-full mt-1 bg-vnbot-bg-1 border border-vnbot-line-soft px-3 py-2 text-vnbot-text font-body text-sm focus:border-vnbot-cyan focus:outline-none"
+            >
+              <option value="note">Nota</option>
+              <option value="event">Evento</option>
+              <option value="preference">Preferencia</option>
+              <option value="task">Tarea</option>
+              <option value="contact">Contacto</option>
+            </select>
+          </div>
+
+          <div className="flex-1">
+            <label htmlFor="mem-sensitivity" className="font-mono text-[10px] text-vnbot-text-muted uppercase tracking-wider">
+              Sensibilidad
+            </label>
+            <select
+              id="mem-sensitivity"
+              value={sensitivity}
+              onChange={(e) => setSensitivity(e.target.value)}
+              className="w-full mt-1 bg-vnbot-bg-1 border border-vnbot-line-soft px-3 py-2 text-vnbot-text font-body text-sm focus:border-vnbot-cyan focus:outline-none"
+            >
+              <option value="public">Público</option>
+              <option value="personal">Personal</option>
+              <option value="sensitive">Sensible</option>
+              <option value="secret">Secreto</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="flex gap-2 pt-2">
+          <button
+            type="submit"
+            disabled={!label.trim() || isSubmitting}
+            className="px-4 py-2 bg-vnbot-cyan text-vnbot-bg-0 font-mono text-xs uppercase hover:bg-vnbot-cyan/80 disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? 'GUARDANDO...' : '✓ GUARDAR'}
+          </button>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-4 py-2 border border-vnbot-line-soft text-vnbot-text-muted font-mono text-xs uppercase hover:bg-vnbot-panel-1"
+          >
+            ✕ Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }

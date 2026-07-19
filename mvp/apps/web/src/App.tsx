@@ -14,6 +14,7 @@ import { Sidebar } from '@/components/shell/Sidebar';
 import { TodayPanel } from '@/routes/today/TodayPanel';
 import { MemoryPanel } from '@/routes/memory/MemoryPanel';
 import { ActivityPanel } from '@/routes/activity/ActivityPanel';
+import { SettingsPanel } from '@/routes/settings/SettingsPanel';
 import { useUIStore } from '@/lib/store/ui';
 
 const queryClient = new QueryClient({
@@ -55,6 +56,7 @@ function App() {
               <Route path="/chat" element={<TodayPanel />} />
               <Route path="/memory" element={<MemoryPanel />} />
               <Route path="/activity" element={<ActivityPanel />} />
+              <Route path="/settings" element={<SettingsPanel />} />
               <Route
                 path="*"
                 element={

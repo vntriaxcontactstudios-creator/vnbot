@@ -41,4 +41,4 @@ export { PixelAvatar } from './components/PixelAvatar';
 export { PixelTile, PixelPanel } from './components/PixelTile';
 
 // Hooks
-export { useFrameCycle, useFrameCycleWithRef } from './animations/frameCycle';
+export { useFrameCycle } from './animations/frameCycle';

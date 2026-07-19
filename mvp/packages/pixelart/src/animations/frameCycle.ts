@@ -2,18 +2,19 @@
  * VNBOT Pixelart — Frame cycle hook
  *
  * Cycles through sprite frames using requestAnimationFrame.
- * Pauses automatically when the canvas leaves the viewport (IntersectionObserver).
+ * Pauses automatically when the container leaves the viewport (IntersectionObserver).
  * Respects prefers-reduced-motion (returns frame 0 only).
  *
  * Reference: VNBOT Terreno Preparado §8.3
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type RefObject } from 'react';
 import { FRAME_SPECS, type MascotState } from '../engine/types';
 
 interface UseFrameCycleOptions {
   state: MascotState;
   enabled?: boolean;
+  containerRef: RefObject<HTMLElement | null>;
 }
 
 interface UseFrameCycleResult {
@@ -22,10 +23,9 @@ interface UseFrameCycleResult {
 }
 
 export function useFrameCycle(opts: UseFrameCycleOptions): UseFrameCycleResult {
-  const { state, enabled = true } = opts;
+  const { state, enabled = true, containerRef } = opts;
   const [frame, setFrame] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const elementRef = useRef<HTMLElement | null>(null);
   const rafRef = useRef<number | null>(null);
   const lastFrameTimeRef = useRef<number>(0);
 
@@ -67,7 +67,8 @@ export function useFrameCycle(opts: UseFrameCycleOptions): UseFrameCycleResult {
 
   // IntersectionObserver to pause off-screen
   useEffect(() => {
-    if (!elementRef.current) return;
+    const el = containerRef.current;
+    if (!el) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -78,50 +79,9 @@ export function useFrameCycle(opts: UseFrameCycleOptions): UseFrameCycleResult {
       { threshold: 0.1 },
     );
 
-    observer.observe(elementRef.current);
+    observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [containerRef]);
 
-  // Return ref to attach to the canvas wrapper
   return { frame, isPaused };
-}
-
-/**
- * Helper: attach the IntersectionObserver target.
- * Usage: const { frame, setRef } = useFrameCycleWithRef({ state });
- *        <div ref={setRef}>...</div>
- */
-export function useFrameCycleWithRef(opts: UseFrameCycleOptions): {
-  frame: number;
-  isPaused: boolean;
-  setRef: (el: HTMLElement | null) => void;
-} {
-  const { frame, isPaused } = useFrameCycle(opts);
-  const ref = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    if (!ref.current) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) {
-            // Pause: cancel any pending raf
-          }
-        }
-      },
-      { threshold: 0.1 },
-    );
-
-    observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
-  return {
-    frame,
-    isPaused,
-    setRef: (el: HTMLElement | null) => {
-      ref.current = el;
-    },
-  };
 }

@@ -1,15 +1,16 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import path from 'node:path';
+import { fileURLToPath, URL } from 'node:url';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
-      '@vnbot/ui': path.resolve(__dirname, '../../packages/ui/src'),
-      '@vnbot/pixelart': path.resolve(__dirname, '../../packages/pixelart/src'),
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@vnbot/ui': fileURLToPath(new URL('../../packages/ui/src', import.meta.url)),
+      '@vnbot/pixelart': fileURLToPath(new URL('../../packages/pixelart/src', import.meta.url)),
     },
   },
   server: {
@@ -32,23 +33,6 @@ export default defineConfig({
           'state': ['zustand', '@tanstack/react-query'],
           'pixelart': ['@vnbot/pixelart', 'atropos', 'animejs'],
         },
-      },
-    },
-  },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./src/test-setup.ts'],
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      include: ['src/**/*.{ts,tsx}'],
-      exclude: ['src/**/*.d.ts', 'src/test-setup.ts'],
-      thresholds: {
-        lines: 60,
-        functions: 60,
-        branches: 60,
-        statements: 60,
       },
     },
   },

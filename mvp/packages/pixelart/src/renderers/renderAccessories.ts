@@ -13,7 +13,6 @@
  */
 
 import type { AgentDefinition, Palette } from '../engine/types';
-import { createRng } from '../engine/prng';
 
 interface RenderAccessoriesOptions {
   size: number;
@@ -28,7 +27,7 @@ export function renderAccessories(
   opts: RenderAccessoriesOptions,
 ): void {
   const { size, agent, palette, frame, seed } = opts;
-  const rng = createRng(seed + ':accessory');
+  void seed; // reserved for future procedural accessory variation
 
   ctx.save();
   ctx.imageSmoothingEnabled = false;
@@ -50,7 +49,7 @@ export function renderAccessories(
       drawCompass(ctx, size, palette, frame);
       break;
     case 'drones':
-      drawDrones(ctx, size, palette, frame, rng);
+      drawDrones(ctx, size, palette, frame);
       break;
     case 'barrier':
       drawBarrier(ctx, size, palette, frame);
@@ -220,7 +219,6 @@ function drawDrones(
   size: number,
   palette: Palette,
   frame: number,
-  rng: () => number,
 ): void {
   // 3 small drones orbiting around the golem
   const cx = size / 2;
@@ -252,6 +250,7 @@ function drawBarrier(
   frame: number,
 ): void {
   // Force field around the body — hexagonal pattern
+  void palette; // barrier uses fixed green color, palette reserved for future variation
   const cx = size / 2;
   const cy = size / 2;
   const r = size * 0.48;

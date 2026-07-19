@@ -19,7 +19,6 @@
  */
 
 import type { MascotState, Palette } from '../engine/types';
-import { createRng } from '../engine/prng';
 
 interface RenderVisorOptions {
   size: number;
@@ -46,7 +45,7 @@ export function renderVisor(
   ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
   opts: RenderVisorOptions,
 ): void {
-  const { size, state, palette, frame, seed } = opts;
+  const { size, state, palette, frame } = opts;
   const color = state === 'idle' ? palette.visor : STATE_COLORS[state];
 
   // Visor position: top-center of the head (rows 2-3 of the 16-grid for 128px)
@@ -138,7 +137,6 @@ function drawStatePattern(
     case 'thinking': {
       // Three scrolling dots
       const dotSize = h * 0.3;
-      const spacing = w / 4;
       for (let i = 0; i < 3; i++) {
         const offsetX = ((frame + i) % 4) * (w / 4) - w / 2;
         const dotX = x + w / 2 + offsetX - dotSize / 2;

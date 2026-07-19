@@ -6,7 +6,6 @@
  */
 
 import type { MascotState, Palette } from '../engine/types';
-import { createRng } from '../engine/prng';
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Shadow
@@ -49,7 +48,7 @@ export function renderArmor(
   opts: RenderArmorOptions,
 ): void {
   const { size, palette, seed } = opts;
-  const rng = createRng(seed + ':armor');
+  void seed; // reserved for future procedural armor variation
 
   ctx.save();
   ctx.imageSmoothingEnabled = false;
@@ -115,11 +114,11 @@ export function renderParticles(
   opts: RenderParticlesOptions,
 ): void {
   const { size, state, palette, frame, seed } = opts;
+  void seed; // reserved for future particle variation
 
   // Only render particles on processing and success states (per UI §19.7)
   if (state !== 'processing' && state !== 'success') return;
 
-  const rng = createRng(seed + ':particles');
   const particleCount = state === 'success' ? 5 : 8;
 
   ctx.save();

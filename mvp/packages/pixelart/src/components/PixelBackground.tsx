@@ -133,6 +133,7 @@ export const PixelBackground = memo(function PixelBackground({
   }
 
   function renderMatrixRain(ctx: CanvasRenderingContext2D, frame: number): void {
+    void frame; // matrix rain uses its own internal state, frame not needed
     // Fade previous frame
     ctx.fillStyle = 'rgba(7, 10, 18, 0.1)';
     ctx.fillRect(0, 0, width, height);

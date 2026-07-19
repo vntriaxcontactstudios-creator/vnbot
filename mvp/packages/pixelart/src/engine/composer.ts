@@ -124,7 +124,7 @@ function renderLayer(
       break;
 
     case 'accessories':
-      renderAccessories(ctx, { agent, palette, frame, seed: seed + ':accessory' });
+      renderAccessories(ctx, { agent, palette, frame, size, seed: seed + ':accessory' });
       break;
 
     case 'particles':

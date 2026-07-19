@@ -1,0 +1,137 @@
+/**
+ * VNBOT Web — API client.
+ *
+ * Typed fetch client for the VNBOT backend.
+ */
+
+interface ApiConfig {
+  baseUrl: string;
+}
+
+const DEFAULT_CONFIG: ApiConfig = {
+  baseUrl: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000/api/v1',
+};
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Types (mirror services/api/app/schemas/chat.py)
+// ──────────────────────────────────────────────────────────────────────────────
+
+export interface ProposalReminder {
+  title: string;
+  due_at: string;
+  timezone: string;
+  recurrence_frequency: string;
+  recurrence_interval: number;
+  priority: string;
+  channel: string;
+  confidence: number;
+}
+
+export interface ProposalMemory {
+  content: string;
+  memory_type: string;
+  tags: string[];
+  confidence: number;
+}
+
+export interface ChatResponse {
+  operation_id: string;
+  intent: string;
+  parsed: boolean;
+  confidence: number;
+  proposal_reminder: ProposalReminder | null;
+  proposal_memory: ProposalMemory | null;
+  requires_confirmation: boolean;
+  expires_at: string | null;
+  notes: string[];
+  error: string | null;
+  suggestion: string | null;
+}
+
+export interface ConfirmResponse {
+  operation_id: string;
+  status: string;
+  entity_id: string | null;
+  entity_type: string | null;
+  next_due_at: string | null;
+  error: string | null;
+}
+
+export interface HealthResponse {
+  status: 'ok' | 'degraded' | 'down';
+  version: string;
+  timestamp: string;
+  checks: Record<string, string>;
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Client
+// ──────────────────────────────────────────────────────────────────────────────
+
+class ApiClient {
+  private config: ApiConfig;
+
+  constructor(config: Partial<ApiConfig> = {}) {
+    this.config = { ...DEFAULT_CONFIG, ...config };
+  }
+
+  private async request<T>(path: string, options: RequestInit = {}): Promise<T> {
+    const url = `${this.config.baseUrl}${path}`;
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'X-Workspace-Id': 'default',
+      ...(options.headers as Record<string, string>),
+    };
+
+    const response = await fetch(url, { ...options, headers });
+
+    if (!response.ok) {
+      const errorBody = await response.json().catch(() => ({ detail: response.statusText }));
+      throw new Error(errorBody.detail ?? `API error ${response.status}`);
+    }
+
+    return response.json() as Promise<T>;
+  }
+
+  async chat(text: string, timezone = 'America/Caracas'): Promise<ChatResponse> {
+    return this.request<ChatResponse>('/chat', {
+      method: 'POST',
+      body: JSON.stringify({ text, timezone }),
+    });
+  }
+
+  async confirmOperation(
+    operationId: string,
+    edits?: Record<string, unknown>,
+  ): Promise<ConfirmResponse> {
+    return this.request<ConfirmResponse>(`/chat/operations/${operationId}/confirm`, {
+      method: 'POST',
+      body: JSON.stringify({ edits }),
+    });
+  }
+
+  async getHealth(): Promise<HealthResponse> {
+    const url = this.config.baseUrl.replace('/api/v1', '') + '/healthz';
+    const response = await fetch(url);
+    return response.json();
+  }
+
+  async getDependencies(): Promise<HealthResponse> {
+    const url = this.config.baseUrl.replace('/api/v1', '') + '/dependencies';
+    const response = await fetch(url);
+    return response.json();
+  }
+
+  async triggerScheduler(): Promise<{
+    triggered: boolean;
+    generated_occurrences: number;
+    delivered_notifications: number;
+    timestamp: string;
+  }> {
+    const url = this.config.baseUrl.replace('/api/v1', '') + '/scheduler/trigger';
+    const response = await fetch(url, { method: 'POST' });
+    return response.json();
+  }
+}
+
+export const apiClient = new ApiClient();

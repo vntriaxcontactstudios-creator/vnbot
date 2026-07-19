@@ -11,7 +11,7 @@
  */
 
 import type { Palette } from '../engine/types';
-import { createRng, pick } from '../engine/prng';
+import { createRng } from '../engine/prng';
 import { makeFractalNoise2D } from '../engine/noise';
 
 interface RenderBodyOptions {
@@ -35,11 +35,12 @@ export function renderGolemBody(
   const rng = createRng(seed);
   const noise = makeFractalNoise2D(createRng(seed + ':noise')(), 4);
 
-  // Coarse grid for silhouette (size/8 cells per side, symmetric)
-  // For 128px: 16 cells. For 256px: 32 cells.
-  const gridSize = Math.max(8, Math.floor(size / 8));
+  // Fixed 16x16 grid for the body silhouette — independent of sprite size.
+  // This keeps the golem proportions consistent across 16/32/64/128/256.
+  // The grid is then scaled to fit the sprite size.
+  const gridSize = 16;
   const cellSize = size / gridSize;
-  const halfGrid = Math.floor(gridSize / 2);
+  const halfGrid = Math.floor(gridSize / 2); // 8
 
   // Define body silhouette as a grid mask.
   // 1 = body, 0 = empty. We render only left half, then mirror.

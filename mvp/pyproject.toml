@@ -5,6 +5,9 @@ description = "VNBOT — Memoria personal open source, recordatorios confiables 
 license = "MIT"
 requires-python = ">=3.12"
 readme = "README.md"
+dependencies = [
+    "opentelemetry-exporter-otlp-proto-http>=1.44.0",
+]
 
 [tool.uv.workspace]
 members = [

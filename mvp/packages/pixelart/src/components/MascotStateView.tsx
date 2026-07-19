@@ -14,11 +14,10 @@
 
 import { forwardRef, useEffect, useRef, memo } from 'react';
 import { Atropos } from 'atropos/react';
-import type { AtroposProps } from 'atropos/react';
 import { composeSprite } from '../engine/composer';
 import { getAgent } from '../templates/agents';
 import { useFrameCycleWithRef } from '../animations/frameCycle';
-import { FRAME_SPECS, type MascotStateViewProps, type SpriteSize } from '../engine/types';
+import type { MascotStateViewProps, SpriteSize } from '../engine/types';
 
 const DEFAULT_SIZE: SpriteSize = 128;
 
@@ -92,17 +91,15 @@ export const MascotStateView = memo(
     }
 
     // Interactive version with Atropos parallax 3D
-    const atroposProps: AtroposProps = {
-      activeOffset: 40,
-      shadow: false,
-      highlight: false,
-      rotateXMax: 8,
-      rotateYMax: 8,
-      style: { width: size, height: size },
-    };
-
     return (
-      <Atropos {...atroposProps}>
+      <Atropos
+        activeOffset={40}
+        shadow={false}
+        highlight={false}
+        rotateXMax={8}
+        rotateYMax={8}
+        style={{ width: size, height: size }}
+      >
         {/* Layer 0: sprite canvas (base layer at translateZ(0)) */}
         <div
           ref={(el) => {

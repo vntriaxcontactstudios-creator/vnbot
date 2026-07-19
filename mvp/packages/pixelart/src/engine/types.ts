@@ -38,7 +38,7 @@ export type Emote =
   | 'offline'
   | 'sleepy';
 
-export type SpriteSize = 16 | 32 | 64 | 128 | 256;
+export type SpriteSize = 16 | 32 | 48 | 64 | 96 | 128 | 256;
 
 /**
  * 8 render layers in strict order (per VNBOT_SPRITESHEET_REFERENCE §4.1)

@@ -1,0 +1,1 @@
+"""VNBOT Domain tests package."""

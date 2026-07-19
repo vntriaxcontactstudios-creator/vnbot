@@ -1,0 +1,135 @@
+/* VNBOT global tokens — canonical palette from docs/05-DISENO-UI-UX §4.1 */
+@import 'tailwindcss';
+
+@theme {
+  /* Backgrounds */
+  --color-vnbot-void: #070a12;
+  --color-vnbot-bg-0: #0a1020;
+  --color-vnbot-bg-1: #101b2e;
+
+  /* Panels */
+  --color-vnbot-panel-0: #12243a;
+  --color-vnbot-panel-1: #173653;
+  --color-vnbot-panel-2: #1c4664;
+
+  /* Lines */
+  --color-vnbot-line: #2a6f8e;
+  --color-vnbot-line-soft: #1d465e;
+
+  /* Text */
+  --color-vnbot-text: #ecf6ff;
+  --color-vnbot-text-muted: #91a9be;
+
+  /* Semantic accents */
+  --color-vnbot-cyan: #20dce8;
+  --color-vnbot-blue: #4d9dff;
+  --color-vnbot-magenta: #d94be3;
+  --color-vnbot-violet: #8a6cff;
+  --color-vnbot-amber: #ffc83d;
+  --color-vnbot-green: #5bdf82;
+  --color-vnbot-red: #ff5c6d;
+  --color-vnbot-white: #ffffff;
+
+  /* Fonts */
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: var(--color-vnbot-bg-0);
+  color: var(--color-vnbot-text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Pixel art rendering: nearest-neighbor mandatory (per UI §19.6) */
+canvas,
+img.pixelated {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Accessibility: prefers-reduced-motion (per UI §21) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Scrollbar styling (cyberpunk HUD) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-vnbot-bg-1);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-vnbot-line-soft);
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-vnbot-line);
+}
+
+/* Focus ring for keyboard navigation (WCAG 2.2 AA per UI §21) */
+:focus-visible {
+  outline: 2px solid var(--color-vnbot-cyan);
+  outline-offset: 2px;
+  border-radius: 0;
+}
+
+/* Selection */
+::selection {
+  background: var(--color-vnbot-cyan);
+  color: var(--color-vnbot-bg-0);
+}
+
+/* Touch targets minimum 44x44 (per UI §21 accessibility) */
+button,
+[role='button'],
+a,
+input,
+select,
+textarea {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Sr-only utility (already in Tailwind, kept for safety) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

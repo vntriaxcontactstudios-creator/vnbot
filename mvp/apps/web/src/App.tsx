@@ -12,6 +12,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Sidebar } from '@/components/shell/Sidebar';
 import { TodayPanel } from '@/routes/today/TodayPanel';
+import { MemoryPanel } from '@/routes/memory/MemoryPanel';
 import { useUIStore } from '@/lib/store/ui';
 
 const queryClient = new QueryClient({
@@ -48,6 +49,7 @@ function App() {
               <Route path="/" element={<Navigate to="/today" replace />} />
               <Route path="/today" element={<TodayPanel />} />
               <Route path="/chat" element={<TodayPanel />} />
+              <Route path="/memory" element={<MemoryPanel />} />
               <Route
                 path="*"
                 element={

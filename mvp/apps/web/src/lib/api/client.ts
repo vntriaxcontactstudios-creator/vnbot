@@ -65,6 +65,53 @@ export interface HealthResponse {
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
+// Memory types (mirror services/api/app/schemas/memories.py)
+// ──────────────────────────────────────────────────────────────────────────────
+
+export interface MemoryNode {
+  id: string;
+  workspace_id: string;
+  type: string;
+  label: string;
+  content: string;
+  tags: string[];
+  sensitivity: string;
+  status: string;
+  provenance: string;
+  authority: string;
+  confidence: number;
+  valid_from: string | null;
+  valid_until: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MemoryListResponse {
+  items: MemoryNode[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+export interface MemorySearchResult {
+  id: string;
+  label: string;
+  content_snippet: string;
+  type: string;
+  sensitivity: string;
+  rank: number;
+  created_at: string;
+}
+
+export interface MemorySearchResponse {
+  items: MemorySearchResult[];
+  total: number;
+  query: string;
+  limit: number;
+  offset: number;
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Client
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -131,6 +178,58 @@ class ApiClient {
     const url = this.config.baseUrl.replace('/api/v1', '') + '/scheduler/trigger';
     const response = await fetch(url, { method: 'POST' });
     return response.json();
+  }
+
+  // ─── Memories ───
+
+  async listMemories(params?: {
+    limit?: number;
+    offset?: number;
+    type?: string;
+  }): Promise<MemoryListResponse> {
+    const searchParams = new URLSearchParams();
+    if (params?.limit) searchParams.set('limit', String(params.limit));
+    if (params?.offset) searchParams.set('offset', String(params.offset));
+    if (params?.type) searchParams.set('type', params.type);
+    const qs = searchParams.toString();
+    return this.request<MemoryListResponse>(`/memories${qs ? '?' + qs : ''}`);
+  }
+
+  async getMemory(id: string): Promise<MemoryNode> {
+    return this.request<MemoryNode>(`/memories/${id}`);
+  }
+
+  async createMemory(data: {
+    label: string;
+    content: string;
+    type?: string;
+    sensitivity?: string;
+  }): Promise<MemoryNode> {
+    return this.request<MemoryNode>('/memories', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateMemory(
+    id: string,
+    data: { label?: string; content?: string; sensitivity?: string },
+  ): Promise<MemoryNode> {
+    return this.request<MemoryNode>(`/memories/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteMemory(id: string): Promise<void> {
+    await this.request<void>(`/memories/${id}`, { method: 'DELETE' });
+  }
+
+  async searchMemories(query: string, limit = 20): Promise<MemorySearchResponse> {
+    return this.request<MemorySearchResponse>('/memories/search', {
+      method: 'POST',
+      body: JSON.stringify({ query, limit }),
+    });
   }
 }
 

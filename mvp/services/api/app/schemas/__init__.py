@@ -10,6 +10,7 @@ from .chat import (
     ProposalMemory,
     ProposalReminder,
 )
+from .exports import ExportRequest, ExportResponse, ImportRequest, ImportResponse
 from .memories import (
     MemoryListResponse,
     MemoryNodeCreate,
@@ -38,4 +39,9 @@ __all__ = [
     "MemorySearchRequest",
     "MemorySearchResponse",
     "MemorySearchResult",
+    # Export/Import
+    "ExportRequest",
+    "ExportResponse",
+    "ImportRequest",
+    "ImportResponse",
 ]

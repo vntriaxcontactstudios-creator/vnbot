@@ -3,6 +3,7 @@
 /healthz — liveness probe (always returns 200 if process is up)
 /readyz — readiness probe (checks DB connectivity)
 /dependencies — lists external dependencies and their status
+/scheduler/trigger — manually trigger scheduler ticks (dev only)
 """
 
 from __future__ import annotations
@@ -15,6 +16,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...config import get_settings
 from ...infrastructure.db.session import get_db
+from ...infrastructure.scheduler import scheduler_service
+from ...infrastructure.notifications import list_channels
 from ...schemas.chat import HealthResponse  # noqa: F401 — re-using for now
 
 router = APIRouter(tags=["health"])
@@ -64,8 +67,10 @@ async def dependencies() -> HealthResponse:
         "llm_provider": settings.llm_provider,
         "llm_model": settings.llm_zai_model if settings.llm_provider == "zai" else "n/a",
         "notification_channel": settings.notification_channel_default,
+        "notification_channels_registered": ",".join(list_channels()),
         "storage_backend": settings.storage_backend,
         "scheduler_timezone": settings.scheduler_timezone,
+        "scheduler_started": str(scheduler_service._started),
     }
     return HealthResponse(
         status="ok",
@@ -73,3 +78,20 @@ async def dependencies() -> HealthResponse:
         timestamp=datetime.now(timezone.utc),
         checks=checks,
     )
+
+
+@router.post("/scheduler/trigger")
+async def trigger_scheduler() -> dict:
+    """Manually trigger scheduler ticks. Dev/test only.
+
+    Runs both ticks immediately:
+    - tick_generate_occurrences: scans active reminders, generates occurrences
+    - tick_deliver_pending: delivers pending occurrences past their due_at
+    """
+    result = await scheduler_service.trigger_now()
+    return {
+        "triggered": True,
+        "generated_occurrences": result["generated"],
+        "delivered_notifications": result["delivered"],
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }

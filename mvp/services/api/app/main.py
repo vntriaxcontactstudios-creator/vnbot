@@ -17,6 +17,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .api.v1 import api_router
 from .config import get_settings
 from .infrastructure.db.session import init_sqlite_pragmas
+from .infrastructure.scheduler import scheduler_service
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Logging (structured JSON, never log plaintext/secrets)
@@ -47,6 +48,9 @@ async def lifespan(app: FastAPI):
     await init_sqlite_pragmas()
     logger.info("SQLite pragmas applied (WAL mode, FK on, 64MB cache)")
 
+    # Start the scheduler (APScheduler with AsyncIO)
+    await scheduler_service.start()
+
     # OpenTelemetry setup (ADR-0001) — minimal for 0.1, full in 0.2+
     if settings.otel_exporter_otlp_endpoint:
         try:
@@ -75,6 +79,8 @@ async def lifespan(app: FastAPI):
 
     yield
 
+    # Shutdown scheduler
+    await scheduler_service.stop()
     logger.info("VNBOT API shutting down")
 
 

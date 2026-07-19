@@ -122,7 +122,7 @@ class ApiClient {
     this.config = { ...DEFAULT_CONFIG, ...config };
   }
 
-  private async request<T>(path: string, options: RequestInit = {}): Promise<T> {
+  async request<T>(path: string, options: RequestInit = {}): Promise<T> {
     const url = `${this.config.baseUrl}${path}`;
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',

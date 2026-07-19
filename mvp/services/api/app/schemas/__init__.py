@@ -1,5 +1,12 @@
 """VNBOT API — Schemas package."""
 
+from .audit import (
+    ActivitySummaryResponse,
+    ExecutionLogResponse,
+    OperationListResponse,
+    OperationResponse,
+    OperationStatusFilter,
+)
 from .chat import (
     ChatRequest,
     ChatResponse,
@@ -44,4 +51,10 @@ __all__ = [
     "ExportResponse",
     "ImportRequest",
     "ImportResponse",
+    # Audit
+    "ActivitySummaryResponse",
+    "ExecutionLogResponse",
+    "OperationListResponse",
+    "OperationResponse",
+    "OperationStatusFilter",
 ]

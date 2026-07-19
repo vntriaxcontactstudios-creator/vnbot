@@ -2,7 +2,8 @@ name: Deploy Demo to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
       - 'mvp/apps/web/**'
       - 'mvp/packages/**'
@@ -15,7 +16,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: 'pages'
+  group: pages
   cancel-in-progress: true
 
 jobs:
@@ -38,14 +39,14 @@ jobs:
         working-directory: mvp
         run: pnpm install --no-frozen-lockfile
 
-      - name: Build demo (VITE_DEMO_MODE=true)
+      - name: Build demo
         working-directory: mvp
         env:
           VITE_DEMO_MODE: 'true'
           VITE_API_BASE_URL: ''
         run: pnpm --filter @vnbot/web build
 
-      - name: Add .nojekyll (bypass Jekyll processing)
+      - name: Add .nojekyll
         run: touch mvp/apps/web/dist/.nojekyll
 
       - name: Setup Pages

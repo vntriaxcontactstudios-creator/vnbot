@@ -13,7 +13,7 @@ from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, Field
-from sqlalchemy import select, func
+from sqlalchemy import Integer, select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...dependencies import get_workspace_id
@@ -96,6 +96,25 @@ class LearningSummaryResponse(BaseModel):
     total_tokens_used: int
     last_24h_count: int
     last_7d_count: int
+
+
+class ProviderUsageEntry(BaseModel):
+    provider: str
+    total_calls: int
+    successful_calls: int
+    failed_calls: int
+    total_tokens: int
+    avg_tokens_per_call: float
+    last_used: str | None = None
+
+
+class CostTrackingResponse(BaseModel):
+    providers: list[ProviderUsageEntry]
+    total_tokens: int
+    total_calls: int
+    estimated_cost_usd: float  # rough estimate based on token prices
+    period_start: str
+    period_end: str
 
 
 class ManualReviewRequest(BaseModel):
@@ -322,4 +341,93 @@ async def trigger_review(
         nothing_to_learn=result.nothing_to_learn,
         error=result.error,
         llm_tokens_used=result.llm_tokens_used,
+    )
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Cost tracking (ADR-0012)
+# ──────────────────────────────────────────────────────────────────────────────
+
+
+# Rough token prices (USD per 1M tokens, as of 2026-07). For estimation only.
+PROVIDER_PRICE_PER_1M_TOKENS: dict[str, float] = {
+    "zai": 0.0,  # free tier (keyless)
+    "openai": 0.15,  # gpt-4o-mini blended
+    "anthropic": 0.25,  # claude-3-5-haiku blended
+    "gemini": 0.075,  # gemini-1.5-flash
+    "ollama": 0.0,  # local
+}
+
+
+@router.get("/learning/costs", response_model=CostTrackingResponse)
+async def cost_tracking(
+    days: int = Query(default=30, ge=1, le=365),
+    db: AsyncSession = Depends(get_db),
+    workspace_id: str = Depends(get_workspace_id),
+) -> CostTrackingResponse:
+    """Per-provider cost tracking for the last N days (default 30).
+
+    Returns token usage broken down by provider, with a rough cost estimate.
+    """
+    from datetime import timedelta
+
+    ws_id = await _ensure_default_workspace(db, workspace_id)
+    now = datetime.now(timezone.utc)
+    period_start = now - timedelta(days=days)
+
+    # Aggregate by provider (or 'unknown' for legacy entries)
+    stmt = (
+        select(
+            func.coalesce(LearningLog.llm_provider, "unknown").label("provider"),
+            func.count(LearningLog.id).label("total_calls"),
+            func.sum(LearningLog.success.cast(Integer)).label("successful_calls"),
+            func.coalesce(func.sum(LearningLog.llm_tokens_used), 0).label("total_tokens"),
+            func.max(LearningLog.created_at).label("last_used"),
+        )
+        .where(
+            LearningLog.workspace_id == ws_id,
+            LearningLog.created_at >= period_start,
+        )
+        .group_by("provider")
+        .order_by(func.coalesce(func.sum(LearningLog.llm_tokens_used), 0).desc())
+    )
+    result = await db.execute(stmt)
+    rows = result.all()
+
+    providers: list[ProviderUsageEntry] = []
+    total_tokens = 0
+    total_calls = 0
+    estimated_cost = 0.0
+
+    for row in rows:
+        provider_name = row.provider
+        tokens = int(row.total_tokens or 0)
+        calls = int(row.total_calls or 0)
+        successful = int(row.successful_calls or 0)
+
+        price = PROVIDER_PRICE_PER_1M_TOKENS.get(provider_name, 0.0)
+        cost = (tokens / 1_000_000) * price
+
+        providers.append(
+            ProviderUsageEntry(
+                provider=provider_name,
+                total_calls=calls,
+                successful_calls=successful,
+                failed_calls=calls - successful,
+                total_tokens=tokens,
+                avg_tokens_per_call=round(tokens / calls, 1) if calls > 0 else 0.0,
+                last_used=row.last_used.isoformat() if row.last_used else None,
+            )
+        )
+        total_tokens += tokens
+        total_calls += calls
+        estimated_cost += cost
+
+    return CostTrackingResponse(
+        providers=providers,
+        total_tokens=total_tokens,
+        total_calls=total_calls,
+        estimated_cost_usd=round(estimated_cost, 4),
+        period_start=period_start.isoformat(),
+        period_end=now.isoformat(),
     )

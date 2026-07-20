@@ -263,6 +263,7 @@ export interface LearningLogEntry {
   outcome_summary: string;
   memory_ids: string[];
   skill_id: string | null;
+  llm_provider: string | null;
   llm_model: string | null;
   llm_tokens_used: number;
   success: boolean;
@@ -312,6 +313,29 @@ export interface CurationResponse {
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
+// Cost tracking types (ADR-0012)
+// ──────────────────────────────────────────────────────────────────────────────
+
+export interface ProviderUsageEntry {
+  provider: string;
+  total_calls: number;
+  successful_calls: number;
+  failed_calls: number;
+  total_tokens: number;
+  avg_tokens_per_call: number;
+  last_used: string | null;
+}
+
+export interface CostTrackingResponse {
+  providers: ProviderUsageEntry[];
+  total_tokens: number;
+  total_calls: number;
+  estimated_cost_usd: number;
+  period_start: string;
+  period_end: string;
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Context types (Fase 0.8)
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -328,6 +352,41 @@ export interface MaterializeResponse {
   memory_md: string;
   user_md_bytes: number;
   memory_md_bytes: number;
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// LLM providers types (ADR-0012)
+// ──────────────────────────────────────────────────────────────────────────────
+
+export interface ProviderInfo {
+  name: string;
+  model: string;
+  base_url: string;
+  api_shape: 'openai' | 'anthropic';
+  enabled: boolean;
+  has_api_key: boolean;
+  is_default: boolean;
+}
+
+export interface ProvidersListResponse {
+  items: ProviderInfo[];
+  total: number;
+  enabled_count: number;
+}
+
+export interface TestProviderRequest {
+  provider: string;
+  prompt?: string;
+}
+
+export interface TestProviderResponse {
+  provider: string;
+  model: string;
+  success: boolean;
+  content: string | null;
+  tokens_used: number;
+  latency_ms: number;
+  error: string | null;
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -738,6 +797,7 @@ class ApiClient {
             outcome_summary: 'saved 1 memories',
             memory_ids: ['mock-mem-1'],
             skill_id: null,
+            llm_provider: 'zai',
             llm_model: 'glm-4.6',
             llm_tokens_used: 412,
             success: true,
@@ -804,6 +864,39 @@ class ApiClient {
     });
   }
 
+  async getCostTracking(days = 30): Promise<CostTrackingResponse> {
+    if (this.demoMode) {
+      return {
+        providers: [
+          {
+            provider: 'zai',
+            total_calls: 18,
+            successful_calls: 17,
+            failed_calls: 1,
+            total_tokens: 8420,
+            avg_tokens_per_call: 467.8,
+            last_used: new Date(Date.now() - 3600000).toISOString(),
+          },
+          {
+            provider: 'openai',
+            total_calls: 4,
+            successful_calls: 4,
+            failed_calls: 0,
+            total_tokens: 2150,
+            avg_tokens_per_call: 537.5,
+            last_used: new Date(Date.now() - 86400000).toISOString(),
+          },
+        ],
+        total_tokens: 10570,
+        total_calls: 22,
+        estimated_cost_usd: 0.0003,
+        period_start: new Date(Date.now() - 30 * 86400000).toISOString(),
+        period_end: new Date().toISOString(),
+      };
+    }
+    return this.request<CostTrackingResponse>(`/learning/costs?days=${days}`);
+  }
+
   // ─── Context (Fase 0.8) ───
 
   async getContext(): Promise<ContextResponse> {
@@ -829,6 +922,85 @@ class ApiClient {
       };
     }
     return this.request<MaterializeResponse>('/context/materialize', { method: 'POST' });
+  }
+
+  // ─── LLM providers (ADR-0012) ───
+
+  async listLLMProviders(): Promise<ProvidersListResponse> {
+    if (this.demoMode) {
+      return {
+        items: [
+          {
+            name: 'zai',
+            model: 'glm-4.6',
+            base_url: 'https://api.z.ai/v1',
+            api_shape: 'openai',
+            enabled: true,
+            has_api_key: true,
+            is_default: true,
+          },
+          {
+            name: 'openai',
+            model: 'gpt-4o-mini',
+            base_url: 'https://api.openai.com/v1',
+            api_shape: 'openai',
+            enabled: false,
+            has_api_key: false,
+            is_default: false,
+          },
+          {
+            name: 'anthropic',
+            model: 'claude-3-5-haiku-20241022',
+            base_url: 'https://api.anthropic.com',
+            api_shape: 'anthropic',
+            enabled: false,
+            has_api_key: false,
+            is_default: false,
+          },
+          {
+            name: 'gemini',
+            model: 'gemini-1.5-flash',
+            base_url: 'https://generativelanguage.googleapis.com/v1beta/openai',
+            api_shape: 'openai',
+            enabled: false,
+            has_api_key: false,
+            is_default: false,
+          },
+          {
+            name: 'ollama',
+            model: 'llama3.2',
+            base_url: 'http://localhost:11434/v1',
+            api_shape: 'openai',
+            enabled: true,
+            has_api_key: true,
+            is_default: false,
+          },
+        ],
+        total: 5,
+        enabled_count: 2,
+      };
+    }
+    return this.request<ProvidersListResponse>('/llm/providers');
+  }
+
+  async testLLMProvider(provider: string, prompt = 'Hello, respond with just OK.'): Promise<TestProviderResponse> {
+    if (this.demoMode) {
+      // Simulate success for zai and ollama, fail for others (no API key in demo)
+      const enabled = ['zai', 'ollama'].includes(provider);
+      return {
+        provider,
+        model: provider === 'zai' ? 'glm-4.6' : provider === 'ollama' ? 'llama3.2' : 'unknown',
+        success: enabled,
+        content: enabled ? 'OK' : null,
+        tokens_used: enabled ? 5 : 0,
+        latency_ms: enabled ? Math.floor(Math.random() * 200) + 100 : 0,
+        error: enabled ? null : 'No API key configured',
+      };
+    }
+    return this.request<TestProviderResponse>('/llm/test', {
+      method: 'POST',
+      body: JSON.stringify({ provider, prompt }),
+    });
   }
 }
 

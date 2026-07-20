@@ -339,6 +339,7 @@ class LearningLog(Base):
     memory_ids_json: Mapped[dict] = mapped_column(JSON, default=list)
     skill_id: Mapped[str | None] = mapped_column(ForeignKey("skills.id"), nullable=True)
     # LLM call metadata
+    llm_provider: Mapped[str | None] = mapped_column(String(20), nullable=True, index=True)
     llm_model: Mapped[str | None] = mapped_column(String(100), nullable=True)
     llm_tokens_used: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     success: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True, index=True)

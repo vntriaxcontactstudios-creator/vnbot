@@ -33,9 +33,11 @@ const queryClient = new QueryClient({
   },
 });
 
-// For GitHub Pages, BrowserRouter needs a basename matching the repo subpath.
-// When VITE_DEMO_MODE=true, base is '/vnbot/' so basename is '/vnbot'.
-const ROUTER_BASENAME = import.meta.env.VITE_DEMO_MODE === 'true' ? '/vnbot' : '/';
+// Router basename: strip trailing slash from base path for React Router.
+// VITE_BASE_PATH takes priority; falls back to '/' for root domains.
+// For GitHub Pages (repo subpath '/vnbot/'), set VITE_BASE_PATH='/vnbot/'.
+const RAW_BASE = import.meta.env.VITE_BASE_PATH ?? '/';
+const ROUTER_BASENAME = RAW_BASE !== '/' ? RAW_BASE.replace(/\/$/, '') : '/';
 
 function App() {
   const { setOnline } = useUIStore();

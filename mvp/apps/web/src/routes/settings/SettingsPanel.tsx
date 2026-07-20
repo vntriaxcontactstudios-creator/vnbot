@@ -1,19 +1,67 @@
 /**
  * VNBOT Web — Settings panel.
  *
- * Single-user personal settings: theme, timezone, locale, LLM config.
+ * Single-user personal settings: theme, timezone, locale, LLM config, providers.
  * Per docs/06 §3 (/settings route).
+ * Per ADR-0012: shows all LLM providers with status + test buttons.
  */
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { TopBar } from '@/components/shell/TopBar';
 import { useUIStore } from '@/lib/store/ui';
 import { apiClient } from '@/lib/api/client';
+import type { ProviderInfo, TestProviderResponse } from '@/lib/api/client';
+
+const PROVIDER_LABELS: Record<string, { label: string; docs: string; envVar: string }> = {
+  zai: { label: 'Z.AI (glm-4.6)', docs: 'https://z.ai', envVar: 'LLM_ZAI_API_KEY (optional)' },
+  openai: { label: 'OpenAI (gpt-4o-mini)', docs: 'https://platform.openai.com/api-keys', envVar: 'OPENAI_API_KEY' },
+  anthropic: { label: 'Anthropic (claude-3-5-haiku)', docs: 'https://console.anthropic.com', envVar: 'ANTHROPIC_API_KEY' },
+  gemini: { label: 'Google Gemini', docs: 'https://aistudio.google.com/app/apikey', envVar: 'GEMINI_API_KEY' },
+  ollama: { label: 'Ollama (local)', docs: 'https://ollama.com', envVar: 'OLLAMA_HOST' },
+};
 
 export function SettingsPanel() {
   const { theme, setTheme, timezone, setTimezone, locale, activeAgent, setActiveAgent } = useUIStore();
   const [savedMessage, setSavedMessage] = useState(false);
-  const isDemo = apiClient.isDemoMode();
+  const [providers, setProviders] = useState<ProviderInfo[]>([]);
+  const [testing, setTesting] = useState<string | null>(null);
+  const [testResults, setTestResults] = useState<Record<string, TestProviderResponse>>({});
+
+  const loadProviders = useCallback(async () => {
+    try {
+      const resp = await apiClient.listLLMProviders();
+      setProviders(resp.items);
+    } catch {
+      /* silent */
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadProviders();
+  }, [loadProviders]);
+
+  const handleTest = useCallback(async (providerName: string) => {
+    setTesting(providerName);
+    try {
+      const result = await apiClient.testLLMProvider(providerName);
+      setTestResults((prev) => ({ ...prev, [providerName]: result }));
+    } catch (e) {
+      setTestResults((prev) => ({
+        ...prev,
+        [providerName]: {
+          provider: providerName,
+          model: '',
+          success: false,
+          content: null,
+          tokens_used: 0,
+          latency_ms: 0,
+          error: (e as Error).message,
+        },
+      }));
+    } finally {
+      setTesting(null);
+    }
+  }, []);
 
   const handleSave = () => {
     setSavedMessage(true);
@@ -88,27 +136,124 @@ export function SettingsPanel() {
             </SettingsRow>
           </SettingsSection>
 
-          {/* LLM */}
-          <SettingsSection title="Modelo de IA" icon="✦">
-            {isDemo ? (
-              <div className="p-3 border border-vnbot-amber/40 bg-vnbot-amber/5 text-vnbot-amber font-mono text-xs">
-                ⚠ Demo mode — sin LLM configurado. Instala VNBOT localmente para usar IA.
+          {/* LLM Providers — ADR-0012 */}
+          <SettingsSection title="Modelos de IA (LLM)" icon="✦">
+            <div className="p-3 border border-vnbot-cyan/30 bg-vnbot-cyan/5 text-vnbot-cyan font-mono text-[10px]">
+              ℹ Multi-LLM con fallback en cadena. Si el primer provider falla, prueba el siguiente automáticamente.
+              Orden: zai → openai → anthropic → gemini → ollama → heurísticas.
+            </div>
+
+            {providers.length === 0 ? (
+              <div className="p-3 text-center font-mono text-xs text-vnbot-text-muted animate-pulse">
+                Cargando providers...
               </div>
             ) : (
-              <>
-                <SettingsRow label="Proveedor" description="LLM para interpretar lenguaje natural">
-                  <select
-                    className="bg-vnbot-bg-1 border border-vnbot-line-soft px-3 py-2 text-vnbot-text font-body text-sm focus:border-vnbot-cyan focus:outline-none"
-                    disabled
-                  >
-                    <option>Z.AI (glm-4.6) — sin API key</option>
-                  </select>
-                </SettingsRow>
-                <div className="p-3 border border-vnbot-green/30 bg-vnbot-green/5 text-vnbot-green font-mono text-xs">
-                  ✓ Sin API key requerida. Fallback heurístico activo cuando LLM no disponible.
-                </div>
-              </>
+              <div className="space-y-2">
+                {providers.map((provider) => {
+                  const labels = PROVIDER_LABELS[provider.name] || {
+                    label: provider.name,
+                    docs: '',
+                    envVar: '',
+                  };
+                  const testResult = testResults[provider.name];
+                  const isTesting = testing === provider.name;
+
+                  return (
+                    <div
+                      key={provider.name}
+                      className={`p-3 border ${
+                        provider.enabled
+                          ? 'border-vnbot-green/40 bg-vnbot-green/5'
+                          : 'border-vnbot-line-soft bg-vnbot-bg-1'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-3 mb-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="font-body text-sm text-vnbot-text">{labels.label}</span>
+                            {provider.is_default && (
+                              <span className="font-mono text-[9px] px-1 bg-vnbot-cyan text-vnbot-bg-0 uppercase">
+                                default
+                              </span>
+                            )}
+                          </div>
+                          <div className="font-mono text-[10px] text-vnbot-text-muted mt-0.5">
+                            {provider.model} · {provider.api_shape} · {provider.base_url}
+                          </div>
+                        </div>
+                        <span
+                          className={`font-mono text-[10px] uppercase px-2 py-0.5 border ${
+                            provider.enabled
+                              ? 'border-vnbot-green text-vnbot-green'
+                              : 'border-vnbot-text-muted text-vnbot-text-muted'
+                          }`}
+                        >
+                          {provider.enabled ? '✓ enabled' : '✗ disabled'}
+                        </span>
+                      </div>
+
+                      {!provider.has_api_key && provider.name !== 'zai' && provider.name !== 'ollama' && (
+                        <div className="font-mono text-[10px] text-vnbot-amber mb-2">
+                          ⚠ Sin API key. Configura <code className="text-vnbot-text">{labels.envVar}</code> en tu .env
+                          {labels.docs && (
+                            <>
+                              {' '}— obtén una en{' '}
+                              <a
+                                href={labels.docs}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-vnbot-cyan underline"
+                              >
+                                {labels.docs}
+                              </a>
+                            </>
+                          )}
+                        </div>
+                      )}
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleTest(provider.name)}
+                          disabled={isTesting || !provider.enabled}
+                          className={`px-3 py-1 font-mono text-[10px] uppercase border ${
+                            provider.enabled
+                              ? 'border-vnbot-cyan text-vnbot-cyan hover:bg-vnbot-cyan hover:text-vnbot-bg-0'
+                              : 'border-vnbot-line-soft text-vnbot-text-muted cursor-not-allowed'
+                          } ${isTesting ? 'animate-pulse' : ''}`}
+                        >
+                          {isTesting ? '⏳ Probando...' : '⚡ Probar'}
+                        </button>
+
+                        {testResult && (
+                          <span
+                            className={`font-mono text-[10px] ${
+                              testResult.success ? 'text-vnbot-green' : 'text-vnbot-red'
+                            }`}
+                          >
+                            {testResult.success
+                              ? `✓ ${testResult.latency_ms}ms · ${testResult.tokens_used} tokens`
+                              : `✗ ${testResult.error || 'falló'}`}
+                          </span>
+                        )}
+                      </div>
+
+                      {testResult?.success && testResult.content && (
+                        <div className="mt-2 p-2 bg-vnbot-bg-0 border border-vnbot-line-soft font-mono text-[10px] text-vnbot-text-muted">
+                          → {testResult.content.slice(0, 200)}
+                          {testResult.content.length > 200 && '...'}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             )}
+
+            <div className="p-3 border border-vnbot-line-soft bg-vnbot-bg-1 font-mono text-[10px] text-vnbot-text-muted">
+              💡 Para habilitar un provider, añade su API key en <code>.env</code> y reinicia el backend.
+              El chain fallback usa los providers habilitados en orden de prioridad.
+            </div>
           </SettingsSection>
 
           {/* Privacy */}
@@ -140,12 +285,13 @@ export function SettingsPanel() {
           {/* About */}
           <SettingsSection title="Acerca de" icon="ⓘ">
             <div className="space-y-2 font-mono text-xs text-vnbot-text-muted">
-              <div>VNBOT v0.1.0 — MVP Phase 0.1</div>
+              <div>VNBOT v0.1.0 — MVP Phase 0.9 (Hermes + Multi-LLM)</div>
               <div>Licencia: MIT</div>
-              <div>Stack: React 19 + Vite + FastAPI + SQLite</div>
-              <div>Pixelart: Atropos.js + anime.js + procedural engine</div>
-              <div>Tests: 47 unit + 5 E2E passing</div>
-              <div>ADRs: 8 arquitectónicos</div>
+              <div>Stack: React 19 + Vite + FastAPI + SQLAlchemy 2 + APScheduler</div>
+              <div>LLM: Z.AI / OpenAI / Anthropic / Gemini / Ollama (chain fallback)</div>
+              <div>Hermes: Background review + Memory curation + Skill creation</div>
+              <div>PWA: Service Worker + manifest + offline shell</div>
+              <div>ADRs: 12 arquitectónicos</div>
             </div>
           </SettingsSection>
 

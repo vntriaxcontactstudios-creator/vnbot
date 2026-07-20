@@ -640,6 +640,7 @@ async def _log_learning_action(
     *,
     memory_ids: list[str] | None = None,
     skill_id: str | None = None,
+    llm_provider: str | None = None,
     llm_tokens: int = 0,
     success: bool = True,
     error_message: str | None = None,
@@ -647,6 +648,8 @@ async def _log_learning_action(
     """Write a LearningLog entry for audit. Never raises."""
     try:
         settings = get_settings()
+        # If provider not specified, infer from settings.llm_provider
+        provider_used = llm_provider or (settings.llm_provider if settings.llm_provider != "auto" else "zai")
         async with async_session_factory() as session:
             entry = LearningLog(
                 id=str(uuid4()),
@@ -658,7 +661,8 @@ async def _log_learning_action(
                 outcome_summary=outcome_summary,
                 memory_ids_json=memory_ids or [],
                 skill_id=skill_id,
-                llm_model=settings.llm_zai_model if settings.llm_provider == "zai" else None,
+                llm_provider=provider_used,
+                llm_model=settings.llm_zai_model if provider_used == "zai" else provider_used,
                 llm_tokens_used=llm_tokens,
                 success=success,
                 error_message=error_message,

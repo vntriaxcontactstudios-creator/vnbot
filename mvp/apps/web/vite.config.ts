@@ -5,10 +5,11 @@ import { fileURLToPath, URL } from 'node:url';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  // For GitHub Pages deployment, base must match the repo subpath.
-  // When building for GH Pages (VITE_DEMO_MODE=true), use '/vnbot/' as base.
-  // For local dev or self-hosted, use '/' (default).
-  base: process.env.VITE_DEMO_MODE === 'true' ? '/vnbot/' : '/',
+  // Base path: '/' for root domains (Netlify, self-hosted), '/vnbot/' for GitHub Pages subpath.
+  // VITE_BASE_PATH takes priority; falls back to demo-mode heuristic.
+  // - Set VITE_BASE_PATH='/' explicitly for Netlify root domain
+  // - Set VITE_BASE_PATH='/vnbot/' for GitHub Pages (repo subpath)
+  base: process.env.VITE_BASE_PATH ?? (process.env.VITE_DEMO_MODE === 'true' ? '/' : '/'),
   plugins: [react()],
   resolve: {
     alias: {

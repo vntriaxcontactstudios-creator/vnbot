@@ -1,0 +1,64 @@
+# VNBOT — Netlify deployment configuration
+#
+# This file lives at the REPO ROOT (parent of mvp/).
+# Netlify only reads netlify.toml from the repo root, NOT from subfolders.
+#
+# Per ADR-0008 (single-user local-first): Netlify is used ONLY for the static
+# demo build (mock data). Production VNBOT runs on the user's own machine.
+#
+# The demo build uses VITE_DEMO_MODE=true to inject mock data instead of
+# requiring the Python backend.
+
+[build]
+  # Netlify clones the repo (which has mvp/ subfolder), so we cd into mvp first
+  command = "cd mvp && pnpm install --no-frozen-lockfile && pnpm --filter @vnbot/web build"
+  # publish path is RELATIVE to repo root
+  publish = "mvp/apps/web/dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+  # Use pnpm 9 (matches lockfile)
+  PNPM_VERSION = "9"
+  # Enable Netlify's built-in pnpm install
+  NETLIFY_USE_PNPM = "true"
+  # Demo mode: inject mock data, no backend needed
+  VITE_DEMO_MODE = "true"
+  # Empty API URL so client falls back to mock data
+  VITE_API_BASE_URL = ""
+  # Base path: '/' for root domain (Netlify default), '/vnbot/' for GH Pages subpath
+  VITE_BASE_PATH = "/"
+
+# ─── SPA fallback (React Router needs client-side routing) ───
+# Without this, refreshing /memory or /skills returns 404.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# ─── Cache static assets aggressively (immutable fingerprinted files) ───
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# ─── Service worker: no cache (always fetch latest) ───
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# ─── Manifest: short cache ───
+[[headers]]
+  for = "/manifest.json"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+# ─── Security headers ───
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    X-XSS-Protection = "1; mode=block"

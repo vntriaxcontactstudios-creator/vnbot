@@ -1,6 +1,6 @@
 """VNBOT API — DB infrastructure."""
 
-from .session import Base, async_session_factory, engine, get_db, init_sqlite_pragmas
+from .session import Base, async_session_factory, engine, get_db, init_db_pragmas
 from .models import (
     ExecutionLog,
     MemoryEdge,
@@ -18,7 +18,7 @@ __all__ = [
     "async_session_factory",
     "engine",
     "get_db",
-    "init_sqlite_pragmas",
+    "init_db_pragmas",
     "ExecutionLog",
     "MemoryEdge",
     "MemoryNode",

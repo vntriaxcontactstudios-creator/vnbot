@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from . import audit, briefing, chat, exports, graph, health, lists, memories, reminders
+from . import audit, briefing, chat, exports, files, graph, health, lists, memories, reminders
 
 api_router = APIRouter()
 api_router.include_router(health.router)
@@ -12,5 +12,6 @@ api_router.include_router(reminders.router, prefix="/api/v1")
 api_router.include_router(graph.router, prefix="/api/v1")
 api_router.include_router(lists.router, prefix="/api/v1")
 api_router.include_router(briefing.router, prefix="/api/v1")
+api_router.include_router(files.router, prefix="/api/v1")
 api_router.include_router(exports.router, prefix="/api/v1")
 api_router.include_router(audit.router, prefix="/api/v1")

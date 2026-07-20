@@ -1,13 +1,17 @@
 """VNBOT API — Database setup.
 
 SQLAlchemy 2 async engine + session factory.
-SQLite WAL mode for better concurrency (multiple readers + 1 writer).
+Supports both SQLite (local/dev) and PostgreSQL+pgvector (server).
+
+Per ADR-0002: SQLite for local, PostgreSQL for server.
+Per docs/07 §13: pgvector for semantic search (Fase 0.5+).
 """
 
 from __future__ import annotations
 
 from collections.abc import AsyncGenerator
 
+from sqlalchemy import event, text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
@@ -16,19 +20,27 @@ from ...config import get_settings
 
 class Base(DeclarativeBase):
     """Declarative base for all SQLAlchemy models."""
+    pass
 
 
 def _build_engine():
     settings = get_settings()
-    connect_args = {}
+    connect_args: dict = {}
+    engine_kwargs: dict = {
+        "echo": settings.is_dev and False,
+        "future": True,
+    }
+
     if settings.database_url.startswith("sqlite"):
         connect_args = {"check_same_thread": False}
-    engine = create_async_engine(
-        settings.database_url,
-        echo=settings.is_dev and False,  # set True for SQL logging
-        connect_args=connect_args,
-        future=True,
-    )
+    elif settings.database_url.startswith("postgresql"):
+        # PostgreSQL with asyncpg
+        engine_kwargs["pool_size"] = 10
+        engine_kwargs["max_overflow"] = 20
+        engine_kwargs["pool_pre_ping"] = True
+
+    engine_kwargs["connect_args"] = connect_args
+    engine = create_async_engine(settings.database_url, **engine_kwargs)
     return engine
 
 
@@ -51,13 +63,24 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
             raise
 
 
-async def init_sqlite_pragmas() -> None:
-    """Apply SQLite WAL mode + foreign keys for better perf + integrity."""
+async def init_db_pragmas() -> None:
+    """Apply DB-specific optimizations.
+
+    SQLite: WAL mode, foreign keys, cache size.
+    PostgreSQL: pgvector extension (if available).
+    """
     settings = get_settings()
-    if not settings.database_url.startswith("sqlite"):
-        return
-    async with engine.begin() as conn:
-        await conn.exec_driver_sql("PRAGMA journal_mode=WAL;")
-        await conn.exec_driver_sql("PRAGMA foreign_keys=ON;")
-        await conn.exec_driver_sql("PRAGMA synchronous=NORMAL;")
-        await conn.exec_driver_sql("PRAGMA cache_size=-64000;")  # 64MB cache
+
+    if settings.database_url.startswith("sqlite"):
+        async with engine.begin() as conn:
+            await conn.exec_driver_sql("PRAGMA journal_mode=WAL;")
+            await conn.exec_driver_sql("PRAGMA foreign_keys=ON;")
+            await conn.exec_driver_sql("PRAGMA synchronous=NORMAL;")
+            await conn.exec_driver_sql("PRAGMA cache_size=-64000;")  # 64MB cache
+    elif settings.database_url.startswith("postgresql"):
+        async with engine.begin() as conn:
+            # Create pgvector extension if not exists
+            try:
+                await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector;"))
+            except Exception:
+                pass  # pgvector may not be installed — semantic search deferred

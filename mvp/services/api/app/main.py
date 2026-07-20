@@ -16,7 +16,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .api.v1 import api_router
 from .config import get_settings
-from .infrastructure.db.session import init_sqlite_pragmas
+from .infrastructure.db.session import init_db_pragmas
 from .infrastructure.scheduler import scheduler_service
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -45,7 +45,7 @@ async def lifespan(app: FastAPI):
     )
 
     # Apply SQLite pragmas (WAL mode, foreign keys, cache_size)
-    await init_sqlite_pragmas()
+    await init_db_pragmas()
     logger.info("SQLite pragmas applied (WAL mode, FK on, 64MB cache)")
 
     # Start the scheduler (APScheduler with AsyncIO)

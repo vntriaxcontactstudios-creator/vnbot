@@ -433,6 +433,46 @@ async def confirm_operation(
             entity_id = memory_node.id
             entity_type = "memory"
 
+            # ─── Auto-create edges from LLM-detected relations ───
+            relations = mem_data.get("relations", [])
+            if relations:
+                from ...infrastructure.db.models import MemoryEdge as MemoryEdgeModel
+                for rel in relations:
+                    target_label = rel.get("target_label", "").strip()
+                    relation_type = rel.get("relation_type", "RELATED_TO").upper()
+                    rel_confidence = float(rel.get("confidence", 0.5))
+
+                    if not target_label or relation_type not in {
+                        "KNOWS", "WORKS_ON", "RELATED_TO", "DEPENDS_ON",
+                        "REMINDER_FOR", "HAPPENS_AT", "PREFERS", "SUPERSEDES",
+                        "CONTRADICTS", "DERIVED_FROM", "ASSIGNED_TO", "MENTIONED_IN",
+                        "LOCATED_AT",
+                    }:
+                        continue
+
+                    # Find target node by label (case-insensitive partial match)
+                    target_stmt = select(MemoryNodeModel).where(
+                        MemoryNodeModel.workspace_id == op.workspace_id,
+                        MemoryNodeModel.status == "active",
+                        MemoryNodeModel.label.ilike(f"%{target_label}%"),
+                    ).limit(1)
+                    target_result = await db.execute(target_stmt)
+                    target_node = target_result.scalars().first()
+
+                    if target_node and target_node.id != memory_node.id:
+                        edge = MemoryEdgeModel(
+                            id=str(uuid4()),
+                            workspace_id=op.workspace_id,
+                            source_node_id=memory_node.id,
+                            target_node_id=target_node.id,
+                            relation_type=relation_type,
+                            confidence=rel_confidence,
+                            status="active",
+                            provenance="llm_inference",
+                            authority="inferred",
+                        )
+                        db.add(edge)
+
         # Mark operation as succeeded
         op.status = OperationStatus.SUCCEEDED
         await db.flush()

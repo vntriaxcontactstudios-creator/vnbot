@@ -18,6 +18,7 @@ import { SettingsPanel } from '@/routes/settings/SettingsPanel';
 import { GraphPanel } from '@/routes/graph/GraphPanel';
 import { ListsPanel } from '@/routes/lists/ListsPanel';
 import { RemindersPanel } from '@/routes/reminders/RemindersPanel';
+import { AgentsPanel } from '@/routes/agents/AgentsPanel';
 import { useUIStore } from '@/lib/store/ui';
 
 const queryClient = new QueryClient({
@@ -61,6 +62,7 @@ function App() {
               <Route path="/graph" element={<GraphPanel />} />
               <Route path="/lists" element={<ListsPanel />} />
               <Route path="/reminders" element={<RemindersPanel />} />
+              <Route path="/agents" element={<AgentsPanel />} />
               <Route path="/activity" element={<ActivityPanel />} />
               <Route path="/settings" element={<SettingsPanel />} />
               <Route

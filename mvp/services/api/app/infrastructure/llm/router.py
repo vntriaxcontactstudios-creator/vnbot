@@ -46,7 +46,14 @@ Devuelve SOLO un JSON válido, sin markdown, con esta estructura:
   "memory": {
     "content": "contenido de la memoria",
     "type": "note|event|preference|task|contact",
-    "tags": ["tag1", "tag2"]
+    "tags": ["tag1", "tag2"],
+    "relations": [
+      {
+        "target_label": "título de una memoria existente que se relaciona",
+        "relation_type": "KNOWS|RELATED_TO|PREFERS|WORKS_ON|DEPENDS_ON|HAPPENS_AT|REMINDER_FOR|LOCATED_AT|MENTIONED_IN",
+        "confidence": 0.0-1.0
+      }
+    ]
   },
   "suggestion": "mensaje amigable si intent=unknown"
 }
@@ -56,6 +63,7 @@ Reglas:
 - "mañana" = el día siguiente a las 9:00 AM
 - "tarde" = 15:00, "noche" = 20:00
 - Para memorias, extrae el contenido limpio sin el comando inicial
+- relations: detecta si la nueva memoria se relaciona con algo que el usuario probablemente ya tiene guardado (personas, lugares, proyectos). Si no hay relación clara, devuelve array vacío.
 - Confidence < 0.5 si no estás seguro
 - Devuelve SOLO el JSON, nada más"""
 

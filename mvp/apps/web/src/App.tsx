@@ -19,6 +19,8 @@ import { GraphPanel } from '@/routes/graph/GraphPanel';
 import { ListsPanel } from '@/routes/lists/ListsPanel';
 import { RemindersPanel } from '@/routes/reminders/RemindersPanel';
 import { AgentsPanel } from '@/routes/agents/AgentsPanel';
+import { SkillsPanel } from '@/routes/skills/SkillsPanel';
+import { IntegrationsPanel } from '@/routes/integrations/IntegrationsPanel';
 import { useUIStore } from '@/lib/store/ui';
 
 const queryClient = new QueryClient({
@@ -63,6 +65,8 @@ function App() {
               <Route path="/lists" element={<ListsPanel />} />
               <Route path="/reminders" element={<RemindersPanel />} />
               <Route path="/agents" element={<AgentsPanel />} />
+              <Route path="/skills" element={<SkillsPanel />} />
+              <Route path="/integrations" element={<IntegrationsPanel />} />
               <Route path="/activity" element={<ActivityPanel />} />
               <Route path="/settings" element={<SettingsPanel />} />
               <Route

@@ -44,7 +44,7 @@ class Settings(BaseSettings):
     encryption_key_version: int = 1
 
     # ─── LLM Provider ───
-    llm_provider: Literal["zai", "ollama", "openai", "anthropic"] = "zai"
+    llm_provider: Literal["auto", "zai", "ollama", "openai", "anthropic", "gemini"] = "auto"
     llm_zai_base_url: str = "https://api.z.ai/v1"
     llm_zai_model: str = "glm-4.6"
     llm_zai_rate_limit_rpm: int = 30

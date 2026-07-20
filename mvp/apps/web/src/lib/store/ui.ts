@@ -12,6 +12,16 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { AgentId, MascotState } from '@vnbot/pixelart';
 
+// ─── PWA install prompt type (beforeinstallprompt is non-standard) ───
+interface BeforeInstallPromptEvent extends Event {
+  readonly platforms: string[];
+  readonly userChoice: Promise<{
+    outcome: 'accepted' | 'dismissed';
+    platform: string;
+  }>;
+  prompt(): Promise<void>;
+}
+
 interface UIState {
   // Mascot state — driven by operations stream
   mascotState: MascotState;
@@ -44,6 +54,12 @@ interface UIState {
   // LLM degraded mode (when LLM unavailable, falling back to heuristics)
   llmDegraded: boolean;
   setLlmDegraded: (degraded: boolean) => void;
+
+  // PWA install prompt (BeforeInstallPromptEvent captured from window)
+  pwaInstallEvent: BeforeInstallPromptEvent | null;
+  pwaInstalled: boolean;
+  setPwaInstallEvent: (event: BeforeInstallPromptEvent | null) => void;
+  setPwaInstalled: (installed: boolean) => void;
 }
 
 export const useUIStore = create<UIState>()(
@@ -80,6 +96,12 @@ export const useUIStore = create<UIState>()(
       // LLM degraded
       llmDegraded: false,
       setLlmDegraded: (llmDegraded) => set({ llmDegraded }),
+
+      // PWA install
+      pwaInstallEvent: null,
+      pwaInstalled: false,
+      setPwaInstallEvent: (pwaInstallEvent) => set({ pwaInstallEvent }),
+      setPwaInstalled: (pwaInstalled) => set({ pwaInstalled }),
     }),
     {
       name: 'vnbot-ui-store',

@@ -1,7 +1,8 @@
 /**
  * VNBOT Web — TopBar.
  *
- * Top bar with: sidebar toggle (mobile), search, mascot state indicator, settings.
+ * Top bar with: sidebar toggle (mobile), search, mascot state indicator, settings,
+ * PWA install button.
  */
 
 import { useUIStore } from '@/lib/store/ui';
@@ -12,8 +13,18 @@ interface TopBarProps {
 }
 
 export function TopBar({ title }: TopBarProps) {
-  const { toggleSidebar, mascotState } = useUIStore();
+  const { toggleSidebar, mascotState, pwaInstallEvent, pwaInstalled, setPwaInstallEvent, setPwaInstalled } = useUIStore();
   const isDemo = apiClient.isDemoMode();
+
+  const handleInstallClick = async () => {
+    if (!pwaInstallEvent) return;
+    await pwaInstallEvent.prompt();
+    const choice = await pwaInstallEvent.userChoice;
+    if (choice.outcome === 'accepted') {
+      setPwaInstalled(true);
+    }
+    setPwaInstallEvent(null);
+  };
 
   return (
     <header className="sticky top-0 z-20 bg-vnbot-bg-0/95 backdrop-blur-sm border-b border-vnbot-line-soft">
@@ -37,6 +48,19 @@ export function TopBar({ title }: TopBarProps) {
 
         {/* Right side — mascot state + actions */}
         <div className="flex items-center gap-3 ml-auto">
+          {/* PWA install button (only shown when prompt is available and not installed) */}
+          {pwaInstallEvent && !pwaInstalled && (
+            <button
+              type="button"
+              onClick={handleInstallClick}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-vnbot-cyan text-vnbot-bg-0 font-mono text-[10px] uppercase tracking-wider hover:bg-vnbot-cyan/90"
+              aria-label="Instalar VNBOT como app"
+              title="Instalar VNBOT como aplicación"
+            >
+              ⬇ INSTALAR
+            </button>
+          )}
+
           {/* Demo mode badge */}
           {isDemo && (
             <div

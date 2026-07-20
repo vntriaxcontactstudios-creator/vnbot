@@ -1,12 +1,19 @@
-"""VNBOT API — LLM Router with Z.AI integration.
+"""VNBOT API — LLM Router with chain fallback (ADR-0007 + ADR-0012).
 
 Per ADR-0007: heuristic fallback is mandatory before depending on LLM.
-The router tries LLM first, falls back to heuristics on failure.
+Per ADR-0012: multiple cloud LLM providers supported with chain fallback.
+  Priority order (configurable via LLM_PROVIDER):
+    1. zai (default, keyless — glm-4.6)
+    2. openai (gpt-4o-mini)
+    3. anthropic (claude-3-5-haiku)
+    4. gemini (gemini-1.5-flash)
+    5. ollama (local — llama3.2)
+    6. heuristic fallback (no LLM)
 
-Z.AI (glm-4.6) requires NO API key — perfect for single-user local mode.
-Uses OpenAI-compatible endpoint: https://api.z.ai/v1/chat/completions
+The router tries LLM providers in order until one succeeds, then falls back
+to heuristics if all LLMs are unavailable.
 
-Per ADR-0011 (Fase 0.8): the system prompt now includes USER.md + MEMORY.md
+Per ADR-0011 (Fase 0.8): the system prompt includes USER.md + MEMORY.md
 context so the LLM has access to long-term user facts and working memory.
 """
 
@@ -16,8 +23,6 @@ import json
 import logging
 from dataclasses import dataclass
 from typing import Any
-
-import httpx
 
 from ...config import get_settings
 
@@ -155,74 +160,57 @@ async def parse_with_llm(
     timezone: str = "America/Caracas",
     workspace_id: str = "00000000-0000-0000-0000-000000000001",
 ) -> LLMResult | None:
-    """Parse user input using Z.AI LLM.
+    """Parse user input using LLM with chain fallback (ADR-0007 + ADR-0012).
 
-    Returns None if LLM is unavailable (caller should fall back to heuristics).
+    Returns None if ALL LLM providers fail (caller should fall back to heuristics).
 
     Per ADR-0011 Fase 0.8: includes USER.md + MEMORY.md context in system prompt.
+    Per ADR-0012: tries providers in priority order until one succeeds.
     """
     settings = get_settings()
 
-    if settings.llm_provider != "zai":
-        logger.debug(f"LLM provider is {settings.llm_provider}, not zai — skipping LLM")
+    # ─── Build context-aware system prompt (Fase 0.8) ───
+    system_prompt = _build_system_prompt(workspace_id)
+    user_message = f"Zona horaria del usuario: {timezone}\n\nInput: {text}"
+
+    # ─── Chain fallback across LLM providers (ADR-0012) ───
+    from .providers import call_with_chain_fallback
+
+    chain = await call_with_chain_fallback(
+        system_prompt=system_prompt,
+        user_message=user_message,
+        preferred_provider=settings.llm_provider if settings.llm_provider != "zai" else None,
+    )
+
+    if chain.content is None:
+        # All providers failed — caller falls back to heuristics
+        if chain.errors:
+            logger.warning(
+                f"[LLM] All providers failed: {chain.errors} — falling back to heuristics"
+            )
         return None
+
+    # ─── Parse the response (same logic regardless of provider) ───
+    content = chain.content.strip()
+
+    # Strip markdown code fences if present
+    if content.startswith("```"):
+        content = content.split("\n", 1)[1].rsplit("```", 1)[0].strip()
 
     try:
-        # Build context-aware system prompt (Fase 0.8)
-        system_prompt = _build_system_prompt(workspace_id)
-
-        headers: dict[str, str] = {"Content-Type": "application/json"}
-        if settings.llm_api_key:
-            headers["Authorization"] = f"Bearer {settings.llm_api_key}"
-
-        async with httpx.AsyncClient(timeout=15.0) as client:
-            response = await client.post(
-                f"{settings.llm_zai_base_url}/chat/completions",
-                json={
-                    "model": settings.llm_zai_model,
-                    "messages": [
-                        {"role": "system", "content": system_prompt},
-                        {
-                            "role": "user",
-                            "content": f"Zona horaria del usuario: {timezone}\n\nInput: {text}",
-                        },
-                    ],
-                    "temperature": 0.3,
-                    "max_tokens": 600,
-                },
-                headers=headers,
-            )
-
-            if response.status_code != 200:
-                logger.warning(f"Z.AI returned {response.status_code}: {response.text[:200]}")
-                return None
-
-            data = response.json()
-            content = data["choices"][0]["message"]["content"].strip()
-
-            # Parse JSON from response (handle markdown code blocks)
-            if content.startswith("```"):
-                content = content.split("\n", 1)[1].rsplit("```", 1)[0].strip()
-
-            try:
-                parsed = json.loads(content)
-            except json.JSONDecodeError:
-                logger.warning(f"Z.AI returned non-JSON: {content[:200]}")
-                return None
-
-            return LLMResult(
-                intent=parsed.get("intent", "unknown"),
-                confidence=float(parsed.get("confidence", 0.5)),
-                reminder=parsed.get("reminder"),
-                memory=parsed.get("memory"),
-                suggestion=parsed.get("suggestion"),
-                raw_response=content,
-                used_llm=True,
-            )
-
-    except httpx.TimeoutException:
-        logger.warning("Z.AI request timed out — falling back to heuristics")
+        parsed = json.loads(content)
+    except json.JSONDecodeError:
+        logger.warning(
+            f"[LLM] {chain.provider_used} returned non-JSON: {content[:200]} — falling back"
+        )
         return None
-    except Exception as e:
-        logger.warning(f"Z.AI request failed: {type(e).__name__}: {e}")
-        return None
+
+    return LLMResult(
+        intent=parsed.get("intent", "unknown"),
+        confidence=float(parsed.get("confidence", 0.5)),
+        reminder=parsed.get("reminder"),
+        memory=parsed.get("memory"),
+        suggestion=parsed.get("suggestion"),
+        raw_response=content,
+        used_llm=True,
+    )

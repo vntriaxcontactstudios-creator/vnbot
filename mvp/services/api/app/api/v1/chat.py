@@ -8,6 +8,7 @@ Heuristic fallback per ADR-0007: this works WITHOUT LLM. LLM Router is added in 
 
 from __future__ import annotations
 
+import asyncio
 import hashlib
 from datetime import datetime, timedelta, timezone
 from uuid import UUID, uuid4
@@ -29,6 +30,7 @@ from ...infrastructure.db.models import Operation as OperationModel
 from ...infrastructure.db.models import Reminder as ReminderModel
 from ...infrastructure.db.models import User, Workspace
 from ...infrastructure.llm import parse_with_llm, spawn_background_review
+from ...infrastructure.llm.correction import maybe_trigger_skill_creation_on_correction
 from ...infrastructure.db.session import get_db
 from ...schemas.chat import (
     ChatRequest,
@@ -95,7 +97,20 @@ async def post_chat(
     operation_id = str(uuid4())
     expires_at = datetime.now(timezone.utc) + timedelta(seconds=PROPOSAL_TTL_SECONDS)
 
-    # ─── Step 1: Try LLM first ───
+    # ─── Fase 0.9: User correction detection → maybe trigger skill creation ───
+    # Fire-and-forget (never blocks user-visible response). Per ADR-0009 Track 2.
+    try:
+        asyncio.create_task(
+            maybe_trigger_skill_creation_on_correction(
+                user_input=req.text,
+                workspace_id=ws_id,
+                context_summary=f"User input: {req.text[:300]}",
+            )
+        )
+    except Exception:
+        pass  # never let skill detection block chat
+
+    # ─── Step 1: Try LLM first (ADR-0012 — chain fallback) ───
     llm_result = await parse_with_llm(req.text, req.timezone, workspace_id=ws_id)
 
     if llm_result is not None and llm_result.intent != "unknown" and llm_result.confidence >= 0.3:

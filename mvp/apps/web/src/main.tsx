@@ -8,6 +8,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import './styles/global.css';
+import { useUIStore } from './lib/store/ui';
 
 const root = document.getElementById('root');
 if (!root) {
@@ -44,4 +45,30 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
     });
   });
 }
+
+// ─── PWA install prompt handler (Fase 0.8) ───
+// Capture beforeinstallprompt so we can show a custom install button in the UI.
+// Per PWA spec: the browser fires this event when it deems the app installable.
+// We MUST call event.prompt() from a user gesture (click handler).
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Prevent the mini-infobar from appearing on mobile
+  e.preventDefault();
+  // Stash the event so the UI can trigger it later via a button click.
+  // Cast through unknown because BeforeInstallPromptEvent is non-standard.
+  useUIStore.getState().setPwaInstallEvent(e as unknown as NonNullable<ReturnType<typeof useUIStore.getState>['pwaInstallEvent']>);
+  console.info('[VNBOT] PWA install prompt captured — show install button');
+});
+
+window.addEventListener('appinstalled', () => {
+  useUIStore.getState().setPwaInstallEvent(null);
+  useUIStore.getState().setPwaInstalled(true);
+  console.info('[VNBOT] PWA installed — hiding install button');
+});
+
+// Detect if already running as PWA (display-mode: standalone)
+if (window.matchMedia('(display-mode: standalone)').matches) {
+  useUIStore.getState().setPwaInstalled(true);
+}
+
+
 

@@ -16,6 +16,7 @@ const NAV_ITEMS = [
   { to: '/memory', label: 'MEMORIA', icon: '◈', agent: 'archivist' as const },
   { to: '/graph', label: 'GRAFO', icon: '⌬', agent: 'archivist' as const },
   { to: '/lists', label: 'LISTAS', icon: '☰', agent: 'beacon' as const },
+  { to: '/reminders', label: 'RECORDATORIOS', icon: '⏰', agent: 'beacon' as const },
   { to: '/agents', label: 'AGENTES', icon: '⚑', agent: 'guardian' as const },
   { to: '/skills', label: 'SKILLS', icon: '⚙', agent: 'forge' as const },
   { to: '/integrations', label: 'INTEGRACIONES', icon: '⇄', agent: 'sentinel' as const },

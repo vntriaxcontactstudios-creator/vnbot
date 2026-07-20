@@ -176,6 +176,21 @@ export const RELATION_TYPES = [
 ] as const;
 
 // ──────────────────────────────────────────────────────────────────────────────
+// Briefing types
+// ──────────────────────────────────────────────────────────────────────────────
+
+export interface BriefingResponse {
+  date: string;
+  greeting: string;
+  pending_reminders: number;
+  overdue_reminders: number;
+  upcoming_reminders: { id: string; title: string; due_at: string | null }[];
+  recent_memories: { id: string; label: string; type: string }[];
+  summary: string;
+  generated_at: string;
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Client
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -407,6 +422,30 @@ class ApiClient {
 
   async deleteEdge(id: string): Promise<void> {
     await this.request<void>(`/graph/edges/${id}`, { method: 'DELETE' });
+  }
+
+  // ─── Briefing ───
+
+  async getBriefing(): Promise<BriefingResponse> {
+    if (this.demoMode) {
+      return {
+        date: new Date().toISOString().split('T')[0],
+        greeting: 'Buenos días',
+        pending_reminders: 2,
+        overdue_reminders: 0,
+        upcoming_reminders: [
+          { id: 'mock-1', title: 'Revisar VNBOT', due_at: new Date(Date.now() + 86400000).toISOString() },
+          { id: 'mock-2', title: 'Llamar al banco', due_at: new Date(Date.now() + 7 * 86400000).toISOString() },
+        ],
+        recent_memories: [
+          { id: 'mock-m1', label: 'Wifi oficina', type: 'note' },
+          { id: 'mock-m2', label: 'Proyecto VNBOT', type: 'task' },
+        ],
+        summary: 'Tienes 2 recordatorios pendientes. Tu próximo recordatorio es "Revisar VNBOT". Ayer guardaste 2 memorias.',
+        generated_at: new Date().toISOString(),
+      };
+    }
+    return this.request<BriefingResponse>('/briefing');
   }
 }
 

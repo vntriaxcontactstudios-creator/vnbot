@@ -96,7 +96,7 @@ async def post_chat(
     expires_at = datetime.now(timezone.utc) + timedelta(seconds=PROPOSAL_TTL_SECONDS)
 
     # ─── Step 1: Try LLM first ───
-    llm_result = await parse_with_llm(req.text, req.timezone)
+    llm_result = await parse_with_llm(req.text, req.timezone, workspace_id=ws_id)
 
     if llm_result is not None and llm_result.intent != "unknown" and llm_result.confidence >= 0.3:
         # LLM succeeded — build proposal from LLM result

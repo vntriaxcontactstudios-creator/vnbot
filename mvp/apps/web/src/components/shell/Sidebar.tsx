@@ -19,6 +19,7 @@ const NAV_ITEMS = [
   { to: '/reminders', label: 'RECORDATORIOS', icon: '⏰', agent: 'beacon' as const },
   { to: '/agents', label: 'AGENTES', icon: '⚑', agent: 'guardian' as const },
   { to: '/skills', label: 'SKILLS', icon: '⚙', agent: 'forge' as const },
+  { to: '/learning', label: 'APRENDIZAJE', icon: '◈', agent: 'forge' as const },
   { to: '/integrations', label: 'INTEGRACIONES', icon: '⇄', agent: 'sentinel' as const },
   { to: '/activity', label: 'ACTIVIDAD', icon: '⏱', agent: 'sentinel' as const },
   { to: '/settings', label: 'AJUSTES', icon: '✦', agent: 'guardian' as const },

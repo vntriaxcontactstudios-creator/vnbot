@@ -5,6 +5,9 @@ The router tries LLM first, falls back to heuristics on failure.
 
 Z.AI (glm-4.6) requires NO API key — perfect for single-user local mode.
 Uses OpenAI-compatible endpoint: https://api.z.ai/v1/chat/completions
+
+Per ADR-0011 (Fase 0.8): the system prompt now includes USER.md + MEMORY.md
+context so the LLM has access to long-term user facts and working memory.
 """
 
 from __future__ import annotations
@@ -20,7 +23,7 @@ from ...config import get_settings
 
 logger = logging.getLogger("vnbot.api.llm")
 
-SYSTEM_PROMPT = """Eres el parser de VNBOT, un asistente personal. Analiza el input del usuario y devuelve un JSON con la intención detectada y los datos extraídos.
+SYSTEM_PROMPT_TEMPLATE = """Eres el parser de VNBOT, un asistente personal. Analiza el input del usuario y devuelve un JSON con la intención detectada y los datos extraídos.
 
 Intenciones posibles:
 - create_reminder: el usuario quiere ser recordado algo en una fecha/hora
@@ -34,29 +37,29 @@ Intenciones posibles:
 - unknown: no se puede determinar la intención
 
 Devuelve SOLO un JSON válido, sin markdown, con esta estructura:
-{
+{{
   "intent": "create_reminder|create_memory|create_task|create_list_item|query_memories|list_reminders|complete_reminder|delete_memory|unknown",
   "confidence": 0.0-1.0,
-  "reminder": {
+  "reminder": {{
     "title": "título corto del recordatorio",
     "due_at": "ISO datetime en UTC, o null si no se puede determinar",
     "timezone": "zona horaria inferida",
     "recurrence": "none|daily|weekly|monthly|yearly"
-  },
-  "memory": {
+  }},
+  "memory": {{
     "content": "contenido de la memoria",
     "type": "note|event|preference|task|contact",
     "tags": ["tag1", "tag2"],
     "relations": [
-      {
+      {{
         "target_label": "título de una memoria existente que se relaciona",
         "relation_type": "KNOWS|RELATED_TO|PREFERS|WORKS_ON|DEPENDS_ON|HAPPENS_AT|REMINDER_FOR|LOCATED_AT|MENTIONED_IN",
         "confidence": 0.0-1.0
-      }
+      }}
     ]
-  },
+  }},
   "suggestion": "mensaje amigable si intent=unknown"
-}
+}}
 
 Reglas:
 - Si la fecha es ambigua, usa tu mejor juicio basado en el contexto
@@ -65,7 +68,13 @@ Reglas:
 - Para memorias, extrae el contenido limpio sin el comando inicial
 - relations: detecta si la nueva memoria se relaciona con algo que el usuario probablemente ya tiene guardado (personas, lugares, proyectos). Si no hay relación clara, devuelve array vacío.
 - Confidence < 0.5 si no estás seguro
-- Devuelve SOLO el JSON, nada más"""
+- Devuelve SOLO el JSON, nada más
+
+## Contexto del usuario (USER.md)
+{user_md}
+
+## Memoria de trabajo (MEMORY.md)
+{memory_md}"""
 
 
 @dataclass
@@ -81,10 +90,76 @@ class LLMResult:
     used_llm: bool = True
 
 
-async def parse_with_llm(text: str, timezone: str = "America/Caracas") -> LLMResult | None:
+def _build_system_prompt(workspace_id: str = "00000000-0000-0000-0000-000000000001") -> str:
+    """Build the system prompt with USER.md + MEMORY.md context injected.
+
+    Per ADR-0011 Fase 0.8: the LLM gets long-term user context so it can
+    personalize parsing. Falls back to a no-context prompt if files are
+    unavailable (e.g., on first run, or if materialize has never been called).
+
+    Uses synchronous file reads — these are tiny (~3.5KB) and cached by the OS.
+    """
+    try:
+        from .hermes_files import read_memory_md, read_user_md, ensure_persistence_files
+        import asyncio
+
+        # Ensure files exist (creates defaults if missing)
+        ensure_persistence_files(workspace_id)
+
+        # Run async reads synchronously (we're in a sync context here)
+        try:
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                # We're inside an async context — can't use asyncio.run, use sync fallback
+                user_md = _read_file_sync(workspace_id, "USER.md")
+                memory_md = _read_file_sync(workspace_id, "MEMORY.md")
+            else:
+                user_md = asyncio.run(read_user_md(workspace_id))
+                memory_md = asyncio.run(read_memory_md(workspace_id))
+        except RuntimeError:
+            # No event loop — use sync reads
+            user_md = _read_file_sync(workspace_id, "USER.md")
+            memory_md = _read_file_sync(workspace_id, "MEMORY.md")
+
+        # Truncate to avoid token bloat
+        if len(user_md) > 2000:
+            user_md = user_md[:2000] + "\n<!-- (truncated) -->"
+        if len(memory_md) > 3500:
+            memory_md = memory_md[:3500] + "\n<!-- (truncated) -->"
+
+        return SYSTEM_PROMPT_TEMPLATE.format(
+            user_md=user_md,
+            memory_md=memory_md,
+        )
+    except Exception as e:
+        logger.warning(f"Failed to build context-aware system prompt: {e} — using bare prompt")
+        return SYSTEM_PROMPT_TEMPLATE.format(
+            user_md="<!-- (no context available) -->",
+            memory_md="<!-- (no context available) -->",
+        )
+
+
+def _read_file_sync(workspace_id: str, filename: str) -> str:
+    """Synchronous read of USER.md or MEMORY.md."""
+    from pathlib import Path
+    from ...config import get_settings
+    settings = get_settings()
+    path = Path(settings.storage_local_path).expanduser() / "workspaces" / workspace_id / filename
+    if not path.exists():
+        return f"<!-- (file {filename} does not exist yet) -->"
+    return path.read_text(encoding="utf-8")
+
+
+async def parse_with_llm(
+    text: str,
+    timezone: str = "America/Caracas",
+    workspace_id: str = "00000000-0000-0000-0000-000000000001",
+) -> LLMResult | None:
     """Parse user input using Z.AI LLM.
 
     Returns None if LLM is unavailable (caller should fall back to heuristics).
+
+    Per ADR-0011 Fase 0.8: includes USER.md + MEMORY.md context in system prompt.
     """
     settings = get_settings()
 
@@ -93,6 +168,9 @@ async def parse_with_llm(text: str, timezone: str = "America/Caracas") -> LLMRes
         return None
 
     try:
+        # Build context-aware system prompt (Fase 0.8)
+        system_prompt = _build_system_prompt(workspace_id)
+
         headers: dict[str, str] = {"Content-Type": "application/json"}
         if settings.llm_api_key:
             headers["Authorization"] = f"Bearer {settings.llm_api_key}"
@@ -103,14 +181,14 @@ async def parse_with_llm(text: str, timezone: str = "America/Caracas") -> LLMRes
                 json={
                     "model": settings.llm_zai_model,
                     "messages": [
-                        {"role": "system", "content": SYSTEM_PROMPT},
+                        {"role": "system", "content": system_prompt},
                         {
                             "role": "user",
                             "content": f"Zona horaria del usuario: {timezone}\n\nInput: {text}",
                         },
                     ],
                     "temperature": 0.3,
-                    "max_tokens": 500,
+                    "max_tokens": 600,
                 },
                 headers=headers,
             )

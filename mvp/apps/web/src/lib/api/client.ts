@@ -191,6 +191,146 @@ export interface BriefingResponse {
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
+// Skills types (Hermes ADR-0009 Fase 0.7)
+// ──────────────────────────────────────────────────────────────────────────────
+
+export interface SkillSummary {
+  id: string;
+  name: string;
+  description: string;
+  status: 'draft' | 'active' | 'deprecated' | 'archived';
+  origin: 'hermes' | 'user' | 'imported';
+  version: number;
+  confidence: number;
+  use_count: number;
+  last_used_at: string | null;
+  created_at: string;
+}
+
+export interface SkillDetail extends SkillSummary {
+  body_markdown: string;
+  triggers_json: Record<string, unknown>;
+  updated_at: string;
+}
+
+export interface SkillListResponse {
+  items: SkillSummary[];
+  total: number;
+}
+
+export interface CreateSkillRequest {
+  name: string;
+  description?: string;
+  body_markdown: string;
+  triggers_json?: Record<string, unknown>;
+  status?: 'draft' | 'active' | 'deprecated' | 'archived';
+  tags?: string[];
+}
+
+export interface PatchSkillRequest {
+  name?: string;
+  description?: string;
+  body_markdown?: string;
+  triggers_json?: Record<string, unknown>;
+  status?: 'draft' | 'active' | 'deprecated' | 'archived';
+  confidence?: number;
+}
+
+export interface SkillHistoryEntry {
+  id: string;
+  action: string;
+  trigger_reason: string | null;
+  outcome_summary: string;
+  success: boolean;
+  created_at: string;
+}
+
+export interface SkillHistoryResponse {
+  items: SkillHistoryEntry[];
+  total: number;
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Learning types (Hermes ADR-0009 Fase 0.7)
+// ──────────────────────────────────────────────────────────────────────────────
+
+export interface LearningLogEntry {
+  id: string;
+  action: string;
+  origin: string;
+  trigger_reason: string | null;
+  review_json: Record<string, unknown>;
+  outcome_summary: string;
+  memory_ids: string[];
+  skill_id: string | null;
+  llm_model: string | null;
+  llm_tokens_used: number;
+  success: boolean;
+  error_message: string | null;
+  created_at: string;
+}
+
+export interface LearningListResponse {
+  items: LearningLogEntry[];
+  total: number;
+}
+
+export interface LearningSummary {
+  total_entries: number;
+  successful: number;
+  failed: number;
+  success_rate: number;
+  by_action: Record<string, number>;
+  by_origin: Record<string, number>;
+  total_tokens_used: number;
+  last_24h_count: number;
+  last_7d_count: number;
+}
+
+export interface ManualReviewRequest {
+  user_input: string;
+  assistant_response: string;
+  intent?: string;
+  used_llm?: boolean;
+}
+
+export interface ManualReviewResponse {
+  memories_to_save: Array<Record<string, unknown>>;
+  nothing_to_learn: boolean;
+  error: string | null;
+  llm_tokens_used: number;
+}
+
+export interface CurationResponse {
+  started_at: string;
+  total_memories_before: number;
+  total_memories_after: number;
+  demoted_low_confidence: number;
+  compressed_old_entries: number;
+  kept_active: number;
+  bytes_estimate: number;
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Context types (Fase 0.8)
+// ──────────────────────────────────────────────────────────────────────────────
+
+export interface ContextResponse {
+  user_md: string;
+  memory_md: string;
+  user_md_bytes: number;
+  memory_md_bytes: number;
+  memory_cap_bytes: number;
+}
+
+export interface MaterializeResponse {
+  user_md: string;
+  memory_md: string;
+  user_md_bytes: number;
+  memory_md_bytes: number;
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Client
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -446,6 +586,249 @@ class ApiClient {
       };
     }
     return this.request<BriefingResponse>('/briefing');
+  }
+
+  // ─── Skills (Hermes ADR-0009 Fase 0.7) ───
+
+  async listSkills(params?: { status?: string; origin?: string }): Promise<SkillListResponse> {
+    if (this.demoMode) {
+      return {
+        items: [
+          {
+            id: 'mock-skill-1',
+            name: 'morning-routine',
+            description: 'Rutina matutina: calendario + tareas + focus mode',
+            status: 'active',
+            origin: 'user',
+            version: 1,
+            confidence: 0.7,
+            use_count: 12,
+            last_used_at: new Date(Date.now() - 3600000).toISOString(),
+            created_at: new Date(Date.now() - 86400000 * 7).toISOString(),
+          },
+          {
+            id: 'mock-skill-2',
+            name: 'weekly-review',
+            description: 'Revisión semanal: progreso + ajustar prioridades',
+            status: 'draft',
+            origin: 'hermes',
+            version: 1,
+            confidence: 0.3,
+            use_count: 0,
+            last_used_at: null,
+            created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
+          },
+        ],
+        total: 2,
+      };
+    }
+    const qs = new URLSearchParams();
+    if (params?.status) qs.set('status', params.status);
+    if (params?.origin) qs.set('origin', params.origin);
+    const q = qs.toString();
+    return this.request<SkillListResponse>(`/skills${q ? `?${q}` : ''}`);
+  }
+
+  async getSkill(id: string): Promise<SkillDetail> {
+    if (this.demoMode) {
+      return {
+        id,
+        name: 'morning-routine',
+        description: 'Rutina matutina: calendario + tareas + focus mode',
+        body_markdown: '# Morning Routine\n\n## Pasos\n1. Check calendar\n2. List today tasks\n3. Set focus mode',
+        triggers_json: {},
+        status: 'active',
+        origin: 'user',
+        version: 1,
+        confidence: 0.7,
+        use_count: 12,
+        last_used_at: new Date(Date.now() - 3600000).toISOString(),
+        created_at: new Date(Date.now() - 86400000 * 7).toISOString(),
+        updated_at: new Date(Date.now() - 3600000).toISOString(),
+      };
+    }
+    return this.request<SkillDetail>(`/skills/${id}`);
+  }
+
+  async createSkill(data: CreateSkillRequest): Promise<SkillDetail> {
+    if (this.demoMode) {
+      throw new Error('Skills creation no disponible en modo demo');
+    }
+    return this.request<SkillDetail>('/skills', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async patchSkill(id: string, data: PatchSkillRequest): Promise<SkillDetail> {
+    if (this.demoMode) {
+      throw new Error('Skills patch no disponible en modo demo');
+    }
+    return this.request<SkillDetail>(`/skills/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteSkill(id: string): Promise<void> {
+    if (this.demoMode) return;
+    await this.request<void>(`/skills/${id}`, { method: 'DELETE' });
+  }
+
+  async activateSkill(id: string): Promise<SkillDetail> {
+    if (this.demoMode) {
+      throw new Error('Skill activation no disponible en modo demo');
+    }
+    return this.request<SkillDetail>(`/skills/${id}/activate`, { method: 'POST' });
+  }
+
+  async recordSkillUse(id: string): Promise<SkillDetail> {
+    if (this.demoMode) return this.getSkill(id);
+    return this.request<SkillDetail>(`/skills/${id}/use`, { method: 'POST' });
+  }
+
+  async materializePersistence(): Promise<MaterializeResponse> {
+    if (this.demoMode) {
+      return {
+        user_md: '# Perfil del Usuario\n\n- Nombre: Local User\n- Zona horaria: America/Caracas',
+        memory_md: '# Memoria de Trabajo\n\n- (sin memorias)',
+        user_md_bytes: 80,
+        memory_md_bytes: 40,
+      };
+    }
+    return this.request<MaterializeResponse>('/skills/materialize', { method: 'POST' });
+  }
+
+  async getSkillHistory(id: string): Promise<SkillHistoryResponse> {
+    if (this.demoMode) {
+      return {
+        items: [
+          {
+            id: 'mock-log-1',
+            action: 'skill_created',
+            trigger_reason: 'manual creation via API',
+            outcome_summary: 'user created skill',
+            success: true,
+            created_at: new Date(Date.now() - 86400000 * 7).toISOString(),
+          },
+        ],
+        total: 1,
+      };
+    }
+    return this.request<SkillHistoryResponse>(`/skills/${id}/history`);
+  }
+
+  // ─── Learning (Hermes ADR-0009 Fase 0.7) ───
+
+  async listLearning(params?: {
+    action?: string;
+    origin?: string;
+    success?: boolean;
+    limit?: number;
+  }): Promise<LearningListResponse> {
+    if (this.demoMode) {
+      return {
+        items: [
+          {
+            id: 'mock-learn-1',
+            action: 'background_review',
+            origin: 'hermes',
+            trigger_reason: 'post-response (intent=create_memory, used_llm=true)',
+            review_json: { memories_to_save: [{ content: 'Prefiere café sobre té' }] },
+            outcome_summary: 'saved 1 memories',
+            memory_ids: ['mock-mem-1'],
+            skill_id: null,
+            llm_model: 'glm-4.6',
+            llm_tokens_used: 412,
+            success: true,
+            error_message: null,
+            created_at: new Date(Date.now() - 3600000).toISOString(),
+          },
+        ],
+        total: 1,
+      };
+    }
+    const qs = new URLSearchParams();
+    if (params?.action) qs.set('action', params.action);
+    if (params?.origin) qs.set('origin', params.origin);
+    if (params?.success !== undefined) qs.set('success', String(params.success));
+    if (params?.limit) qs.set('limit', String(params.limit));
+    const q = qs.toString();
+    return this.request<LearningListResponse>(`/learning${q ? `?${q}` : ''}`);
+  }
+
+  async getLearningSummary(): Promise<LearningSummary> {
+    if (this.demoMode) {
+      return {
+        total_entries: 24,
+        successful: 22,
+        failed: 2,
+        success_rate: 0.917,
+        by_action: { background_review: 18, skill_created: 4, memory_curation: 2 },
+        by_origin: { hermes: 20, user: 4 },
+        total_tokens_used: 8420,
+        last_24h_count: 6,
+        last_7d_count: 18,
+      };
+    }
+    return this.request<LearningSummary>('/learning/summary');
+  }
+
+  async triggerCuration(): Promise<CurationResponse> {
+    if (this.demoMode) {
+      return {
+        started_at: new Date().toISOString(),
+        total_memories_before: 8,
+        total_memories_after: 5,
+        demoted_low_confidence: 2,
+        compressed_old_entries: 1,
+        kept_active: 5,
+        bytes_estimate: 1000,
+      };
+    }
+    return this.request<CurationResponse>('/learning/curate', { method: 'POST' });
+  }
+
+  async triggerReview(data: ManualReviewRequest): Promise<ManualReviewResponse> {
+    if (this.demoMode) {
+      return {
+        memories_to_save: [{ content: 'Demo memory', type: 'note', confidence: 0.7 }],
+        nothing_to_learn: false,
+        error: null,
+        llm_tokens_used: 0,
+      };
+    }
+    return this.request<ManualReviewResponse>('/learning/review', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // ─── Context (Fase 0.8) ───
+
+  async getContext(): Promise<ContextResponse> {
+    if (this.demoMode) {
+      return {
+        user_md: '# Perfil del Usuario\n\n## Información Básica\n- Nombre: Local User\n- Zona horaria: America/Caracas\n- Idioma: es\n\n## Preferencias Conocidas\n- Prefiere café sobre té\n- Trabaja en proyecto VNBOT',
+        memory_md: '# Memoria de Trabajo\n\n- **Wifi oficina** (conf=0.95): clave 1234\n- **Cumpleaños** (conf=0.90): 15 marzo\n- **Proyecto VNBOT** (conf=0.85): monorepo Next.js + FastAPI',
+        user_md_bytes: 220,
+        memory_md_bytes: 180,
+        memory_cap_bytes: 3500,
+      };
+    }
+    return this.request<ContextResponse>('/context');
+  }
+
+  async materializeContext(): Promise<MaterializeResponse> {
+    if (this.demoMode) {
+      return {
+        user_md: '# Perfil del Usuario (materializado)\n\n- Nombre: Local User',
+        memory_md: '# Memoria (materializada)\n\n- (sin memorias)',
+        user_md_bytes: 60,
+        memory_md_bytes: 40,
+      };
+    }
+    return this.request<MaterializeResponse>('/context/materialize', { method: 'POST' });
   }
 }
 

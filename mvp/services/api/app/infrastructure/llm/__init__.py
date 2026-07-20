@@ -1,6 +1,6 @@
 """VNBOT API — LLM infrastructure."""
 
-from .router import LLMResult, parse_with_llm
+from .router import LLMResult, parse_with_llm, _build_system_prompt, SYSTEM_PROMPT_TEMPLATE
 from .learning_loop import (
     LearningResult,
     background_review,
@@ -25,6 +25,8 @@ from .hermes_files import (
 __all__ = [
     "LLMResult",
     "parse_with_llm",
+    "_build_system_prompt",
+    "SYSTEM_PROMPT_TEMPLATE",
     "LearningResult",
     "background_review",
     "memory_curation",
@@ -42,4 +44,5 @@ __all__ = [
     "user_md_path",
     "memory_md_path",
 ]
+
 

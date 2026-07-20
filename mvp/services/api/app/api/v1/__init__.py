@@ -6,6 +6,7 @@ from . import (
     audit,
     briefing,
     chat,
+    context,
     exports,
     files,
     graph,
@@ -30,4 +31,5 @@ api_router.include_router(exports.router, prefix="/api/v1")
 api_router.include_router(audit.router, prefix="/api/v1")
 api_router.include_router(skills.router, prefix="/api/v1")
 api_router.include_router(learning.router, prefix="/api/v1")
+api_router.include_router(context.router, prefix="/api/v1")
 

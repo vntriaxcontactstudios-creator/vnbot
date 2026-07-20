@@ -140,6 +140,42 @@ export interface ReminderListResponse {
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
+// Graph types
+// ──────────────────────────────────────────────────────────────────────────────
+
+export interface GraphNode {
+  id: string;
+  type: string;
+  label: string;
+  sensitivity: string;
+  status: string;
+  created_at: string;
+}
+
+export interface GraphEdge {
+  id: string;
+  source: string;
+  target: string;
+  relation: string;
+  confidence: number;
+  created_at: string;
+}
+
+export interface GraphResponse {
+  nodes: GraphNode[];
+  edges: GraphEdge[];
+  total_nodes: number;
+  total_edges: number;
+}
+
+export const RELATION_TYPES = [
+  'KNOWS', 'WORKS_ON', 'RELATED_TO', 'DEPENDS_ON',
+  'REMINDER_FOR', 'HAPPENS_AT', 'PREFERS', 'SUPERSEDES',
+  'CONTRADICTS', 'DERIVED_FROM', 'ASSIGNED_TO', 'MENTIONED_IN',
+  'LOCATED_AT',
+] as const;
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Client
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -337,6 +373,40 @@ class ApiClient {
 
   async cancelReminder(id: string): Promise<ReminderItem> {
     return this.request<ReminderItem>(`/reminders/${id}/cancel`, { method: 'POST' });
+  }
+
+  // ─── Graph ───
+
+  async getGraph(limit = 50): Promise<GraphResponse> {
+    if (this.demoMode) {
+      return {
+        nodes: [
+          { id: 'mock-node-1', type: 'note', label: 'Wifi oficina', sensitivity: 'PERSONAL', status: 'active', created_at: new Date().toISOString() },
+          { id: 'mock-node-2', type: 'event', label: 'Cumpleaños Daniel', sensitivity: 'PERSONAL', status: 'active', created_at: new Date().toISOString() },
+          { id: 'mock-node-3', type: 'preference', label: 'Preferencia café', sensitivity: 'PERSONAL', status: 'active', created_at: new Date().toISOString() },
+          { id: 'mock-node-4', type: 'note', label: 'Proyecto VNBOT', sensitivity: 'PERSONAL', status: 'active', created_at: new Date().toISOString() },
+        ],
+        edges: [
+          { id: 'mock-edge-1', source: 'mock-node-2', target: 'mock-node-1', relation: 'RELATED_TO', confidence: 0.8, created_at: new Date().toISOString() },
+          { id: 'mock-edge-2', source: 'mock-node-4', target: 'mock-node-3', relation: 'RELATED_TO', confidence: 0.6, created_at: new Date().toISOString() },
+          { id: 'mock-edge-3', source: 'mock-node-2', target: 'mock-node-3', relation: 'PREFERS', confidence: 0.5, created_at: new Date().toISOString() },
+        ],
+        total_nodes: 4,
+        total_edges: 3,
+      };
+    }
+    return this.request<GraphResponse>(`/graph?limit=${limit}`);
+  }
+
+  async createEdge(source: string, target: string, relation: string, confidence = 1.0): Promise<{ id: string; source: string; target: string; relation: string; confidence: number; created_at: string }> {
+    return this.request('/graph/edges', {
+      method: 'POST',
+      body: JSON.stringify({ source_node_id: source, target_node_id: target, relation_type: relation, confidence }),
+    });
+  }
+
+  async deleteEdge(id: string): Promise<void> {
+    await this.request<void>(`/graph/edges/${id}`, { method: 'DELETE' });
   }
 }
 

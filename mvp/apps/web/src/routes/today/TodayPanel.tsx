@@ -10,6 +10,7 @@ import { TopBar } from '@/components/shell/TopBar';
 import { ChatInput } from '@/components/chat/ChatInput';
 import { MessageList, type Message } from '@/components/chat/MessageList';
 import { ActionProposal } from '@/components/chat/ActionProposal';
+import { FileUpload } from '@/components/chat/FileUpload';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { useUIStore } from '@/lib/store/ui';
 import { apiClient } from '@/lib/api/client';
@@ -107,6 +108,31 @@ export function TodayPanel() {
     },
     [setMascotState],
   );
+
+  const handleFileUploaded = useCallback((label: string, _content: string) => {
+    const msg: Message = {
+      id: crypto.randomUUID(),
+      role: 'assistant',
+      content: `✓ Archivo procesado y guardado como memoria: "${label}"`,
+      timestamp: new Date().toISOString(),
+      agent: 'archivist',
+      mascotState: 'success',
+    };
+    setMessages((prev) => [...prev, msg]);
+    setMascotState('idle');
+    void loadData();
+  }, [loadData, setMascotState]);
+
+  const handleFileError = useCallback((error: string) => {
+    const msg: Message = {
+      id: crypto.randomUUID(),
+      role: 'system',
+      content: `⚠ Error al procesar archivo: ${error}`,
+      timestamp: new Date().toISOString(),
+    };
+    setMessages((prev) => [...prev, msg]);
+    setMascotState('warning');
+  }, [setMascotState]);
 
   const handleCompleteReminder = useCallback(async (id: string) => {
     try {
@@ -208,6 +234,15 @@ export function TodayPanel() {
           <div className="border-t border-vnbot-line-soft p-4 bg-vnbot-bg-0">
             <div className="max-w-4xl mx-auto">
               <ActionProposal proposal={pendingProposal} onConfirmed={handleConfirmed} onDismiss={handleDismiss} />
+            </div>
+          </div>
+        )}
+
+        {/* File upload */}
+        {!pendingProposal && (
+          <div className="px-4 pb-2">
+            <div className="max-w-4xl mx-auto">
+              <FileUpload onMemoryCreated={handleFileUploaded} onError={handleFileError} />
             </div>
           </div>
         )}

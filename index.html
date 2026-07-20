@@ -2,14 +2,14 @@
 <html lang="es" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#0A1020" />
     <meta name="description" content="VNBOT — Memoria personal open source, recordatorios confiables y mini-agentes bajo el control del usuario." />
     <meta name="color-scheme" content="dark" />
 
     <!-- PWA manifest -->
-    <link rel="manifest" href="/manifest.json" />
+    
 
     <!-- Fonts: load locally in production, CDN in dev (per UI §5: include fonts locally when license allows) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -21,17 +21,14 @@
 
     <!-- Strict CSP (per Terreno Preparado §9.4) -->
     <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:8000 https://api.z.ai; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests;"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.z.ai; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests;"
     />
-    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="X-Frame-Options" content="DENY" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <script type="module" crossorigin src="/vnbot/assets/index-B_GQUd0r.js"></script>
-    <link rel="modulepreload" crossorigin href="/vnbot/assets/react-vendor-CaysvFCf.js">
-    <link rel="modulepreload" crossorigin href="/vnbot/assets/state-DJqyxs5C.js">
-    <link rel="modulepreload" crossorigin href="/vnbot/assets/pixelart-CShip_sV.js">
-    <link rel="stylesheet" crossorigin href="/vnbot/assets/index-B9Eg_a3s.css">
+    <script type="module" crossorigin src="./assets/index-0Gf9s-K1.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/react-vendor-CaysvFCf.js">
+    <link rel="modulepreload" crossorigin href="./assets/state-DJqyxs5C.js">
+    <link rel="modulepreload" crossorigin href="./assets/pixelart-CShip_sV.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-B9Eg_a3s.css">
   </head>
   <body class="bg-vnbot-bg-0 text-vnbot-text font-body antialiased">
     <div id="root"></div>

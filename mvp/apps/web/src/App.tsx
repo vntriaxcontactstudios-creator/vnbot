@@ -16,6 +16,7 @@ import { MemoryPanel } from '@/routes/memory/MemoryPanel';
 import { ActivityPanel } from '@/routes/activity/ActivityPanel';
 import { SettingsPanel } from '@/routes/settings/SettingsPanel';
 import { GraphPanel } from '@/routes/graph/GraphPanel';
+import { ListsPanel } from '@/routes/lists/ListsPanel';
 import { useUIStore } from '@/lib/store/ui';
 
 const queryClient = new QueryClient({
@@ -57,6 +58,7 @@ function App() {
               <Route path="/chat" element={<TodayPanel />} />
               <Route path="/memory" element={<MemoryPanel />} />
               <Route path="/graph" element={<GraphPanel />} />
+              <Route path="/lists" element={<ListsPanel />} />
               <Route path="/activity" element={<ActivityPanel />} />
               <Route path="/settings" element={<SettingsPanel />} />
               <Route

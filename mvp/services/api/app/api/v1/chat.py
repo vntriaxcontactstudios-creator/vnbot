@@ -28,6 +28,7 @@ from vnbot_domain.heuristics import Intent, ParseFailure, ParseSuccess, parse as
 from ...infrastructure.db.models import Operation as OperationModel
 from ...infrastructure.db.models import Reminder as ReminderModel
 from ...infrastructure.db.models import User, Workspace
+from ...infrastructure.llm import parse_with_llm
 from ...infrastructure.db.session import get_db
 from ...schemas.chat import (
     ChatRequest,
@@ -88,15 +89,127 @@ async def post_chat(
 ) -> ChatResponse:
     """Parse user input and return a proposal operation.
 
-    Heuristic parse (no LLM). If parse fails, returns suggestion to configure LLM.
+    Tries LLM (Z.AI glm-4.6) first, falls back to heuristics (ADR-0007).
     """
-    # Ensure workspace exists
     ws_id = await _ensure_default_workspace(db)
     operation_id = str(uuid4())
     expires_at = datetime.now(timezone.utc) + timedelta(seconds=PROPOSAL_TTL_SECONDS)
 
-    # Run heuristic parser
+    # ─── Step 1: Try LLM first ───
+    llm_result = await parse_with_llm(req.text, req.timezone)
+
+    if llm_result is not None and llm_result.intent != "unknown" and llm_result.confidence >= 0.3:
+        # LLM succeeded — build proposal from LLM result
+        proposal_reminder: ProposalReminder | None = None
+        proposal_memory: ProposalMemory | None = None
+        op_type = "create_reminder"
+        agent_id = "zai-glm-4.6"
+        confidence = llm_result.confidence
+        notes = ["LLM parse (Z.AI glm-4.6)"]
+
+        if llm_result.reminder and llm_result.intent in ("create_reminder", "create_task"):
+            rem = llm_result.reminder
+            due_at_str = rem.get("due_at")
+            due_at = None
+            if due_at_str:
+                try:
+                    due_at = datetime.fromisoformat(due_at_str.replace("Z", "+00:00"))
+                except (ValueError, TypeError):
+                    pass
+
+            if due_at:
+                proposal_reminder = ProposalReminder(
+                    title=rem.get("title", "Recordatorio"),
+                    due_at=due_at,
+                    timezone=rem.get("timezone", req.timezone),
+                    recurrence_frequency=rem.get("recurrence", "none"),
+                    recurrence_interval=1,
+                    priority="normal",
+                    channel="mock",
+                    confidence=confidence,
+                )
+                op_type = "create_reminder"
+
+        elif llm_result.memory and llm_result.intent in ("create_memory", "create_list_item"):
+            mem = llm_result.memory
+            proposal_memory = ProposalMemory(
+                content=mem.get("content", ""),
+                memory_type=mem.get("type", "note"),
+                tags=mem.get("tags", []),
+                confidence=confidence,
+            )
+            op_type = "create_memory"
+
+        elif llm_result.intent in ("query_memories", "list_reminders", "complete_reminder", "delete_memory"):
+            # These require database access — return as parsed intent
+            op = OperationModel(
+                id=operation_id,
+                workspace_id=ws_id,
+                user_id=DEFAULT_USER_ID,
+                agent_id=agent_id,
+                conversation_id=req.conversation_id,
+                type="chat_parse",
+                status=OperationStatus.NEEDS_CLARIFICATION,
+                risk_level=RiskTier.LOW,
+                input_ref=_hash_input(req.text),
+                proposal_json={"intent": llm_result.intent, "raw_text": req.text, "used_llm": True},
+                requires_confirmation=False,
+                expires_at=expires_at,
+                idempotency_key=req.idempotency_key,
+            )
+            db.add(op)
+            await db.flush()
+            return ChatResponse(
+                operation_id=operation_id,
+                intent=llm_result.intent,
+                parsed=True,
+                confidence=confidence,
+                requires_confirmation=False,
+                expires_at=expires_at,
+                notes=notes,
+            )
+
+        if proposal_reminder or proposal_memory:
+            op = OperationModel(
+                id=operation_id,
+                workspace_id=ws_id,
+                user_id=DEFAULT_USER_ID,
+                agent_id=agent_id,
+                conversation_id=req.conversation_id,
+                type=op_type,
+                status=OperationStatus.PROPOSED,
+                risk_level=RiskTier.LOW,
+                input_ref=_hash_input(req.text),
+                proposal_json={
+                    "intent": llm_result.intent,
+                    "raw_text": req.text,
+                    "reminder": proposal_reminder.model_dump(mode="json") if proposal_reminder else None,
+                    "memory": proposal_memory.model_dump(mode="json") if proposal_memory else None,
+                    "notes": notes,
+                    "used_llm": True,
+                },
+                requires_confirmation=True,
+                expires_at=expires_at,
+                idempotency_key=req.idempotency_key,
+            )
+            db.add(op)
+            await db.flush()
+            return ChatResponse(
+                operation_id=operation_id,
+                intent=llm_result.intent,
+                parsed=True,
+                confidence=confidence,
+                proposal_reminder=proposal_reminder,
+                proposal_memory=proposal_memory,
+                requires_confirmation=True,
+                expires_at=expires_at,
+                notes=notes,
+            )
+
+    # ─── Step 2: Fallback to heuristics (ADR-0007) ───
     result = heuristic_parse(req.text, tz_name=req.timezone)
+    agent_id = "heuristic"
+    notes = ["Heuristic parse (fallback)"]
 
     if isinstance(result, ParseFailure):
         # Store the failed operation for audit
@@ -104,7 +217,7 @@ async def post_chat(
             id=operation_id,
             workspace_id=ws_id,
             user_id=DEFAULT_USER_ID,
-            agent_id="heuristic",
+            agent_id=agent_id,
             conversation_id=req.conversation_id,
             type="chat_parse",
             status=OperationStatus.NEEDS_CLARIFICATION,
@@ -171,7 +284,7 @@ async def post_chat(
         id=operation_id,
         workspace_id=ws_id,
         user_id=DEFAULT_USER_ID,
-        agent_id="heuristic",
+        agent_id=agent_id,
         conversation_id=req.conversation_id,
         type=op_type,
         status=OperationStatus.PROPOSED,
@@ -182,7 +295,7 @@ async def post_chat(
             "raw_text": result.raw_text,
             "reminder": proposal_reminder.model_dump(mode="json") if proposal_reminder else None,
             "memory": proposal_memory.model_dump(mode="json") if proposal_memory else None,
-            "notes": result.notes,
+            "notes": notes,
         },
         requires_confirmation=True,
         expires_at=expires_at,
@@ -200,7 +313,7 @@ async def post_chat(
         proposal_memory=proposal_memory,
         requires_confirmation=True,
         expires_at=expires_at,
-        notes=result.notes,
+        notes=notes,
     )
 
 

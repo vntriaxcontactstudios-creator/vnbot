@@ -112,6 +112,34 @@ export interface MemorySearchResponse {
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
+// Reminder types
+// ──────────────────────────────────────────────────────────────────────────────
+
+export interface ReminderItem {
+  id: string;
+  title: string;
+  timezone: string;
+  recurrence_frequency: string;
+  recurrence_interval: number;
+  priority: string;
+  channel: string;
+  status: string;
+  next_due_at: string | null;
+  created_at: string;
+  updated_at: string;
+  completed_at: string | null;
+  cancelled_at: string | null;
+}
+
+export interface ReminderListResponse {
+  items: ReminderItem[];
+  total: number;
+  upcoming: number;
+  overdue: number;
+  completed: number;
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Client
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -263,6 +291,52 @@ class ApiClient {
       method: 'POST',
       body: JSON.stringify({ query, limit }),
     });
+  }
+
+  // ─── Reminders ───
+
+  async listReminders(): Promise<ReminderListResponse> {
+    if (this.demoMode) {
+      const { MOCK_REMINDERS } = await import('./mock');
+      await new Promise((r) => setTimeout(r, 300));
+      return {
+        items: MOCK_REMINDERS.map((r) => ({
+          id: r.id,
+          title: r.title,
+          timezone: r.timezone,
+          recurrence_frequency: r.recurrence_frequency,
+          recurrence_interval: 1,
+          priority: r.priority,
+          channel: 'mock',
+          status: r.status,
+          next_due_at: r.due_at,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          completed_at: null,
+          cancelled_at: null,
+        })),
+        total: MOCK_REMINDERS.length,
+        upcoming: MOCK_REMINDERS.length,
+        overdue: 0,
+        completed: 0,
+      };
+    }
+    return this.request<ReminderListResponse>('/reminders');
+  }
+
+  async completeReminder(id: string): Promise<ReminderItem> {
+    return this.request<ReminderItem>(`/reminders/${id}/complete`, { method: 'POST' });
+  }
+
+  async snoozeReminder(id: string, hours: number): Promise<ReminderItem> {
+    return this.request<ReminderItem>(`/reminders/${id}/snooze`, {
+      method: 'POST',
+      body: JSON.stringify({ hours }),
+    });
+  }
+
+  async cancelReminder(id: string): Promise<ReminderItem> {
+    return this.request<ReminderItem>(`/reminders/${id}/cancel`, { method: 'POST' });
   }
 }
 

@@ -2,12 +2,7 @@ name: Deploy Demo to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - 'mvp/apps/web/**'
-      - 'mvp/packages/**'
-      - '.github/workflows/deploy-demo.yml'
+    branches: [gh-pages]
   workflow_dispatch:
 
 permissions:
@@ -20,50 +15,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-          cache-dependency-path: mvp/pnpm-lock.yaml
-
-      - name: Install dependencies
-        working-directory: mvp
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Build demo
-        working-directory: mvp
-        env:
-          VITE_DEMO_MODE: 'true'
-          VITE_API_BASE_URL: ''
-        run: pnpm --filter @vnbot/web build
-
-      - name: Add .nojekyll
-        run: touch mvp/apps/web/dist/.nojekyll
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: mvp/apps/web/dist
-
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

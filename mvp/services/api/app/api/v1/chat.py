@@ -28,7 +28,7 @@ from vnbot_domain.heuristics import Intent, ParseFailure, ParseSuccess, parse as
 from ...infrastructure.db.models import Operation as OperationModel
 from ...infrastructure.db.models import Reminder as ReminderModel
 from ...infrastructure.db.models import User, Workspace
-from ...infrastructure.llm import parse_with_llm
+from ...infrastructure.llm import parse_with_llm, spawn_background_review
 from ...infrastructure.db.session import get_db
 from ...schemas.chat import (
     ChatRequest,
@@ -476,6 +476,24 @@ async def confirm_operation(
         # Mark operation as succeeded
         op.status = OperationStatus.SUCCEEDED
         await db.flush()
+
+        # ─── Hermes background review (ADR-0009 Fase 0.7) ───
+        # Fire-and-forget — never blocks the user-visible response.
+        # Reviews the transcript and decides what to persist as long-term memory.
+        raw_text = proposal.get("raw_text", "") or ""
+        used_llm = bool(proposal.get("used_llm", False))
+        assistant_response_summary = (
+            f"Confirmed {op.type} → {entity_type}:{entity_id}"
+            if entity_id
+            else f"Confirmed {op.type}"
+        )
+        spawn_background_review(
+            user_input=raw_text,
+            assistant_response=assistant_response_summary,
+            intent=proposal.get("intent", "unknown"),
+            used_llm=used_llm,
+            workspace_id=op.workspace_id,
+        )
 
         return ConfirmResponse(
             operation_id=operation_id,

@@ -86,11 +86,23 @@ class SchedulerService:
             max_instances=1,
             coalesce=True,
         )
+        # ─── Hermes memory curation job (ADR-0009 Fase 0.7) ───
+        # Runs every CURATION_INTERVAL_HOURS to keep MEMORY.md under cap.
+        from ..llm import CURATION_INTERVAL_HOURS, memory_curation
+        self._scheduler.add_job(
+            memory_curation,
+            trigger=IntervalTrigger(hours=CURATION_INTERVAL_HOURS),
+            id="hermes_memory_curation",
+            replace_existing=True,
+            max_instances=1,
+            coalesce=True,
+        )
         self._scheduler.start()
         self._started = True
         logger.info(
             f"Scheduler started (tick={settings.scheduler_tick_seconds}s, "
-            f"lookahead={settings.scheduler_lookahead_days}d)"
+            f"lookahead={settings.scheduler_lookahead_days}d, "
+            f"hermes_curation={CURATION_INTERVAL_HOURS}h)"
         )
 
     async def stop(self) -> None:

@@ -267,3 +267,81 @@ class ListItem(Base):
     due_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, onupdate=_utcnow)
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Skills (Hermes — ADR-0009 Fase 0.7)
+# ──────────────────────────────────────────────────────────────────────────────
+
+
+class Skill(Base):
+    """A learned or hand-authored skill (markdown body + trigger metadata).
+
+    Per ADR-0009:
+    - Created by Hermes when triggers fire (≥5 tool calls, error recovery,
+      user correction, novel successful workflow)
+    - Patched by Hermes when an existing skill needs refinement
+    - User can also hand-author skills via /skills panel
+    - Body is markdown — interpreted by the LLM at runtime as context
+    """
+
+    __tablename__ = "skills"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    workspace_id: Mapped[str] = mapped_column(ForeignKey("workspaces.id"), nullable=False, index=True)
+    name: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    description: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    # Markdown body — the actual skill instructions
+    body_markdown: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    # Triggers (JSON): keywords, intent_patterns, tool_call_patterns, min_calls
+    triggers_json: Mapped[dict] = mapped_column(JSON, default=dict)
+    # Status: draft | active | deprecated | archived
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="draft", index=True)
+    # Origin: hermes | user | imported
+    origin: Mapped[str] = mapped_column(String(20), nullable=False, default="user")
+    # Versioning — every Hermes patch increments
+    version: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    # Confidence 0.0-1.0 — Hermes starts low, increases with successful uses
+    confidence: Mapped[float] = mapped_column(Float, nullable=False, default=0.3)
+    # How many times this skill has been used / referenced
+    use_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    last_used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # Optional tags for organization
+    tags_ciphertext: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, index=True)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, onupdate=_utcnow)
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class LearningLog(Base):
+    """Audit trail of Hermes learning actions (ADR-0009).
+
+    Every background_review, memory_curation, skill_creation, and skill_patch
+    writes a log entry. This gives the user full visibility into what Hermes
+    is learning — no silent memory mutations.
+    """
+
+    __tablename__ = "learning_logs"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    workspace_id: Mapped[str] = mapped_column(ForeignKey("workspaces.id"), nullable=False, index=True)
+    # Action type: background_review | memory_curation | skill_created | skill_patched | memory_saved | user_info_updated
+    action: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
+    # Origin: hermes | user | scheduler
+    origin: Mapped[str] = mapped_column(String(20), nullable=False, default="hermes")
+    # Trigger reason (e.g., "post-response review", "≥5 tool calls", "periodic")
+    trigger_reason: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    # The LLM's raw review output (JSON) for audit
+    review_json: Mapped[dict] = mapped_column(JSON, default=dict)
+    # What was actually done (e.g., "saved 1 memory", "patched skill 'morning-routine'")
+    outcome_summary: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    # References to affected entities
+    memory_ids_json: Mapped[dict] = mapped_column(JSON, default=list)
+    skill_id: Mapped[str | None] = mapped_column(ForeignKey("skills.id"), nullable=True)
+    # LLM call metadata
+    llm_model: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    llm_tokens_used: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    success: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True, index=True)
+    error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, index=True)
+

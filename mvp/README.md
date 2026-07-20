@@ -17,17 +17,29 @@ El modelo de IA puede interpretar y proponer, pero el dominio valida, el sistema
 
 ## Estado del proyecto
 
-**Fase 0.1 — MVP comprimido** (en desarrollo). Documentación completa en [`docs/`](./docs/). Implementación siguiendo el [Plan de Implementación](./docs/04-PLAN-IMPLEMENTACION-VNBOT.md).
+**Fase 0.7 — Hermes Learning Loop activo** ✨
 
-## Stack tecnológico (Fase 0.1)
+- ✅ Fase 0.1: MVP comprimido (chat → proposal → confirm → reminder/memory)
+- ✅ Fase 0.2: PostgreSQL dual-mode + Docker Compose
+- ✅ Fase 0.4: LLM integration (Z.AI glm-4.6 + heuristic fallback ADR-0007)
+- ✅ Fase 0.5: FileReader Registry (106 extensiones) + VLM (glm-4.6v)
+- ✅ Fase 0.6: Background review branch (Hermes Track 1)
+- ✅ **Fase 0.7: Self-learning loop + skill creation + memory curation** (Hermes Track 2+3)
 
-- **Frontend:** React 19 + Vite + TypeScript strict + Tailwind 4 + TanStack Query + Zustand + Dexie + Atropos.js + anime.js
-- **Backend:** Python 3.12 + FastAPI + Pydantic v2 + SQLAlchemy 2 async + Alembic + Uvicorn
-- **DB:** SQLite (WAL mode) — PostgreSQL en 0.3
-- **LLM:** Z.AI (glm-4.6, sin API key requerida) — Ollama como fallback
+Documentación completa en [`docs/`](./docs/) y ADRs en [`docs/adrs/`](./docs/adrs/).
+
+
+## Stack tecnológico
+
+- **Frontend:** React 19 + Vite + TypeScript strict + Tailwind 4 + TanStack Query + Zustand + Dexie + Atropos.js + anime.js + PWA (Service Worker + manifest)
+- **Backend:** Python 3.12 + FastAPI + Pydantic v2 + SQLAlchemy 2 async + Alembic + Uvicorn + APScheduler
+- **DB:** SQLite (WAL mode) — PostgreSQL+pgvector en Fase 0.2 (Docker Compose ready)
+- **LLM:** Z.AI glm-4.6 (parser) + glm-4.6v (VLM imágenes) — sin API key requerida
+- **Hermes:** Background review + memory curation + skill creation (ADR-0009 Fase 0.7)
 - **Observabilidad:** OpenTelemetry SDK desde día 1
 - **Testing:** Vitest + pytest + Playwright + axe-core
 - **CI:** GitHub Actions (lint, typecheck, tests, Gitleaks, Semgrep, axe-core)
+- **Deploy:** Netlify (demo estática con mock data) + self-hosted (Docker)
 
 ## Estructura del monorepo
 

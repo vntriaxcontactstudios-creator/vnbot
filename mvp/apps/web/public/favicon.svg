@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0A1020"/>
+      <stop offset="1" stop-color="#050810"/>
+    </linearGradient>
+    <linearGradient id="eye" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#00FFB0"/>
+      <stop offset="1" stop-color="#00B890"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <!-- Mascot body (rounded rect = robot head) -->
+  <rect x="14" y="14" width="36" height="36" rx="6" fill="#1A2238" stroke="#00FFB0" stroke-width="1.5"/>
+  <!-- Eyes (pixel-style) -->
+  <rect x="22" y="26" width="6" height="6" fill="url(#eye)"/>
+  <rect x="36" y="26" width="6" height="6" fill="url(#eye)"/>
+  <!-- Mouth (pixel-style smile) -->
+  <rect x="24" y="38" width="2" height="2" fill="#00FFB0"/>
+  <rect x="26" y="40" width="2" height="2" fill="#00FFB0"/>
+  <rect x="28" y="42" width="8" height="2" fill="#00FFB0"/>
+  <rect x="36" y="40" width="2" height="2" fill="#00FFB0"/>
+  <rect x="38" y="38" width="2" height="2" fill="#00FFB0"/>
+  <!-- Antenna -->
+  <rect x="30" y="6" width="4" height="6" fill="#1A2238"/>
+  <rect x="28" y="4" width="8" height="2" fill="#FFCC00"/>
+</svg>
